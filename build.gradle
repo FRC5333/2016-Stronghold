@@ -1,0 +1,62 @@
+
+buildscript {
+  repositories {
+  mavenCentral()
+  maven {
+    name = "Jaci"
+    url = "http://dev.imjac.in/maven"
+  }
+  }
+  dependencies {
+    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+', classifier: 'Toast'			//Change this line if you wish to Update GradleRIO
+  }
+}
+
+plugins {
+    id 'idea'
+    id 'eclipse'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'GradleRIO'
+    
+    configurations {
+        ideProvider
+    }
+    
+    idea.module {
+        scopes.PROVIDED.plus += [configurations.ideProvider]
+    }
+    
+    repositories {
+        maven {
+            name = "Toast"
+            url = "http://dev.imjac.in/maven"
+        }
+    }
+    
+    dependencies {
+        compile group: 'jaci.openrio.toast', name: 'Toast', version: '+'
+    }
+    
+    gradlerio.team = "5663"
+    gradlerio.deployFile = "toast/modules/${archivesBaseName}.jar"
+}
+
+subprojects {
+    dependencies {
+        compile         project(path: ':', configuration: 'compile')
+        ideProvider     project(path: ':', configuration: 'compile')
+    }
+}
+
+project(":5333-Stats") {
+    archivesBaseName = "5333-Stats"
+    
+    dependencies {
+        compile group: 'jaci.openrio.modules', name: 'BlackBox', version: '+'
+        toastModule group: 'jaci.openrio.modules', name: 'BlackBox', version: '+'
+    }
+}

@@ -1,0 +1,3 @@
+include '5333-Stats'
+
+rootProject.name = "5333-Stronghold"
