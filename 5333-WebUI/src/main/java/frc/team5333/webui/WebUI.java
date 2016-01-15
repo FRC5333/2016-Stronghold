@@ -16,7 +16,7 @@ public class WebUI extends ToastModule {
 
     @Override
     public void prestart() {
-
+        WebHandler.init();
     }
 
     @Override
