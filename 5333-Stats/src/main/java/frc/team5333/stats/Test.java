@@ -14,26 +14,34 @@ import java.io.IOException;
 public class Test {
 
     public static void init() {
-        SplineFit hermite = new CubicHermite();
-        Waypoint start = new Waypoint(new Vec2D(-4, 2), 0);
-        Waypoint middle = new Waypoint(new Vec2D(0, 5), MathHelper.d2r(20));
-        Waypoint end = new Waypoint(new Vec2D(4, 1), MathHelper.d2r(-45));
+        SplineFit fit = new CubicHermite();
+        Waypoint start = new Waypoint(new Vec2D(-10, 5), 0);
+        Waypoint quarter = new Waypoint(new Vec2D(-5, -1), MathHelper.d2r(-80));
+        Waypoint half = new Waypoint(new Vec2D(0, -4), 0);
+        Waypoint threequarter = new Waypoint(new Vec2D(5, 2), MathHelper.d2r(50));
+        Waypoint end = new Waypoint(new Vec2D(10, 4), MathHelper.d2r(-20));
 
-        Spline fit1 = hermite.fit(start, middle);
-        Spline fit2 = hermite.fit(middle, end);
+        Spline[] s = new Spline[] {
+            fit.fit(start, quarter), fit.fit(quarter, half),
+            fit.fit(half, threequarter), fit.fit(threequarter, end)
+        };
 
         try {
             FileWriter writer = new FileWriter("test.csv");
-            writer.write("x,y1,y2\n");
+
+            writer.write("x,s1,s2,s3,s4\n");
             for (double i = 0; i < 1; i+=0.01) {
-                double[] val_1 = fit1.getXandY(i);
-                double[] val_2 = fit2.getXandY(i);
-                writer.write(val_1[0] + "," + val_1[1] + ",\n");
-                writer.write(val_2[0] + ",," + val_2[1] + "\n");
+                for (int si = 0; si < s.length; si++) {
+                    Spline spline = s[si];
+                    Vec2D d = spline.getXandY(i);
+                    if (si == 0) writer.write(d.x() + "," + d.y() + ",,,\n");
+                    if (si == 1) writer.write(d.x() + ",," + d.y() + ",,\n");
+                    if (si == 2) writer.write(d.x() + ",,," + d.y() + ",\n");
+                    if (si == 3) writer.write(d.x() + ",,,," + d.y() + "\n");
+                }
             }
             writer.close();
-        } catch (IOException e) {
-        }
+        } catch (IOException e) { }
     }
 
 }

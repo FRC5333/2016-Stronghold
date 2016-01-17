@@ -1,5 +1,7 @@
 package frc.team5333.core.motion.spline;
 
+import jaci.openrio.toast.lib.math.Vec2D;
+
 public class Spline {
 
     // Follows spline formula (ax^5 + bx^4 + cx^3 + dx^2 + ex). Coefficient groups
@@ -16,7 +18,7 @@ public class Spline {
     public double knot_distance;
     public double arc_length;
 
-    public double[] getXandY(double percentage) {
+    public Vec2D getXandY(double percentage) {
         double[] result = new double[2];
 
         percentage = Math.max(Math.min(percentage, 1), 0);
@@ -29,18 +31,54 @@ public class Spline {
 
         result[0] = x_val * cos_theta - y_val * sin_theta + x_offset;
         result[1] = x_val * sin_theta + y_val * cos_theta + y_offset;
-        return result;
+        return new Vec2D(result[0], result[1]);
+    }
+
+    public void serialize(double step, SplineConsumer consumer) {
+        for (double i = 0; i < 1; i+=step) {
+            Vec2D v = getXandY(i);
+            consumer.write(v.x(), v.y(), i);
+        }
+    }
+
+    public double length() {
+        if (arc_length >= 0) {
+            return arc_length;
+        }
+
+        final int kNumSamples = 100000;
+        double arc_length = 0;
+        double t, dydt;
+        double integrand, last_integrand
+                = Math.sqrt(1 + deriv(0) * deriv(0)) / kNumSamples;
+        for (int i = 1; i <= kNumSamples; ++i) {
+            t = ((double) i) / kNumSamples;
+            dydt = deriv(t);
+            integrand = Math.sqrt(1 + dydt * dydt) / kNumSamples;
+            arc_length += (integrand + last_integrand) / 2;
+            last_integrand = integrand;
+        }
+        this.arc_length = knot_distance * arc_length;
+        return this.arc_length;
+    }
+
+    public double deriv(double percentage) {
+        percentage = Math.max(Math.min(percentage, 1), 0);
+
+        double x_hat = percentage * knot_distance;
+        double yp_hat = (5 * a5 * x_hat + 4 * b4) * x_hat * x_hat * x_hat + 3 * c3 * x_hat * x_hat
+                + 2 * d2 * x_hat + e1;
+
+        return yp_hat;
     }
 
     public String toString() {
-        return String.format("Spline[%.2fx^5 + %.2fx^4 + %.2fx^3 + %.2fx^2 + %.2fx][x=%.2f, y=%.2f, theta=%.2f, knot=%.2f, arc=%.2f]",
+        return String.format("Spline[%.2fx^5 + %.2fx^4 + %.2fx^3 + %.2fx^2 + %.2fx, x=%.2f, y=%.2f, theta=%.2f, knot=%.2f, arc=%.2f]",
                 a5, b4, c3, d2, e1, x_offset, y_offset, angle_offset, knot_distance, arc_length);
     }
 
-    public String asFormula(int dp) {
-        double x_offset = this.x_offset - knot_distance;
-        return String.format("%."+dp+"f(x - %."+dp+"f)^5 + %."+dp+"f(x - %."+dp+"f)^4 + %."+dp+"f(x - %."+dp+"f)^3 + %."+dp+"f(x - %."+dp+"f)^2 + %."+dp+"f(x - %."+dp+"f) + %."+dp+"f",
-                a5, x_offset, b4, x_offset, c3, x_offset, d2, x_offset, e1, x_offset, y_offset);
+    public static interface SplineConsumer {
+        public void write(double x, double y, double progress);
     }
 
 }
