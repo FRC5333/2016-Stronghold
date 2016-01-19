@@ -1,7 +1,5 @@
 package frc.team5333.core.motion.spline;
 
-import jaci.openrio.toast.lib.math.Vec2D;
-
 public interface SplineFit {
 
     default public Spline fit(Waypoint start, Waypoint end) {

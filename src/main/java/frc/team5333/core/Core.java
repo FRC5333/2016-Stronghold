@@ -2,6 +2,8 @@ package frc.team5333.core;
 
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.operator.Operator;
+import frc.team5333.core.operator.TransientControls;
+import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.loader.annotation.Priority;
 import jaci.openrio.toast.lib.log.Logger;
 import jaci.openrio.toast.lib.module.IterativeModule;
@@ -27,9 +29,18 @@ public class Core extends IterativeModule {
     public void prestart() {
         logger = new Logger("5333-Stronghold", Logger.ATTR_DEFAULT);
         config = new ModuleConfig("5333-Stronghold");
+
+        StateTracker.addTicker((s) -> { TransientControls.tick(); });
+
         Operator.init();
         IO.init();
 
         MatchInfo.init();
+
+        TransientControls.init();
     }
+
+    public void teleopPeriodic() {
+    }
+
 }
