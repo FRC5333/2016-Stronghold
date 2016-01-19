@@ -1,6 +1,7 @@
 package frc.team5333.core;
 
 import frc.team5333.core.data.MatchInfo;
+import frc.team5333.core.hardware.IO;
 import frc.team5333.core.operator.Operator;
 import frc.team5333.core.operator.TransientControls;
 import jaci.openrio.toast.core.StateTracker;
