@@ -10,6 +10,7 @@ buildscript {
   }
   dependencies {
     classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+', classifier: 'Toast'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:+'
   }
 }
 
@@ -17,6 +18,8 @@ plugins {
     id 'idea'
     id 'eclipse'
 }
+
+apply plugin: 'kotlin'
 
 allprojects {
     apply plugin: 'java'
@@ -59,10 +62,9 @@ allprojects {
 }
 
 subprojects {
-    
     // These link back to the root project to make sure everything depends on the root project.
     dependencies {
-        compile         project(path: ':', configuration: 'compile')
+        compile         project(path: ':', configuration: 'runtime')
         ideProvider     project(path: ':', configuration: 'compile')
     }
 }
@@ -73,6 +75,10 @@ dependencies {
     // It's really quite nifty
     runtime  project(path: ':5333-Stats', configuration: 'compile')
     runtime  project(path: ':5333-WebUI', configuration: 'compile')
+    
+    // The main module has some sources written in Kotlin. 
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:+'
+    buildLibs 'org.jetbrains.kotlin:kotlin-stdlib:+'
 }
 
 // The stats module is used to record match data over time thanks to the BlackBox module. This lets us view

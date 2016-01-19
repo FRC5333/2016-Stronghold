@@ -9,13 +9,14 @@ public class MotionPipeline {
 
         Spline[] splines = new Spline[path.length - 1];
         double[] spline_lengths = new double[splines.length];
-        double total_length;
+        double total_length = 0;
 
         for (int i = 0; i < splines.length; ++i) {
             splines[i] = fitter.fit(path[i], path[i+1]);
             spline_lengths[i] = splines[i].length();
             total_length += spline_lengths[i];
         }
+        return null;
     }
 
 }
