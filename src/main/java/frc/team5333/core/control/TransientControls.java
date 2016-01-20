@@ -1,4 +1,4 @@
-package frc.team5333.core.operator;
+package frc.team5333.core.control;
 
 import edu.wpi.first.wpilibj.Joystick;
 

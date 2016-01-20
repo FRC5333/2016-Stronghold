@@ -1,4 +1,4 @@
-package frc.team5333.core.operator
+package frc.team5333.core.control
 
 public enum class ControlManager {
     INSTANCE;       // Kotlin doesn't have statics, so a singleton will have to do
