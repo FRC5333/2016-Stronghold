@@ -39,9 +39,9 @@ public enum class ControlManager {
         if (driveMode() == DriveMode.BOTH)
             return -JoystickController.getY(rJoy)
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(-JoystickController.getY(lJoy), JoystickController.getTwist(lJoy)).second
+            return calculateThrottlePair(-JoystickController.getY(lJoy), JoystickController.getX(lJoy)).second
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(-JoystickController.getY(rJoy), JoystickController.getTwist(rJoy)).second
+            return calculateThrottlePair(-JoystickController.getY(rJoy), JoystickController.getX(rJoy)).second
         return 0.0
     }
 
