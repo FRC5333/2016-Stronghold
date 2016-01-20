@@ -1,6 +1,9 @@
 package frc.team5333.core.control;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.team5333.core.teleop.StrategyBlank;
+import frc.team5333.core.teleop.StrategyOperator;
+import frc.team5333.core.teleop.TeleopController;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -22,8 +25,18 @@ public class TransientControls {
         Joystick rJoy = Operator.getRightJoystick();
 
         // Hitting the #12 Button on the Right Joystick will auto-configure the handed-ness of the joysticks
-        triggerOn(() -> { return Operator.joy_1.getRawButton(12); }, () -> { Operator.right_is_1 = true; });
-        triggerOn(() -> { return Operator.joy_2.getRawButton(12); }, () -> { Operator.right_is_1 = false; });
+        triggerOn(onChangeRising(() -> { return Operator.joy_1.getRawButton(12); }), () -> { Operator.right_is_1 = true; });
+        triggerOn(onChangeRising(() -> { return Operator.joy_2.getRawButton(12); }), () -> { Operator.right_is_1 = false; });
+
+        // Hitting the #3 Button on either Joystick will force control to be regained by the driver, in the case
+        // an autonomous action is not working properly
+        triggerOn(onChangeRising(() -> { return Operator.eitherButton(3); }), () -> {
+            TeleopController.INSTANCE.setActiveStrategy(new StrategyOperator()); });
+
+        // Hitting the #5 Button on either Joystick will force the Teleop program to be disabled and repeatedly set
+        // all motors to 0.0. This is kind of like an E-Stop mode.
+        triggerOn(onChangeRising(() -> { return Operator.eitherButton(5); }), () -> {
+            TeleopController.INSTANCE.setActiveStrategy(new StrategyBlank()); });
     }
 
     public static void tick() {

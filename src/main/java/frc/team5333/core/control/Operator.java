@@ -32,4 +32,8 @@ public class Operator {
         right_is_1 = !right_is_1;
     }
 
+    public static boolean eitherButton(int buttonID) {
+        return joy_1.getRawButton(buttonID) || joy_2.getRawButton(buttonID);
+    }
+
 }

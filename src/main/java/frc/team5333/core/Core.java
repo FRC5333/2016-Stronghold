@@ -1,9 +1,10 @@
 package frc.team5333.core;
 
+import frc.team5333.core.control.Operator;
+import frc.team5333.core.control.TransientControls;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.hardware.IO;
-import frc.team5333.core.operator.Operator;
-import frc.team5333.core.operator.TransientControls;
+import frc.team5333.core.teleop.TeleopController;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.loader.annotation.Priority;
 import jaci.openrio.toast.lib.log.Logger;
@@ -41,7 +42,14 @@ public class Core extends IterativeModule {
         TransientControls.init();
     }
 
+    @Override
+    public void teleopInit() {
+        TeleopController.INSTANCE.switchTo(StateTracker.lastState);
+    }
+
+    @Override
     public void teleopPeriodic() {
+        TeleopController.INSTANCE.tick();
     }
 
 }
