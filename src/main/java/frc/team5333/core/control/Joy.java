@@ -10,7 +10,7 @@ import jaci.openrio.toast.lib.module.ModuleConfig;
  *
  * @author Jaci
  */
-public class JoystickController {
+public class Joy {
 
     public static ModuleConfig joyConfig;
 

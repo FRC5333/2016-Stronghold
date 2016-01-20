@@ -8,6 +8,17 @@ import frc.team5333.core.teleop.TeleopController;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+/**
+ * The TransientControls class is used for parts of the Control System that function regardless of state. These controls
+ * are mostly setup for Driver Control, such as HotButtons on the Joystick to trigger drive modes, and Joystick
+ * configuration.
+ *
+ * Thanks to this class, hitting the #12 button on the Right joystick at the beginning of a match will automatically
+ * configure the joystick handed-ness, in case they are plugged in wrongly. Additionally, it controls buttons for
+ * Teleop strategies.
+ *
+ * @author Jaci
+ */
 public class TransientControls {
 
     static ArrayList<TriggerContainer> containers;
@@ -39,6 +50,9 @@ public class TransientControls {
             TeleopController.INSTANCE.setActiveStrategy(new StrategyBlank()); });
     }
 
+    /**
+     * Tick the controls. This is periodically called regardless of state
+     */
     public static void tick() {
         synchronized (lock) {
             for (TriggerContainer container : containers)
@@ -46,6 +60,11 @@ public class TransientControls {
         }
     }
 
+    /**
+     * Register a new trigger. If the condition is true, the runnable callback is called. This is checked once every
+     * tick.
+     * @param condition A supplier of a Boolean Value representing whether the callback should be called.
+     */
     public static void triggerOn(Supplier<Boolean> condition, Runnable callback) {
         synchronized (lock) {
             TriggerContainer container = new TriggerContainer();
@@ -55,6 +74,12 @@ public class TransientControls {
         }
     }
 
+    /**
+     * Convert a Boolean Supplier to a Rising-Edge Boolean Supplier. The most obvious use of this is for a button,
+     * which will trigger return 'true' when the state of the button goes from unpressed to pressed. This prevents
+     * the trigger being detected for the duration of the hold.
+     * @param otherSupplier The supplier to filter the rising edge of
+     */
     public static Supplier<Boolean> onChangeRising(Supplier<Boolean> otherSupplier) {
         return new Supplier<Boolean>() {
             boolean lastState;

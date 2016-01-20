@@ -3,7 +3,13 @@ package frc.team5333.core.hardware
 import edu.wpi.first.wpilibj.SpeedController
 import kotlin.collections.forEach
 
-class MultiMotor(vararg motors: SpeedController) : SpeedController {
+/**
+ * The MotorGroup class is a dummy SpeedController which combines multiple SpeedControllers under one class. This means
+ * motor controllers can be 'grouped' for control of all motors in the group.
+ *
+ * @author Jaci
+ */
+class MotorGroup(vararg motors: SpeedController) : SpeedController {
 
     var _motors = motors
     var _inverted = false

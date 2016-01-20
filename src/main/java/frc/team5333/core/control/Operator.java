@@ -15,7 +15,7 @@ public class Operator {
     public static boolean right_is_1 = false;
 
     public static void init() {
-        JoystickController.init();
+        Joy.init();
         joy_1    = new Joystick(Core.config.getInt("core.operator.joy.one", 0));
         joy_2    = new Joystick(Core.config.getInt("core.operator.joy.two", 1));
     }
@@ -28,10 +28,16 @@ public class Operator {
         return right_is_1 ? joy_1 : joy_2;
     }
 
+    /**
+     * Swap the joysticks in case they are plugged in incorrectly
+     */
     public static void switchJoysticks() {
         right_is_1 = !right_is_1;
     }
 
+    /**
+     * A simple 'or' operation on the same button ID of both Joysticks
+     */
     public static boolean eitherButton(int buttonID) {
         return joy_1.getRawButton(buttonID) || joy_2.getRawButton(buttonID);
     }

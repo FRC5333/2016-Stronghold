@@ -11,6 +11,12 @@ import jaci.openrio.toast.lib.log.Logger;
 import jaci.openrio.toast.lib.module.IterativeModule;
 import jaci.openrio.toast.lib.module.ModuleConfig;
 
+/**
+ * The Core class of Team 5333's Stronghold code. This class serves to startup other parts of the code, as well
+ * as delegate periodic functions to the appropriate handler.
+ *
+ * @author Jaci
+ */
 public class Core extends IterativeModule {
 
     public static ModuleConfig config;
@@ -32,20 +38,17 @@ public class Core extends IterativeModule {
         logger = new Logger("5333-Stronghold", Logger.ATTR_DEFAULT);
         config = new ModuleConfig("5333-Stronghold");
 
-        StateTracker.addTicker((s) -> { TransientControls.tick(); });
-
         Operator.init();
         IO.init();
 
         MatchInfo.init();
 
         TransientControls.init();
+        StateTracker.addTicker((s) -> { TransientControls.tick(); });
     }
 
     @Override
-    public void teleopInit() {
-        TeleopController.INSTANCE.switchTo(StateTracker.lastState);
-    }
+    public void teleopInit() { }
 
     @Override
     public void teleopPeriodic() {

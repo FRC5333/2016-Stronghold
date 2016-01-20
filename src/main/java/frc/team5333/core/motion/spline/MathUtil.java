@@ -1,4 +1,4 @@
-package frc.team5333.core;
+package frc.team5333.core.motion.spline;
 
 public class MathUtil {
 
