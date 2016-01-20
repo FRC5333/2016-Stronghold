@@ -24,11 +24,11 @@ public enum class ControlManager {
         var rJoy = Operator.getRightJoystick()
 
         if (driveMode() == DriveMode.BOTH)
-            return -JoystickController.getY(lJoy)
+            return sq(-JoystickController.getY(lJoy))
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(-JoystickController.getY(lJoy), JoystickController.getX(lJoy)).first
+            return calculateThrottlePair(sq(-JoystickController.getY(lJoy)), sq(JoystickController.getX(lJoy))).first
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(-JoystickController.getY(rJoy), JoystickController.getX(rJoy)).first
+            return calculateThrottlePair(sq(-JoystickController.getY(rJoy)), sq(JoystickController.getX(rJoy))).first
         return 0.0
     }
 
@@ -37,11 +37,11 @@ public enum class ControlManager {
         var rJoy = Operator.getRightJoystick()
 
         if (driveMode() == DriveMode.BOTH)
-            return -JoystickController.getY(rJoy)
+            return sq(-JoystickController.getY(rJoy))
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(-JoystickController.getY(lJoy), JoystickController.getX(lJoy)).second
+            return calculateThrottlePair(sq(-JoystickController.getY(lJoy)), sq(JoystickController.getX(lJoy))).second
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(-JoystickController.getY(rJoy), JoystickController.getX(rJoy)).second
+            return calculateThrottlePair(sq(-JoystickController.getY(rJoy)), sq(JoystickController.getX(rJoy))).second
         return 0.0
     }
 
@@ -70,5 +70,15 @@ public enum class ControlManager {
 
     internal fun limit(value: Double): Double {
         return Math.min(Math.max(value, -1.0), 1.0)
+    }
+
+    /**
+     * Square value while maintaining the sign
+     */
+    internal fun sq(value: Double): Double {
+        if (value >= 0.0)
+            return value * value
+        else
+            return -(value * value)
     }
 }

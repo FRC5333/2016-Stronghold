@@ -12,7 +12,9 @@ enum class TeleopController {
         activeStrategy.tick()
     }
 
-    fun switchTo(lastState: RobotState) {
-        activeStrategy.onSwitchedTo(lastState)
+    fun switchTo(lastState: RobotState?) {
+        var state: RobotState = RobotState.DISABLED
+        if (lastState != null) state = lastState
+        activeStrategy.onSwitchedTo(state)
     }
 }
