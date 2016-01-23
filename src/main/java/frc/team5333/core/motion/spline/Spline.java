@@ -1,5 +1,6 @@
 package frc.team5333.core.motion.spline;
 
+import frc.team5333.core.MathUtil;
 import jaci.openrio.toast.lib.math.Vec2D;
 
 public class Spline {
@@ -70,6 +71,38 @@ public class Spline {
                 + 2 * d2 * x_hat + e1;
 
         return yp_hat;
+    }
+
+    public double angleAt(double percentage) {
+        return MathUtil.boundAngleRadians(Math.atan(deriv(percentage)) + angle_offset);
+    }
+
+    public double progressForDist(double distance) {
+        final int RESOLUTION = 100000;
+        double arc_length = 0;
+        double t = 0;
+        double last_arc_length = 0;
+        double dydt;
+        double integrand, last_integrand = Math.sqrt(1 + deriv(0) * deriv(0)) / RESOLUTION;
+        distance /= knot_distance;
+        for (int i = 1; i <= RESOLUTION; ++i) {
+            t = ((double) i) / RESOLUTION;
+            dydt = deriv(t);
+            integrand = Math.sqrt(1 + dydt * dydt) / RESOLUTION;
+            arc_length += (integrand + last_integrand) / 2;
+            if (arc_length > distance) {
+                break;
+            }
+            last_integrand = integrand;
+            last_arc_length = arc_length;
+        }
+
+        double interpolated = t;
+        if (arc_length != last_arc_length) {
+            interpolated += ((distance - last_arc_length)
+                    / (arc_length - last_arc_length) - 1) / (double) RESOLUTION;
+        }
+        return interpolated;
     }
 
     public String toString() {
