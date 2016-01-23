@@ -1,6 +1,7 @@
 package frc.team5333.core.motion.spline;
 
 import jaci.openrio.toast.lib.math.Vec2D;
+import kotlin.Pair;
 
 public class MotionPipeline {
 
@@ -53,6 +54,55 @@ public class MotionPipeline {
         }
 
         return traj;
+    }
+
+    public static Pair<Trajectory, Trajectory> createTrajectoryPair(Trajectory original, double width) {
+        Pair<Trajectory, Trajectory> out = new Pair<>(original.copy(), original.copy());
+        Trajectory first = out.getFirst();
+        Trajectory second = out.getSecond();
+
+        double w2 = width / 2;
+
+        for (int i = 0; i < original.length(); i++) {
+            Trajectory.Section section = original.get(i);
+            double ca = Math.cos(section.heading);
+            double sa = Math.sin(section.heading);
+
+            Trajectory.Section section1 = first.get(i);
+            section1.x = section.x - (w2 * sa);
+            section1.y = section.y + (w2 * ca);
+
+            if (i > 0) {
+                Trajectory.Section last = first.get(i - 1);
+                double distance = Math.sqrt(
+                        (section1.x - last.x) * (section1.x - last.x)
+                        +
+                        (section1.y - last.y) * (section1.y - last.y)
+                );
+                section1.position = last.position + distance;
+                section1.velocity = distance / section1.time;
+                section1.acceleration = (section1.velocity - last.velocity) / section1.time;
+                section1.jerk = (section1.acceleration - last.acceleration) / section1.time;
+            }
+
+            Trajectory.Section section2 = second.get(i);
+            section2.x = section.x + (w2 * sa);
+            section2.y = section.y - (w2 * ca);
+
+            if (i > 0) {
+                Trajectory.Section last = second.get(i - 1);
+                double distance = Math.sqrt(
+                        (section2.x - last.x) * (section2.x - last.x)
+                        +
+                        (section2.y - last.y) * (section2.y - last.y)
+                );
+                section2.position = last.position + distance;
+                section2.velocity = distance / section2.time;
+                section2.acceleration = (section2.velocity - last.velocity) / section2.time;
+                section2.jerk = (section2.acceleration - last.acceleration) / section2.time;
+            }
+        }
+        return out;
     }
 
 }

@@ -59,6 +59,10 @@ public class Trajectory {
         sections[index] = section;
     }
 
+    public Section[] getAll() {
+        return sections;
+    }
+
     public void append(Trajectory to_append) {
         Section[] temp = new Section[length()
                 + to_append.length()];

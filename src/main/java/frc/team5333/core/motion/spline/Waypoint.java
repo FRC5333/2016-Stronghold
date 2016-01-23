@@ -12,4 +12,8 @@ public class Waypoint {
         this.exitAngle = exitAngle;
     }
 
+    public Waypoint(double x, double y, double exitAngle) {
+        this(new Vec2D(x, y), exitAngle);
+    }
+
 }

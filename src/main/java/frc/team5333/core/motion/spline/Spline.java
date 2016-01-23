@@ -43,7 +43,7 @@ public class Spline {
     }
 
     public double length() {
-        if (arc_length >= 0) {
+        if (arc_length > 0) {
             return arc_length;
         }
 
