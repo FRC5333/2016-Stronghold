@@ -4,6 +4,12 @@ import frc.team5333.core.Core;
 import jaci.openrio.toast.core.io.Persistent;
 import jaci.openrio.toast.core.io.Storage;
 
+/**
+ * The MatchInfo class contains data about the current match we are in. This is used to record our Robot Statistics
+ * and performance over time, and be able to review this data after each match and publish it.
+ *
+ * @author Jaci
+ */
 public class MatchInfo {
 
     public static enum MatchType {

@@ -3,7 +3,8 @@ package frc.team5333.webui;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.port;
 
 public class WebHandler {
 

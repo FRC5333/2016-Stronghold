@@ -1,9 +1,8 @@
 package frc.team5333.core.motion.spline.fit;
 
-import frc.team5333.core.MathUtil;
+import frc.team5333.core.motion.spline.MathUtil;
 import frc.team5333.core.motion.spline.Spline;
 import frc.team5333.core.motion.spline.SplineFit;
-import frc.team5333.core.motion.spline.Waypoint;
 
 public class CubicHermite implements SplineFit {
 

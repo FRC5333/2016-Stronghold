@@ -5,7 +5,6 @@ import frc.team5333.core.motion.spline.fit.CubicHermite;
 import jaci.openrio.toast.lib.math.MathHelper;
 import jaci.openrio.toast.lib.math.Vec2D;
 
-import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
