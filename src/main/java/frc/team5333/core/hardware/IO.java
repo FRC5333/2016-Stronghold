@@ -19,10 +19,10 @@ public class IO {
     public static MotorGroup drive_motors, all_motors;
 
     public static void init() {
-        motor_left_1    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_1",   1));
-        motor_left_2    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_2",   2));
-        motor_right_1   = Registrar.canTalon(Core.config.getInt("core.io.motor.right_1",  3));
-        motor_right_2   = Registrar.canTalon(Core.config.getInt("core.io.motor.right_2",  4));
+        motor_left_1    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_1",   10));
+        motor_left_2    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_2",   11));
+        motor_right_1   = Registrar.canTalon(Core.config.getInt("core.io.motor.right_1",  12));
+        motor_right_2   = Registrar.canTalon(Core.config.getInt("core.io.motor.right_2",  13));
 
         drive_motors    = new MotorGroup(motor_left_1, motor_left_2, motor_right_1, motor_right_2);
         all_motors      = new MotorGroup(drive_motors);
