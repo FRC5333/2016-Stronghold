@@ -17,6 +17,6 @@ class StrategyOperator : TeleopStrategy {
 
     override fun tick() {
         IO.setLeftMotors(ControlManager.INSTANCE.getLeftDrive())
-        IO.setRightMotors(ControlManager.INSTANCE.getRightDrive())
+        IO.setRightMotors(-ControlManager.INSTANCE.getRightDrive())
     }
 }

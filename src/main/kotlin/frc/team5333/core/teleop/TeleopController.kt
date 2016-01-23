@@ -15,8 +15,7 @@ enum class TeleopController {
     var activeStrategy: TeleopStrategy = StrategyOperator()
     set(value) {
         activeStrategy.onDisable()
-        activeStrategy = value
-        activeStrategy.onEnable()
+        value.onEnable()
     }
 
     /**
