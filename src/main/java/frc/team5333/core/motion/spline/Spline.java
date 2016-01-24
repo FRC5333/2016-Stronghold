@@ -1,6 +1,6 @@
 package frc.team5333.core.motion.spline;
 
-import frc.team5333.core.MathUtil;
+import frc.team5333.core.motion.spline.MathUtil;
 import jaci.openrio.toast.lib.math.Vec2D;
 
 public class Spline {
@@ -83,7 +83,7 @@ public class Spline {
         double t = 0;
         double last_arc_length = 0;
         double dydt;
-        double integrand, last_integrand = Math.sqrt(1 + deriv(0) * deriv(0)) / RESOLUTION;
+        double integrand = 0, last_integrand = Math.sqrt(1 + deriv(0) * deriv(0)) / RESOLUTION;
         distance /= knot_distance;
         for (int i = 1; i <= RESOLUTION; ++i) {
             t = ((double) i) / RESOLUTION;

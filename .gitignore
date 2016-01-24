@@ -33,3 +33,4 @@ gradle/.launch/
 ehthumbs.db
 Thumbs.db
 
+*.csv
