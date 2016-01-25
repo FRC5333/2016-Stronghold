@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-int trajectory_prepare_candidate(Waypoint *path, int path_length, void (*fit)(Waypoint,Waypoint,Spline*), double dt,
+int trajectory_prepare_candidate(Waypoint *path, int path_length, void (*fit)(Waypoint,Waypoint,Spline*), int sample_count, double dt,
         double max_velocity, double max_acceleration, double max_jerk, TrajectoryCandidate *cand) {
     if (path_length < 2) return -1;
     
@@ -14,14 +14,14 @@ int trajectory_prepare_candidate(Waypoint *path, int path_length, void (*fit)(Wa
     for (i = 0; i < path_length-1; i++) {
         Spline s;
         fit(path[i], path[i+1], &s);
-        double dist = spline_distance(&s);
+        double dist = spline_distance(&s, sample_count);
         splines[i] = s;
         splineLengths[i] = dist;
         totalLength += dist;
     }
     
     TrajectoryConfig config = {dt, max_velocity, max_acceleration, max_jerk, 0, path[0].angle,
-        totalLength, 0, path[0].angle};
+        totalLength, 0, path[0].angle, sample_count};
     TrajectoryInfo info = trajectory_prepare(config);
     int trajectory_length = info.length;
     
@@ -58,7 +58,7 @@ int trajectory_generate(TrajectoryCandidate *c, Segment *segments) {
             double pos_relative = pos - spline_pos_initial;
             if (pos_relative <= splineLengths[spline_i]) {
                 Spline si = splines[spline_i];
-                double percentage = spline_progress_for_distance(si, pos_relative);
+                double percentage = spline_progress_for_distance(si, pos_relative, c->config.sample_count);
                 Coord coords = spline_coords(si, percentage);
                 segments[i].heading = spline_angle(si, percentage);
                 segments[i].x = coords.x;

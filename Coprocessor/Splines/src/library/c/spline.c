@@ -29,7 +29,9 @@ double spline_angle(Spline s, double percentage) {
     return bound_radians(atan(spline_deriv(s, percentage)) + s.angle_offset);
 }
 
-double spline_distance(Spline *s) {
+double spline_distance(Spline *s, int sample_count) {
+    double sample_count_d = (double) sample_count;
+    
     double a = s->a; double b = s->b; double c = s->c; 
     double d = s->d; double e = s->e; double knot = s->knot_distance;
     
@@ -38,13 +40,13 @@ double spline_distance(Spline *s) {
     double deriv0 = spline_deriv_2(a, b, c, d, e, knot, 0);
     
     double integrand = 0;
-    double last_integrand = sqrt(1 + deriv0*deriv0) / SPLINE_NUM_SAMPLES_D;
+    double last_integrand = sqrt(1 + deriv0*deriv0) / sample_count_d;
     
     int i;
-    for (i = 0; i <= SPLINE_NUM_SAMPLES_I; i = i + 1) {
-        t = i / SPLINE_NUM_SAMPLES_D;
+    for (i = 0; i <= sample_count; i = i + 1) {
+        t = i / sample_count_d;
         dydt = spline_deriv_2(a, b, c, d, e, knot, t);
-        integrand = sqrt(1 + dydt*dydt) / SPLINE_NUM_SAMPLES_D;
+        integrand = sqrt(1 + dydt*dydt) / sample_count_d;
         arc_length += (integrand + last_integrand) / 2;
         last_integrand = integrand;
     }
@@ -53,7 +55,9 @@ double spline_distance(Spline *s) {
     return al;
 }
 
-double spline_progress_for_distance(Spline s, double distance) {
+double spline_progress_for_distance(Spline s, double distance, int sample_count) {
+    double sample_count_d = (double) sample_count;
+    
     double a = s.a; double b = s.b; double c = s.c;             // Todo: Does this decrease instruction count?
     double d = s.d; double e = s.e; double knot = s.knot_distance;
     
@@ -62,15 +66,15 @@ double spline_progress_for_distance(Spline s, double distance) {
     double deriv0 = spline_deriv_2(a, b, c, d, e, knot, 0);
 
     double integrand = 0;
-    double last_integrand = sqrt(1 + deriv0*deriv0) / SPLINE_NUM_SAMPLES_D;
+    double last_integrand = sqrt(1 + deriv0*deriv0) / sample_count_d;
     
     distance /= knot;
     
     int i;
-    for (i = 0; i <= SPLINE_NUM_SAMPLES_I; i = i + 1) {
-        t = i / SPLINE_NUM_SAMPLES_D;
+    for (i = 0; i <= sample_count; i = i + 1) {
+        t = i / sample_count_d;
         dydt = spline_deriv_2(a, b, c, d, e, knot, t);
-        integrand = sqrt(1 + dydt*dydt) / SPLINE_NUM_SAMPLES_D;
+        integrand = sqrt(1 + dydt*dydt) / sample_count_d;
         arc_length += (integrand + last_integrand) / 2;
         if (arc_length > distance) break;
         last_integrand = integrand;
@@ -80,7 +84,7 @@ double spline_progress_for_distance(Spline s, double distance) {
     double interpolated = t;
     if (arc_length != last_arc_length) {
         interpolated += ((distance - last_arc_length)
-            / (arc_length - last_arc_length) - 1) / SPLINE_NUM_SAMPLES_D;
+            / (arc_length - last_arc_length) - 1) / sample_count_d;
     }
     return interpolated;
 }
