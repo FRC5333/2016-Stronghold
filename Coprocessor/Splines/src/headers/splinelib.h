@@ -4,3 +4,4 @@
 
 #include "spline.h"
 #include "trajectory.h"
+#include "motion.h"

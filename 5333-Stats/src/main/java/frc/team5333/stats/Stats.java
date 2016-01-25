@@ -1,6 +1,7 @@
 package frc.team5333.stats;
 
 import jaci.openrio.toast.core.loader.annotation.Priority;
+import jaci.openrio.toast.lib.device.XboxController;
 import jaci.openrio.toast.lib.module.IterativeModule;
 
 public class Stats extends IterativeModule {
@@ -18,6 +19,6 @@ public class Stats extends IterativeModule {
     @Override
     @Priority(level = Priority.Level.LOWEST)
     public void prestart() {
-        Test.init();
+
     }
 }

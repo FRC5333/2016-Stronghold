@@ -27,4 +27,14 @@ typedef struct {
     double dt, u, v, impulse;
 } TrajectoryInfo;
 
+typedef struct {
+    Spline **saptr;
+    double **laptr;
+    double totalLength;
+    int length;
+    int path_length;
+    TrajectoryInfo info;
+    TrajectoryConfig config;
+} TrajectoryCandidate;
+
 #endif

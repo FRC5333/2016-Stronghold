@@ -1,63 +1,23 @@
 #include "splinelib.h"
 
 #include <stdlib.h>
-#include <pthread.h>
 
-typedef struct {
-    Spline *splinesptr;
-    double *length;
-    double *lengthsptr;
-    int *id;
-} targs;
-
-void *threadDistance(void *arg) {
-    targs t = *((targs *) arg);
+int trajectory_prepare_candidate(Waypoint *path, int path_length, void (*fit)(Waypoint,Waypoint,Spline*), double dt,
+        double max_velocity, double max_acceleration, double max_jerk, TrajectoryCandidate *cand) {
+    if (path_length < 2) return -1;
     
-    int id = *t.id;
-    Spline *s = &t.splinesptr[id];
-    double dist = spline_distance(s);
-    
-    *t.length += dist;
-    *t.lengthsptr = dist;
-    
-    free(t.id);
-    free(arg);
-    return NULL;
-}
-
-// Usage: 
-// int length;
-// Segment *segs = trajectory_generate(&waypoints_array, waypoints_size, fit_function_ptr, time, vel, acceleration, jerk, &length);
-// Don't forget to free the 'segs' object when you are done with it, or else the program will memory leak.
-Segment *trajectory_generate(Waypoint *path, int path_length, void (*fit)(Waypoint,Waypoint,Spline*), double dt,
-        double max_velocity, double max_acceleration, double max_jerk, int *length) {
-    if (path_length < 2) return 0;
-    
-    Spline splines[path_length - 1];
-    double splineLengths[path_length - 1];
+    Spline *splines = malloc((path_length - 1) * sizeof(Spline));
+    double *splineLengths = malloc((path_length - 1) * sizeof(double));
     double totalLength = 0;
-    
-    pthread_t pth[path_length-1];
     
     int i;
     for (i = 0; i < path_length-1; i++) {
-        // TODO: Move threaded stuff over to the post-processing of progress_for_distance
         Spline s;
         fit(path[i], path[i+1], &s);
+        double dist = spline_distance(&s);
         splines[i] = s;
-        
-        int *ida = malloc(sizeof(int));
-        *ida = i;
-        
-        targs args1 = { splines, &totalLength, &splineLengths[i], ida };
-        targs *args = malloc(sizeof(targs));
-        
-        *args = args1;
-        pthread_create(&pth[i], NULL, threadDistance, args);
-    }
-    
-    for (i = 0; i < path_length-1; i++) {
-        pthread_join(pth[i], NULL);
+        splineLengths[i] = dist;
+        totalLength += dist;
     }
     
     TrajectoryConfig config = {dt, max_velocity, max_acceleration, max_jerk, 0, path[0].angle,
@@ -65,12 +25,31 @@ Segment *trajectory_generate(Waypoint *path, int path_length, void (*fit)(Waypoi
     TrajectoryInfo info = trajectory_prepare(config);
     int trajectory_length = info.length;
     
-    Segment *segments = malloc(trajectory_length * sizeof(Segment));
-    trajectory_create(info, config, segments);
+    cand->saptr = &splines;
+    cand->laptr = &splineLengths;
+    cand->totalLength = totalLength;
+    cand->length = trajectory_length;
+    cand->path_length = path_length;
+    cand->info = info;
+    cand->config = config;
+    
+    return 0;
+}
+
+int trajectory_generate(TrajectoryCandidate *c, Segment *segments) {
+    int trajectory_length = c->length;
+    int path_length = c->path_length;
+    double totalLength = c->totalLength;
+    
+    Spline *splines = *(c->saptr);
+    double *splineLengths = *(c->laptr);
+    
+    trajectory_create(c->info, c->config, segments);
     
     int spline_i = 0;
     double spline_pos_initial, splines_complete;
     
+    int i;
     for (i = 0; i < trajectory_length; ++i) {
         double pos = segments[i].position;
 
@@ -100,6 +79,5 @@ Segment *trajectory_generate(Waypoint *path, int path_length, void (*fit)(Waypoi
         }
     }
     
-    *length = trajectory_length;
-    return segments;
+    return trajectory_length;
 }
