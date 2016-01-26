@@ -19,6 +19,5 @@ public class Stats extends IterativeModule {
     @Override
     @Priority(level = Priority.Level.LOWEST)
     public void prestart() {
-
     }
 }

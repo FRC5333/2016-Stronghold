@@ -68,7 +68,7 @@ int length = candidate.length;
 
 // Create the Segments array
 Segment seg[length];
-trajectory_generate(&cd, &seg);
+trajectory_generate(&candidate, &seg);
 ```
 
 You can also use `FIT_HERMITE_QUINTIC` for a Quintic Hermite Spline fit.
