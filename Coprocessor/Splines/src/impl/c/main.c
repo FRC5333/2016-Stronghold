@@ -11,6 +11,8 @@
 #define HOST_PORT 5808
 
 int main() {
+    setbuf(stdout, NULL);
+    
     socket_init();
     int return_code = -1;
     
