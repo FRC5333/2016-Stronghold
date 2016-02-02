@@ -2,6 +2,7 @@ package frc.team5333.core.hardware;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import frc.team5333.core.Core;
+import frc.team5333.lib.device.ADIS16448_IMU;
 import jaci.openrio.toast.lib.registry.Registrar;
 
 /**
@@ -17,6 +18,7 @@ public class IO {
 
     public static CANTalon motor_left_1, motor_left_2, motor_right_1, motor_right_2;
     public static MotorGroup drive_motors, all_motors;
+    public static ADIS16448_IMU imu_mxp;
 
     public static void init() {
         motor_left_1    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_1",   10));
@@ -26,6 +28,8 @@ public class IO {
 
         drive_motors    = new MotorGroup(motor_left_1, motor_left_2, motor_right_1, motor_right_2);
         all_motors      = new MotorGroup(drive_motors);
+
+        imu_mxp = new ADIS16448_IMU();
     }
 
     public static void setLeftMotors(double speed) {

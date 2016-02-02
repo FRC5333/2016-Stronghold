@@ -1,5 +1,6 @@
 package frc.team5333.core;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
 import frc.team5333.core.data.MatchInfo;
@@ -48,7 +49,8 @@ public class Core extends IterativeModule {
     }
 
     @Override
-    public void teleopInit() { }
+    public void teleopInit() {
+    }
 
     @Override
     public void teleopPeriodic() {
