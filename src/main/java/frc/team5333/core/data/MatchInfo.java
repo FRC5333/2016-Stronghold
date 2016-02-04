@@ -28,8 +28,8 @@ public class MatchInfo {
 
     static Persistent persistent;
 
-    static MatchType matchType;
-    static int matchNum;
+    public static MatchType matchType;
+    public static int matchNum;
 
     public static void init() {
         persistent = new Persistent(Storage.highestPriority("game/Match.json"));

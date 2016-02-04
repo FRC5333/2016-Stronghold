@@ -3,6 +3,7 @@ package frc.team5333.core.hardware;
 import edu.wpi.first.wpilibj.CANTalon;
 import frc.team5333.core.Core;
 import frc.team5333.lib.device.ADIS16448_IMU;
+import jaci.openrio.toast.core.Environment;
 import jaci.openrio.toast.lib.registry.Registrar;
 
 /**
@@ -29,7 +30,12 @@ public class IO {
         drive_motors    = new MotorGroup(motor_left_1, motor_left_2, motor_right_1, motor_right_2);
         all_motors      = new MotorGroup(drive_motors);
 
-        imu_mxp = new ADIS16448_IMU();
+        if (IMU_SUPPORTED())
+            imu_mxp = new ADIS16448_IMU();
+    }
+
+    public static boolean IMU_SUPPORTED() {
+        return Environment.isEmbedded();
     }
 
     public static void setLeftMotors(double speed) {

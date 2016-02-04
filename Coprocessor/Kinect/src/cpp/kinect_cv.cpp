@@ -5,7 +5,7 @@
 
 using namespace cv;
 
-Mat depthimg_1, depthimg_3, rgbimg_1, rgbimg_3, tempimg_1, tempimg_2, tempimg_3;
+Mat videomat, temp_1c, temp_3c;
 
 void *video_thread(void *args) {
     while(1) {
@@ -13,21 +13,18 @@ void *video_thread(void *args) {
         void *depth = depth_fetch();
         int count = kinect_video_bytecount();
     
-        // render_rgb(data, count);
+        prepare_video(data, count, videomat);
     }
 }
 
-void render_rgb(void *rgb, int bytecount) {
+void prepare_video(void *video, int bytecount, Mat video_mat) {
     if (bytecount == 1) {
-        memcpy(rgbimg_1.data, rgb, 640*480*bytecount);
-        cvtColor(rgbimg_1, rgbimg_3, CV_GRAY2BGR);
+        memcpy(temp_1c.data, video, 640*480*bytecount);
+        cvtColor(temp_1c, video_mat, CV_GRAY2RGB);
     } else {
-        memcpy(rgbimg_3.data, rgb, 640*480*bytecount);
+        memcpy(video_mat.data, video, 640*480*bytecount);
+        cvtColor(video_mat, video_mat, CV_BGR2RGB);
     }
-    
-    cvtColor(rgbimg_3, tempimg_1, CV_BGR2RGB);
-
-    imwrite("out.jpg", tempimg_2);
 }
 
 void render_text(Mat *mat, std::string str, int x, int y, double scale, int r, int g, int b) {
@@ -35,11 +32,14 @@ void render_text(Mat *mat, std::string str, int x, int y, double scale, int r, i
 }
 
 void init_cv() {
-    depthimg_1 = Mat(480, 640, CV_8UC1);
-    depthimg_3 = Mat(480, 640, CV_8UC3);
-    rgbimg_1 = Mat(480, 640, CV_8UC1);
-    rgbimg_3 = Mat(480, 640, CV_8UC3);
+    temp_1c = Mat(480, 640, CV_8UC1);
+    temp_3c = Mat(480, 640, CV_8UC3);
+    videomat = Mat(480, 640, CV_8UC3);
     
-    pthread_t listen_thread;
-    pthread_create(&listen_thread, NULL, video_thread, NULL);
+    // pthread_t listen_thread;
+    
+    // pthread_create(&listen_thread, NULL, video_thread, NULL);
+    Mat mat = imread("out.jpg", CV_LOAD_IMAGE_COLOR);
+    char *destination;
+    size_t comp_size = compressLZ4()
 }

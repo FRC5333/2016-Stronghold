@@ -37,10 +37,10 @@ int main() {
     // printf("\nHost Connected!\n");
     
     init_cv();
-    init_kinect();
+    // init_kinect();
     // kinect_video_ir();
-    printf("Kinect Ready\n");
-    start_kinect();
+    // printf("Kinect Ready\n");
+    // start_kinect();
     
     // socket_quit();
     return 0;

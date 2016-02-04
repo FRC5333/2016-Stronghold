@@ -1,12 +1,14 @@
 package frc.team5333.core;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team5333.core.commands.ShooterCommand;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.hardware.IO;
 import frc.team5333.core.teleop.TeleopController;
 import jaci.openrio.toast.core.StateTracker;
+import jaci.openrio.toast.core.command.CommandBus;
 import jaci.openrio.toast.core.loader.annotation.Priority;
 import jaci.openrio.toast.lib.log.Logger;
 import jaci.openrio.toast.lib.module.IterativeModule;
@@ -46,6 +48,8 @@ public class Core extends IterativeModule {
 
         TransientControls.init();
         StateTracker.addTicker((s) -> { TransientControls.tick(); });
+
+        CommandBus.registerCommand(new ShooterCommand());
     }
 
     @Override
