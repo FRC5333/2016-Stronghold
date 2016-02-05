@@ -48,9 +48,9 @@ public enum class ControlManager {
         if (driveMode() == DriveMode.BOTH)
             return sq(-Joy.getY(lJoy))
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(lJoy)), sq(Joy.getX(lJoy))).first
+            return calculateThrottlePair(sq(-Joy.getY(lJoy)), sq(-Joy.getX(lJoy))).first
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(rJoy)), sq(Joy.getX(rJoy))).first
+            return calculateThrottlePair(sq(-Joy.getY(rJoy)), sq(-Joy.getX(rJoy))).first
         return 0.0
     }
 
@@ -66,9 +66,9 @@ public enum class ControlManager {
         if (driveMode() == DriveMode.BOTH)
             return sq(-Joy.getY(rJoy))
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(lJoy)), sq(Joy.getX(lJoy))).second
+            return calculateThrottlePair(sq(-Joy.getY(lJoy)), sq(-Joy.getX(lJoy))).second
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(rJoy)), sq(Joy.getX(rJoy))).second
+            return calculateThrottlePair(sq(-Joy.getY(rJoy)), sq(-Joy.getX(rJoy))).second
         return 0.0
     }
 
