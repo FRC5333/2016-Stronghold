@@ -20,6 +20,10 @@ public enum class ControlManager {
         LEFT_ONLY, RIGHT_ONLY, BOTH
     }
 
+    var throttleCoefficient = 0.75
+    var throttleScale = 1.0
+    var inverted = false
+
     /**
      * Gets the DriveMode of the control system based on the triggers of the left and right joysticks.
      * This is used to determine how controls are interpreted.
@@ -37,6 +41,25 @@ public enum class ControlManager {
     }
 
     /**
+     * Do a single update. This is mostly used for setting the ThrottleScale based on the inputs on the Joystick
+     */
+    fun update() {
+        var pov = Operator.getRightJoystick().pov
+        inverted = Joy.getBumper(Operator.getRightJoystick())
+        if (pov == 0 || pov == 360)
+            throttleScale = 1.0
+        else if (pov == 90)
+            throttleScale = 0.75
+        else if (pov == 180)
+            throttleScale = 0.5
+        else if (pov == 270)
+            throttleScale = 0.25
+
+        if (inverted)
+            throttleScale = -Math.abs(throttleScale)
+    }
+
+    /**
      * Get the Left Side of the Drive Train using the current Drive Mode. In Single Stick mode,
      * This is the result of calculateThrottlePair() using the X and Y axis of the specified Joystick.
      * In Dual Stick mode, this is the Y Axis of the left stick.
@@ -48,9 +71,9 @@ public enum class ControlManager {
         if (driveMode() == DriveMode.BOTH)
             return sq(-Joy.getY(lJoy))
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(lJoy)), sq(-Joy.getX(lJoy))).first
+            return jaciDrive3(sq(-Joy.getY(lJoy)), sq(-Joy.getX(lJoy)), Joy.getTwist(lJoy)).first
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(rJoy)), sq(-Joy.getX(rJoy))).first
+            return jaciDrive3(sq(-Joy.getY(rJoy)), sq(-Joy.getX(rJoy)), Joy.getTwist(rJoy)).first
         return 0.0
     }
 
@@ -66,37 +89,42 @@ public enum class ControlManager {
         if (driveMode() == DriveMode.BOTH)
             return sq(-Joy.getY(rJoy))
         else if (driveMode() == DriveMode.LEFT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(lJoy)), sq(-Joy.getX(lJoy))).second
+            return jaciDrive3(sq(-Joy.getY(lJoy)), sq(-Joy.getX(lJoy)), Joy.getTwist(lJoy)).second
         else if (driveMode() == DriveMode.RIGHT_ONLY)
-            return calculateThrottlePair(sq(-Joy.getY(rJoy)), sq(-Joy.getX(rJoy))).second
+            return jaciDrive3(sq(-Joy.getY(rJoy)), sq(-Joy.getX(rJoy)), Joy.getTwist(rJoy)).second
         return 0.0
     }
 
     /**
      * Calculate the Left/Right sides of the Drive Train using the Throttle and Rotate values (usually
-     * X/Y Axis) of the Joystick. This is mercilessly stolen from RobotDrive's arcadeDrive() method.
+     * X/Y Axis) of the Joystick. On it's own, the X-axis has a limited maximum rotation. This makes it more accurate
+     * in small amounts, but adding the twist of the joystick to this equation enables a fast turn.
+     *
+     * This is called the Jaci drive because apparently I'm an egotistical prick
      */
-    internal fun calculateThrottlePair(throttle: Double, rotate: Double): Pair<Double, Double> {
+    internal fun jaciDrive3(throttle: Double, rotate: Double, twist: Double): Pair<Double, Double> {
+        var adjustedRotation = (rotate * throttleCoefficient) + (rotate * twist * twist * (1 - throttleCoefficient))
+
         var left = 0.0
         var right = 0.0
         if (throttle > 0.0) {
-            if (rotate > 0.0) {
-                left = throttle - rotate
-                right = Math.max(throttle, rotate);
+            if (adjustedRotation > 0.0) {
+                left = throttle - adjustedRotation
+                right = Math.max(throttle, adjustedRotation);
             } else {
-                left = Math.max(throttle, -rotate);
-                right = throttle + rotate;
+                left = Math.max(throttle, -adjustedRotation);
+                right = throttle + adjustedRotation;
             }
         } else {
-            if (rotate > 0.0) {
-                left = -Math.max(-throttle, rotate);
-                right = throttle + rotate
+            if (adjustedRotation > 0.0) {
+                left = -Math.max(-throttle, adjustedRotation);
+                right = throttle + adjustedRotation
             } else {
-                left = throttle - rotate;
-                right = -Math.max(-throttle, -rotate);
+                left = throttle - adjustedRotation;
+                right = -Math.max(-throttle, -adjustedRotation);
             }
         }
-        return Pair(left, right)
+        return Pair(left * throttleScale, right * throttleScale)
     }
 
     /**
