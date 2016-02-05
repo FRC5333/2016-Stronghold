@@ -1,7 +1,7 @@
 package frc.team5333.stats.serializers;
 
 import frc.team5333.core.data.MatchInfo;
-import frc.team5333.core.events.ShooterEvent;
+import frc.team5333.core.events.ShootEvent;
 import frc.team5333.core.systems.ShooterSystem;
 import frc.team5333.lib.events.EventBus;
 import frc.team5333.lib.events.EventListener;
@@ -9,7 +9,6 @@ import frc.team5333.lib.events.EventPriority;
 import jaci.openrio.toast.core.Toast;
 import jaci.openrio.toast.core.io.Storage;
 import jaci.openrio.toast.core.thread.Async;
-import kotlin.Pair;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,11 +17,11 @@ import java.io.IOException;
 public class ShooterSerializer {
 
     public static void init() {
-        EventBus.MECHANISMS.register(ShooterSerializer.class);
+        EventBus.INSTANCE.register(ShooterSerializer.class);
     }
 
     @EventListener(priority = EventPriority.LOWEST)
-    public static void trigger(ShooterEvent event) {
+    public static void trigger(ShootEvent event) {
         double timestamp = Toast.getToast().station().getMatchTime();
         ShooterSystem.ShooterTrajectory traj = event.getTrajectory();
         Async.schedule(() -> {

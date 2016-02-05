@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public enum EventBus {
-    MECHANISMS;
+    INSTANCE;
 
     private ArrayList<Object> listeners = new ArrayList<Object>();
 

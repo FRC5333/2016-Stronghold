@@ -1,5 +1,7 @@
 package frc.team5333.core.teleop
 
+import frc.team5333.core.events.StrategyEvent
+import frc.team5333.lib.events.EventBus
 import jaci.openrio.toast.lib.state.RobotState
 
 /**
@@ -15,6 +17,7 @@ enum class TeleopController {
     var activeStrategy: TeleopStrategy = StrategyOperator()
     set(value) {
         activeStrategy.onDisable()
+        EventBus.INSTANCE.raiseEvent(StrategyEvent.StrategyChangeEvent(value, activeStrategy))
         value.onEnable()
     }
 
