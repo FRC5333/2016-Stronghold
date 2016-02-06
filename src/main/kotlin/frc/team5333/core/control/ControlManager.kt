@@ -20,7 +20,7 @@ public enum class ControlManager {
         LEFT_ONLY, RIGHT_ONLY, BOTH
     }
 
-    var throttleCoefficient = 0.75
+    var throttleCoefficient = 0.5
     var throttleScale = 1.0
     var inverted = false
 
@@ -54,9 +54,6 @@ public enum class ControlManager {
             throttleScale = 0.5
         else if (pov == 270)
             throttleScale = 0.25
-
-        if (inverted)
-            throttleScale = -Math.abs(throttleScale)
     }
 
     /**
@@ -104,24 +101,26 @@ public enum class ControlManager {
      */
     internal fun jaciDrive3(throttle: Double, rotate: Double, twist: Double): Pair<Double, Double> {
         var adjustedRotation = (rotate * throttleCoefficient) + (rotate * twist * twist * (1 - throttleCoefficient))
+        var adjustedThrottle = throttle
+        if (inverted) adjustedThrottle *= -1
 
         var left = 0.0
         var right = 0.0
-        if (throttle > 0.0) {
+        if (adjustedThrottle > 0.0) {
             if (adjustedRotation > 0.0) {
-                left = throttle - adjustedRotation
-                right = Math.max(throttle, adjustedRotation);
+                left = adjustedThrottle - adjustedRotation
+                right = Math.max(adjustedThrottle, adjustedRotation);
             } else {
-                left = Math.max(throttle, -adjustedRotation);
-                right = throttle + adjustedRotation;
+                left = Math.max(adjustedThrottle, -adjustedRotation);
+                right = adjustedThrottle + adjustedRotation;
             }
         } else {
             if (adjustedRotation > 0.0) {
-                left = -Math.max(-throttle, adjustedRotation);
-                right = throttle + adjustedRotation
+                left = -Math.max(-adjustedThrottle, adjustedRotation);
+                right = adjustedThrottle + adjustedRotation
             } else {
-                left = throttle - adjustedRotation;
-                right = -Math.max(-throttle, -adjustedRotation);
+                left = adjustedThrottle - adjustedRotation;
+                right = -Math.max(-adjustedThrottle, -adjustedRotation);
             }
         }
         return Pair(left * throttleScale, right * throttleScale)
