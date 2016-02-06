@@ -82,10 +82,21 @@ enum class ShooterSystem {
         return y
     }
 
+    fun calculate_time_at_x(launchVelocity: Double, launchAngle: Double, x: Double): Double {
+        var time = x / (launchVelocity * Math.cos(launchAngle))
+        return time
+    }
+
     /**
      * Calculate the RPM of each Flywheel in the Shooting Mechanism, given the desired Launch Velocity in Meters per Second
      */
     fun calculate_rpm(launchVelocity: Double): Double = launchVelocity / ((flywheel_diameter / 2) * 1.0472 * flywheel_count)
+
+    fun calculate_velocities_at_time(launchVelocity: Double, launchAngle: Double, time: Double): Pair<Double, Double> {
+        var xv = Math.cos(launchAngle) * launchVelocity
+        var yv = Math.sin(launchAngle) * launchVelocity - gravity * time
+        return Pair(xv, yv)
+    }
 
     // TODO x velocity and y velocity based on drag
 
@@ -95,9 +106,11 @@ enum class ShooterSystem {
      */
     class ShooterTrajectory(var x_distance: Double, var y_distance: Double, var launch_angle: Double) {
         var vel = ShooterSystem.INSTANCE.calculate_launch_velocity(x_distance, y_distance, launch_angle)
+        var time = ShooterSystem.INSTANCE.calculate_time(x_distance, y_distance, launch_angle)
         var range = 0.0..x_distance
 
         fun it(step: Double) = Range(0.0, x_distance, step)
+        fun itTime(step: Double) = Range(0.0, time, step)
         fun y_at(x: Double): Double = INSTANCE.calculate_y_at_x(vel, launch_angle, x)
 
         fun shoot() = EventBus.INSTANCE.raiseEvent(ShootEvent(this))

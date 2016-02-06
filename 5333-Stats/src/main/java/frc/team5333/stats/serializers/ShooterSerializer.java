@@ -9,6 +9,7 @@ import frc.team5333.lib.events.EventPriority;
 import jaci.openrio.toast.core.Toast;
 import jaci.openrio.toast.core.io.Storage;
 import jaci.openrio.toast.core.thread.Async;
+import kotlin.Pair;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -31,12 +32,14 @@ public class ShooterSerializer {
                 file.getParentFile().mkdirs();
 
                 FileWriter writer = new FileWriter(file);
-                writer.write("x,y\n");
+                writer.write("x,y,xv,yv\n");
 
                 traj.it(0.01).forEach((x) -> {
+                    double time = ShooterSystem.INSTANCE.calculate_time_at_x(traj.getVel(), traj.getLaunch_angle(), x);
+                    Pair<Double, Double> velocities = ShooterSystem.INSTANCE.calculate_velocities_at_time(traj.getVel(), traj.getLaunch_angle(), time);
                     double y = traj.y_at(x);
                     try {
-                        writer.write(x + "," + y + "\n");
+                        writer.write(x + "," + y + "," + velocities.getFirst() + "," + velocities.getSecond() + "\n");
                     } catch (IOException e) { }
                 });
                 writer.close();
