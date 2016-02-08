@@ -113,8 +113,7 @@ public class WebHandler {
     }
 
     public static String resource(String name) {
-//        try(BufferedReader reader = new BufferedReader(new InputStreamReader(WebHandler.class.getResourceAsStream("/5333/webui/" + name)))) {
-        try(BufferedReader reader = new BufferedReader(new FileReader("D:\\Programming\\FRC\\5333\\2016\\2016-Stronghold\\5333-WebUI\\src\\main\\resources\\5333\\webui\\" + name))) {
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(WebHandler.class.getResourceAsStream("/5333/webui/" + name)))) {
             String ln;
             String total = "";
             while ((ln = reader.readLine()) != null) {
@@ -128,7 +127,7 @@ public class WebHandler {
     }
 
     public static byte[] resourceRaw(String name) {
-        try(InputStream in = new FileInputStream("D:\\Programming\\FRC\\5333\\2016\\2016-Stronghold\\5333-WebUI\\src\\main\\resources\\5333\\webui\\" + name)) {
+        try(InputStream in = WebHandler.class.getResourceAsStream("/5333/webui/" + name)) {
             byte[] buffer = new byte[8192];
             int bytesRead;
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -142,8 +141,7 @@ public class WebHandler {
     }
 
     public static String applyTemplate(String name, HashMap<String, Object> values) {
-        if (true) {
-//        if (!templates.containsKey(name)) {
+        if (!templates.containsKey(name)) {
             String path = "templates/" + name;
             try {
                 templates.put(name, getHandlebars().compileInline(resource(path)));
