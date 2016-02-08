@@ -1,0 +1,21 @@
+{{#include t="include/base.html" title="Home" }}    
+    <div class="container">
+        
+        <div class="row">
+            <div class="column">
+                {{import t="components/match_selector.html"}}
+            </div>
+            <div class="column"> </div>
+        </div>
+        
+        <div class="row">
+            {{import t="components/defense_selector.html"}}
+        </div>
+        
+        <br>
+        <div class="row">
+            {{import t="components/logger.html"}}
+        </div>
+        
+    </div>
+{{/include}}

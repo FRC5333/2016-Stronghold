@@ -16,9 +16,9 @@ class DriveAPI : API {
     override fun init() { }
 
     override fun handle(request: Request?, response: Response?): Any? {
-        var mode = ControlManager.INSTANCE.driveMode()
-        var strat = TeleopController.INSTANCE.activeStrategy
-        var map: HashMap<String, Any> = hashMapOf(
+        var mode = ControlManager.INSTANCE.driveMode().name
+        var strat = TeleopController.INSTANCE.activeStrategy.javaClass.canonicalName
+        var map: HashMap<String, String> = hashMapOf(
                 Pair("drive_mode", mode),
                 Pair("strategy", strat)
         )

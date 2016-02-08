@@ -1,0 +1,12 @@
+<div class="defense_select" data-defense="{{category}}" data-active="{{defense}}">
+    <div class="defense_img">
+        <img class="img" src="/png/{{defense}}_{{category}}.png" data-active-img="{{defense}}">
+    </div>
+    <div class="defense_inner">
+        <br>
+        <a class="button button-outline defense_button swap_left" onclick="swap_left(this)"> < </a>
+        <a class="button button-outline defense_button swap_up" onclick="switch_defense(this, '{{category}}')"> ^ </a>
+        <a class="button button-outline defense_button swap_right" onclick="swap_right(this)"> > </a>
+    </div>
+</div>
+

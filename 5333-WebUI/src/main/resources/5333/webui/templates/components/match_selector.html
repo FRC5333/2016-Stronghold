@@ -1,0 +1,22 @@
+<script type="text/javascript" src="/scripts/matches.js"> </script>
+
+<form id="match_form" action="#" onsubmit="return submit_match()">
+    <div class="row">
+        <div class="column">
+            <label for="matchTypeField">Match Type</label>
+            <input type="radio" name="matchType" value="Quals" id="match_quals"> Qualifications </input><br>
+            <input type="radio" name="matchType" value="Quarter" id="match_quarter"> Quarter Finals </input><br>
+            <input type="radio" name="matchType" value="Semi" id="match_semi"> Semi Finals </input><br>
+            <input type="radio" name="matchType" value="Final" id="match_finals"> Finals </input><br>
+            <script type="text/javascript">
+                match_{{match_type}}.checked = true
+            </script>
+        </div>
+        <div class="column">
+            <label for="matchNumberField">Match Number</label>
+            <input type="number" name="matchNumber" placeholder="0" value="{{match_number}}" id="qualsField">
+            
+            <input class="button-primary fade" type="submit" value="Update Match" style="width: 100%">
+        </div>
+    </div>
+</form>

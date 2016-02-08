@@ -1,0 +1,22 @@
+<script type="text/javascript" src="/scripts/defenses.js"> </script>
+<div>
+    <label> Defense Selection </label>
+    <div>
+        <div class="defense_select" data-defense="lowbar">
+            <div class="defense_img">
+                <img class="img" height="100" src="/png/lowbar.png">
+            </div>
+            <div class="defense_inner">
+                <br>
+                <a class="button" onclick="submit_defenses()"> Update Defenses </a>
+            </div>
+        </div>
+        
+        <div class="defense_sorter" id="defense_sorter">
+            {{ import t="components/defense_selector_category.html" defense="cheval" category="a"}}
+            {{ import t="components/defense_selector_category.html" defense="moat" category="b"}}
+            {{ import t="components/defense_selector_category.html" defense="drawbridge" category="c"}}
+            {{ import t="components/defense_selector_category.html" defense="rock" category="d"}}
+        </div>
+    </div>
+</div>

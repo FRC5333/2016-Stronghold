@@ -75,7 +75,7 @@ dependencies {
     runtime  project(path: ':5333-Stats', configuration: 'compile')
     runtime  project(path: ':5333-WebUI', configuration: 'compile')
     
-    // The main module has some sources written in Kotlin. 
+    // The main and WebUI modules have some sources written in Kotlin. 
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
     buildLibs 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
 }
@@ -97,9 +97,12 @@ project(":5333-Stats") {
 project(":5333-WebUI") {
     archivesBaseName = "5333-WebUI"
     
-    // WebUI Dependencies (currently Spark-Java)
+    // WebUI Dependencies (currently Spark-Java and Handlebars.java)
     dependencies {
         compile group: 'com.sparkjava', name: 'spark-core', version: '2.3'
         buildLibs group: 'com.sparkjava', name: 'spark-core', version: '2.3'
+        
+        compile 'com.github.jknack:handlebars:+'
+        buildLibs 'com.github.jknack:handlebars:+'
     }
 }

@@ -1,6 +1,5 @@
 package frc.team5333.core;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team5333.core.commands.ShooterCommand;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
@@ -44,7 +43,7 @@ public class Core extends IterativeModule {
         Operator.init();
         IO.init();
 
-        MatchInfo.init();
+        MatchInfo.load();
 
         TransientControls.init();
         StateTracker.addTicker((s) -> { TransientControls.tick(); });

@@ -1,0 +1,93 @@
+body {
+    color: #606c76;
+    background-color: #f4f5f6;
+}
+
+.navigation {
+    background-color: #f4f5f6;
+    border-bottom: .1rem solid #d1d1d1;
+    display: block;
+    height: 5.2rem;
+    width: 100%;
+}
+
+.navigation .container {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    
+    line-height: 6.5rem;
+}
+
+.container {
+    padding-top: 7.5rem;
+    padding-bottom: 7.5rem;
+    margin-bottom: 0;
+    max-width: 80.0rem;
+}
+
+.container.body {
+    margin-top: 10px;
+}
+
+.fade {
+   opacity: 1;
+   transition: all .2s ease-out;
+   -moz-transition: all .2s ease-out;
+   -webkit-transition: all .2s ease-out;
+}
+
+.button-primary:hover {
+    background-color: #faf5ff !important;
+    color: #606c76 !important;
+}
+
+#matchTypeField {
+    border: 1px solid black;
+}
+
+.loggerField {
+    resize: none;
+    height: 30rem;
+    font-size: 12px;
+}
+
+.defense_select {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #606c76;
+    border-radius: 5px;
+    width: 19.5%;
+    height: 200px;
+}
+
+.defense_select[data-defense="lowbar"] {
+    background-color: #FFEEEE;
+}
+
+.defense_sorter {
+    display: inline;
+}
+
+.defense_img {
+    display: block;
+    height: 60%;
+}
+
+.defense_img img {
+    margin: auto;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.defense_inner {
+    display: table;
+    margin: auto;
+    vertical-align: bottom;
+}
+
+.defense_button {
+    padding: 0 2rem !important;
+    margin-left: 5px;
+    margin-bottom: 0;
+}

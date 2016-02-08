@@ -31,7 +31,7 @@ public class MatchInfo {
     public static MatchType matchType;
     public static int matchNum;
 
-    public static void init() {
+    public static void load() {
         persistent = new Persistent(Storage.highestPriority("game/Match.json"));
         if (!persistent.valueExists("type") || !persistent.valueExists("num")) {
             Core.logger.info("[MATCH] No persistent match data file! Creating a new one!");
@@ -44,6 +44,18 @@ public class MatchInfo {
         matchNum = persistent.getInteger("num");
 
         Core.logger.info("[MATCH] Current Match: " + matchType.getShortName() + " #" + matchNum);
+    }
+
+    public static void set(String type, int num) {
+        for (MatchType ty : MatchType.values())
+            if (ty.getShortName().equalsIgnoreCase(type)) matchType = ty;
+        matchNum = num;
+
+        persistent.setString("type", matchType.name());
+        persistent.setNumber("num", num);
+        persistent.save();
+
+        load();
     }
 
 }
