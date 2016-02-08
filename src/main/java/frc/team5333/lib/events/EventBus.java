@@ -1,5 +1,8 @@
 package frc.team5333.lib.events;
 
+import frc.team5333.core.Core;
+import jaci.openrio.toast.core.thread.Async;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -7,7 +10,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Future;
 
+/**
+ * The EventBus provides a listener system for listening to events. Events are raised, and then any available
+ * listeners are triggered with an instance of the event. The event may be cancelled, at which point the pipeline
+ * stops unless the EventListener is specifies that is wants to listen to cancelled events. EventListeners may
+ * have a priority, in which the execution order of events is determined.
+ *
+ * @author Jaci
+ */
 public enum EventBus {
     INSTANCE;
 
@@ -73,21 +85,37 @@ public enum EventBus {
                 try {
                     raise(event);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Core.logger.exception(e);
                 }
             }
         }.start();
     }
 
     /**
-     * Raise an event to all available listeners
+     * Raise an event on the Async Thread Pool. This will execute when resources become available
+     * @param event
      */
-    public void raiseEvent(final EventBase event) {
+    public void raiseEventAsync(final EventBase event) {
+        Async.schedule(() -> {
+            try {
+                raise(event);
+            } catch (Exception e) {
+                Core.logger.exception(e);
+            }
+        });
+    }
+
+    /**
+     * Raise an event to all available listeners
+     * @return false if the event was cancelled
+     */
+    public boolean raiseEvent(final EventBase event) {
         try {
             raise(event);
         } catch (Exception e) {
-            e.printStackTrace();
+            Core.logger.exception(e);
         }
+        return !event.isCancelled();
     }
 
     private void raise(final EventBase event) throws IllegalAccessException, InstantiationException, InvocationTargetException {
