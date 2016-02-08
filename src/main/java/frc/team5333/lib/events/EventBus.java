@@ -152,6 +152,8 @@ public enum EventBus {
 
             Collections.sort(valid, comp);
 
+            event.raiseTime = System.currentTimeMillis();
+            event.completed = false;
             for (Method method : valid) {
                 EventListener annotation = method.getAnnotation(EventListener.class);
 
@@ -161,7 +163,8 @@ public enum EventBus {
                 } else
                     method.invoke(currentHandler, event);
             }
-
+            event.raiseEndTime = System.currentTimeMillis();
+            event.completed = true;
         }
     }
 

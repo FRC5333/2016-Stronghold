@@ -9,8 +9,8 @@ buildscript {
     }
   }
   dependencies {
-    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+', classifier: 'Toast'
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:+'
+    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '4.3.0', classifier: 'Toast'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4589'
   }
 }
 
@@ -19,12 +19,11 @@ plugins {
     id 'eclipse'
 }
 
-apply plugin: 'kotlin'
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'kotlin'
     apply plugin: 'GradleRIO'
     
     configurations {
@@ -47,7 +46,7 @@ allprojects {
     
     // Toast is kind of important, don't you think?
     dependencies {
-        compile group: 'jaci.openrio.toast', name: 'Toast', version: '+'
+        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.4'
     }
     
     // The buildLibs configuration makes it easy to include libraries in the final .jar for any project.
@@ -77,8 +76,8 @@ dependencies {
     runtime  project(path: ':5333-WebUI', configuration: 'compile')
     
     // The main module has some sources written in Kotlin. 
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:+'
-    buildLibs 'org.jetbrains.kotlin:kotlin-stdlib:+'
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
+    buildLibs 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
 }
 
 // The stats module is used to record match data over time thanks to the BlackBox module. This lets us view
@@ -88,8 +87,8 @@ project(":5333-Stats") {
     
     // Stat Dependencies (BlackBox). Assemble it since it's a dependency anyway
     dependencies {
-        compile group: 'jaci.openrio.modules', name: 'BlackBox', version: '+'
-        buildLibs group: 'jaci.openrio.modules', name: 'BlackBox', version: '+'
+        compile group: 'jaci.openrio.modules', name: 'BlackBox', version: '0.1.0'
+        buildLibs group: 'jaci.openrio.modules', name: 'BlackBox', version: '0.1.0'
     }
 }
 

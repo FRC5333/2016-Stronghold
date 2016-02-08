@@ -3,6 +3,9 @@ package frc.team5333.lib.events;
 public class EventBase {
 
     private boolean isCancelled;
+    public long raiseTime;
+    public long raiseEndTime;
+    public boolean completed;
 
     /**
      * Is this event cancelled?
