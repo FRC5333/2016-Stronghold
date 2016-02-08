@@ -5,6 +5,8 @@ import frc.team5333.webui.WebHandler
 import spark.Request
 import spark.Response
 import java.util.*
+import kotlin.collections.hashMapOf
+import kotlin.text.toLowerCase
 
 class IndexController : Controller{
     override fun address(): String = "/"
