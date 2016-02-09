@@ -4,15 +4,30 @@ import frc.team5333.core.Core
 import frc.team5333.core.network.NetworkHub
 import kotlin.collections.forEach
 import kotlin.collections.map
+import kotlin.collections.toHashSet
+import kotlin.collections.toTypedArray
 
 enum class SplineSystem {
     INSTANCE;
 
     class Waypoint(var x:Double, var y:Double, var angle:Double)
-    class Segment(var x:Double, var y:Double, var position:Double, var velocity:Double, var acceleration:Double, var jerk:Double, var heading:Double);
-    class Spline(segments: List<Segment>)
+    class Segment(var x:Double, var y:Double, var position:Double, var velocity:Double, var acceleration:Double, var jerk:Double, var heading:Double) {
+        constructor(seg: Segment) : this(seg.x, seg.y, seg.position, seg.velocity, seg.acceleration, seg.jerk, seg.heading)
+    }
 
-    fun generateCentralSpline(vararg points: Waypoint): Spline {
+    class Trajectory(var segments: Array<Segment>) {
+        fun copy(): Trajectory {
+            var newTraj = Trajectory(segments)
+            newTraj.segments = newTraj.segments.map { Segment(it) }.toTypedArray()
+            return newTraj
+        }
+
+        fun getLength(): Int = segments.size
+        fun get(i: Int): Segment = segments.get(i)
+        fun set(i: Int, seg: Segment) = segments.set(i, seg)
+    }
+
+    fun generateCentralSpline(vararg points: Waypoint): Trajectory {
         writeToCoprocessor(Core.config.getFloat("motion.max_velocity", 10.0f),
                 Core.config.getFloat("motion.max_acceleration", 15.0f), points)
         return readFromCoprocessor()
@@ -35,7 +50,7 @@ enum class SplineSystem {
         }
     }
 
-    fun readFromCoprocessor(): Spline {
+    fun readFromCoprocessor(): Trajectory {
         var hub = NetworkHub.INSTANCE
         var sock = NetworkHub.PROCESSORS.SPLINES.active!!
         var inp = sock.inputStream
@@ -59,9 +74,47 @@ enum class SplineSystem {
                     segments.set(i, Segment(x, y, pos, vel, acc, jerk, head))
                 }
 
-                return Spline(segments.map { it!! })
+                return Trajectory(segments.map { it!! }.toTypedArray())
             }
         }
+    }
+
+    fun createTrajectoryPair(original: Trajectory, width: Double): Pair<Trajectory, Trajectory> {
+        var out = Pair(original.copy(), original.copy())
+        var w = width / 2
+
+        for (i in 0..original.getLength() - 1) {
+            var seg = original.get(i)
+            var ca = Math.cos(seg.heading)
+            var sa = Math.sin(seg.heading)
+
+            var seg1 = out.first.get(i)
+            seg1.x = seg.x - (w * sa)
+            seg1.y = seg.y + (w * ca)
+
+            if (i > 0) {
+                var last = out.first.get(i - 1)
+                var distance = Math.sqrt((seg1.x - last.x) * (seg1.x - last.x) + (seg1.y - last.y) * (seg1.y - last.y))
+                seg1.position = last.position + distance
+                seg1.velocity = distance / 0.01
+                seg1.acceleration = (seg1.velocity - last.velocity) / 0.01
+                seg1.jerk = (seg1.acceleration - last.acceleration) / 0.01
+            }
+
+            var seg2 = out.second.get(i)
+            seg2.x = seg.x + (w * sa)
+            seg2.y = seg.y - (w * ca)
+
+            if (i > 0) {
+                var last = out.second.get(i - 1)
+                var distance = Math.sqrt((seg2.x - last.x) * (seg2.x - last.x) + (seg2.y - last.y) * (seg2.y - last.y))
+                seg2.position = last.position + distance
+                seg2.velocity = distance / 0.01
+                seg2.acceleration = (seg2.velocity - last.velocity) / 0.01
+                seg2.jerk = (seg2.acceleration - last.acceleration) / 0.01
+            }
+        }
+        return out
     }
 
 }
