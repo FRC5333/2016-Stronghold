@@ -27,7 +27,11 @@ enum class SplineSystem {
         fun set(i: Int, seg: Segment) = segments.set(i, seg)
     }
 
-    fun generateCentralSpline(vararg points: Waypoint): Trajectory {
+    fun generateTrajectoryPairs(points: Array<out Waypoint>): Pair<Trajectory, Trajectory> {
+        return createTrajectoryPair(generateCentralTrajectory(points), Core.config.getDouble("motion.wheelbase_width", 10.0))
+    }
+
+    fun generateCentralTrajectory(points: Array<out Waypoint>): Trajectory {
         writeToCoprocessor(Core.config.getFloat("motion.max_velocity", 10.0f),
                 Core.config.getFloat("motion.max_acceleration", 15.0f), points)
         return readFromCoprocessor()
