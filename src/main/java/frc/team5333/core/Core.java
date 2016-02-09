@@ -1,10 +1,12 @@
 package frc.team5333.core;
 
+import frc.team5333.core.commands.CommandClearConfigs;
 import frc.team5333.core.commands.ShooterCommand;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.hardware.IO;
+import frc.team5333.core.network.NetworkHub;
 import frc.team5333.core.teleop.TeleopController;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
@@ -40,6 +42,8 @@ public class Core extends IterativeModule {
         logger = new Logger("5333-Stronghold", Logger.ATTR_DEFAULT);
         config = new ModuleConfig("5333-Stronghold");
 
+        NetworkHub.INSTANCE.start();
+
         Operator.init();
         IO.init();
 
@@ -49,6 +53,7 @@ public class Core extends IterativeModule {
         StateTracker.addTicker((s) -> { TransientControls.tick(); });
 
         CommandBus.registerCommand(new ShooterCommand());
+        CommandBus.registerCommand(new CommandClearConfigs());
     }
 
     @Override
