@@ -67,7 +67,7 @@ enum class NetworkHub {
         socket.inputStream.read(ba, 0, 6)
         var s = ba.toString("ASCII")
 
-        var proc = PROCESSORS.values.filter {
+        var proc = PROCESSORS.values().filter {
             it.abbrev.toLowerCase().equals(s.toLowerCase())
         }[0]
 
