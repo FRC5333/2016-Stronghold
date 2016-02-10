@@ -89,7 +89,7 @@ int main() {
             send(host_socket, buf, 4, 0);
             
             FILE *f = fopen("__lock.csv", "w");
-            fprintf(f, "x,y\n");	           // This line is required, but I'm not sure why.  
+            fprintf(f, "x,y\n");     // This line is required, but I'm not sure why.  
             
             for (i = 0; i < length; i++) {
                 Segment s = seg[i];
