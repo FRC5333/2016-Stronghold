@@ -9,7 +9,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '4.3.1', classifier: 'Toast'
+    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '4.3.3', classifier: 'Toast'
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4589'
   }
 }
@@ -46,7 +46,7 @@ allprojects {
     
     // Toast is kind of important, don't you think?
     dependencies {
-        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.5'
+        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.6'
     }
     
     // The buildLibs configuration makes it easy to include libraries in the final .jar for any project.
