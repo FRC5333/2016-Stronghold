@@ -46,7 +46,7 @@ allprojects {
     
     // Toast is kind of important, don't you think?
     dependencies {
-        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.4'
+        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.5'
     }
     
     // The buildLibs configuration makes it easy to include libraries in the final .jar for any project.
@@ -87,8 +87,8 @@ project(":5333-Stats") {
     
     // Stat Dependencies (BlackBox). Assemble it since it's a dependency anyway
     dependencies {
-        compile group: 'jaci.openrio.modules', name: 'BlackBox', version: '0.1.0'
-        buildLibs group: 'jaci.openrio.modules', name: 'BlackBox', version: '0.1.0'
+        compile group: 'jaci.openrio.modules', name: 'BlackBox', version: '0.1.1'
+        buildLibs group: 'jaci.openrio.modules', name: 'BlackBox', version: '0.1.1'
     }
 }
 

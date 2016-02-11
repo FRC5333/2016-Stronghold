@@ -5,9 +5,11 @@ import frc.team5333.core.commands.ShooterCommand;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
 import frc.team5333.core.data.MatchInfo;
+import frc.team5333.core.events.StateChangeEvent;
 import frc.team5333.core.hardware.IO;
 import frc.team5333.core.network.NetworkHub;
 import frc.team5333.core.teleop.TeleopController;
+import frc.team5333.lib.events.EventBus;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
 import jaci.openrio.toast.core.loader.annotation.Priority;
@@ -51,6 +53,7 @@ public class Core extends IterativeModule {
 
         TransientControls.init();
         StateTracker.addTicker((s) -> { TransientControls.tick(); });
+        StateTracker.addTransition((o,n) -> { EventBus.INSTANCE.raiseEvent(new StateChangeEvent(o,n)); });
 
         CommandBus.registerCommand(new ShooterCommand());
         CommandBus.registerCommand(new CommandClearConfigs());

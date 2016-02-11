@@ -1,6 +1,7 @@
 package frc.team5333.lib.events;
 
 import frc.team5333.core.Core;
+import jaci.openrio.toast.core.Toast;
 import jaci.openrio.toast.core.thread.Async;
 
 import java.lang.reflect.InvocationTargetException;
@@ -56,7 +57,6 @@ public enum EventBus {
 
             if (currClass == type)
                 listeners.remove(curr);
-
         }
     }
 
@@ -79,7 +79,7 @@ public enum EventBus {
     /**
      * Raise an event to all the available listeners in a new thread
      */
-    public void raiseEventConcurrent(final EventBase event) {
+    public EventBase raiseEventConcurrent(final EventBase event) {
         new Thread() {
             public void run() {
                 try {
@@ -89,13 +89,14 @@ public enum EventBus {
                 }
             }
         }.start();
+        return event;
     }
 
     /**
      * Raise an event on the Async Thread Pool. This will execute when resources become available
      * @param event
      */
-    public void raiseEventAsync(final EventBase event) {
+    public EventBase raiseEventAsync(final EventBase event) {
         Async.schedule(() -> {
             try {
                 raise(event);
@@ -103,19 +104,20 @@ public enum EventBus {
                 Core.logger.exception(e);
             }
         });
+        return event;
     }
 
     /**
      * Raise an event to all available listeners
      * @return false if the event was cancelled
      */
-    public boolean raiseEvent(final EventBase event) {
+    public EventBase raiseEvent(final EventBase event) {
         try {
             raise(event);
         } catch (Exception e) {
             Core.logger.exception(e);
         }
-        return !event.isCancelled();
+        return event;
     }
 
     private void raise(final EventBase event) throws IllegalAccessException, InstantiationException, InvocationTargetException {
@@ -181,6 +183,7 @@ public enum EventBus {
             Collections.sort(valid, comp);
 
             event.raiseTime = System.currentTimeMillis();
+            event.matchTimeStart = Toast.getToast().station().getMatchTime();
             event.completed = false;
             for (Method method : valid) {
                 EventListener annotation = method.getAnnotation(EventListener.class);
@@ -193,6 +196,7 @@ public enum EventBus {
             }
             event.raiseEndTime = System.currentTimeMillis();
             event.completed = true;
+            event.completeDispatch();
         }
     }
 
