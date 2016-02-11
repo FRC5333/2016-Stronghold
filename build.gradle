@@ -9,7 +9,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '4.3.0', classifier: 'Toast'
+    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '4.3.1', classifier: 'Toast'
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4589'
   }
 }
