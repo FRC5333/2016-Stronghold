@@ -2,7 +2,7 @@ package frc.team5333.webui.api
 
 import com.grack.nanojson.JsonObject
 import frc.team5333.core.control.ControlManager
-import frc.team5333.core.teleop.TeleopController
+import frc.team5333.core.control.strategy.StrategyController
 import frc.team5333.webui.WebHandler
 import spark.Request
 import spark.Response
@@ -17,7 +17,7 @@ class DriveAPI : API {
 
     override fun handle(request: Request?, response: Response?): Any? {
         var mode = ControlManager.INSTANCE.driveMode().name
-        var strat = TeleopController.INSTANCE.activeStrategy.javaClass.canonicalName
+        var strat = StrategyController.INSTANCE.activeStrategy.javaClass.canonicalName
         var map: HashMap<String, String> = hashMapOf(
                 Pair("drive_mode", mode),
                 Pair("strategy", strat)

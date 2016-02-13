@@ -2,13 +2,16 @@ package frc.team5333.core;
 
 import frc.team5333.core.commands.CommandClearConfigs;
 import frc.team5333.core.commands.ShooterCommand;
+import frc.team5333.core.control.ControlManager;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
+import frc.team5333.core.control.loops.ControlLoopManager;
+import frc.team5333.core.control.strategy.StrategyController;
+import frc.team5333.core.control.strategy.StrategyOperator;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.events.StateChangeEvent;
 import frc.team5333.core.hardware.IO;
 import frc.team5333.core.network.NetworkHub;
-import frc.team5333.core.teleop.TeleopController;
 import frc.team5333.lib.events.EventBus;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
@@ -49,6 +52,8 @@ public class Core extends IterativeModule {
         Operator.init();
         IO.init();
 
+        ControlLoopManager.init();
+
         MatchInfo.load();
 
         TransientControls.init();
@@ -60,12 +65,18 @@ public class Core extends IterativeModule {
     }
 
     @Override
+    public void autonomousPeriodic() {
+        StrategyController.INSTANCE.tickSlow();
+    }
+
+    @Override
     public void teleopInit() {
+        StrategyController.INSTANCE.setStrategy(new StrategyOperator());
     }
 
     @Override
     public void teleopPeriodic() {
-        TeleopController.INSTANCE.tick();
+        StrategyController.INSTANCE.tickSlow();
     }
 
 }

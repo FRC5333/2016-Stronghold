@@ -7,6 +7,15 @@ import kotlin.collections.map
 import kotlin.collections.toHashSet
 import kotlin.collections.toTypedArray
 
+/**
+ * Spline and Motion Profiling generation subsystem. All values are in Metric Units unless otherwise stated. Not your
+ * silly 'Freedom Units' like feet, inches and dick size.
+ *
+ * Motion Profiling is a way for the Robot to accurately move from point a to point b in a smooth, nice motion using
+ * spline fitting. This means our robot cha chas real smooth
+ *
+ * @author Jaci
+ */
 enum class SplineSystem {
     INSTANCE;
 
@@ -28,7 +37,7 @@ enum class SplineSystem {
     }
 
     fun generateTrajectoryPairs(points: Array<out Waypoint>): Pair<Trajectory, Trajectory> {
-        return createTrajectoryPair(generateCentralTrajectory(points), Core.config.getDouble("motion.wheelbase_width", 10.0))
+        return createTrajectoryPair(generateCentralTrajectory(points), Core.config.getDouble("motion.wheelbase_width", 0.633294))
     }
 
     fun generateCentralTrajectory(points: Array<out Waypoint>): Trajectory {

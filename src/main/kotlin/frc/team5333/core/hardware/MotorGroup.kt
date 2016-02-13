@@ -43,4 +43,8 @@ class MotorGroup(vararg motors: SpeedController) : SpeedController {
         _motors.forEach { it.pidWrite(output) }
     }
 
+    override fun stopMotor() {
+        _motors.forEach { it.stopMotor() }
+    }
+
 }
