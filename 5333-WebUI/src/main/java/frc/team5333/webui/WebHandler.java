@@ -13,6 +13,8 @@ import frc.team5333.webui.api.MatchAPI;
 import frc.team5333.webui.controller.Controller;
 import frc.team5333.webui.controller.IndexController;
 import frc.team5333.webui.websockets.SocketLogger;
+import frc.team5333.webui.websockets.SocketReadout;
+import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.lib.log.Logger;
 
 import java.io.*;
@@ -55,7 +57,9 @@ public class WebHandler {
         port(5801);
 
         webSocket("/socket/logger", SocketLogger.class);
+        webSocket("/socket/readout", SocketReadout.class);
         Logger.addHandler(new SocketLogger());
+        StateTracker.addTicker(SocketReadout::tick);
 
         get("/styles/:file", (req, res) -> {
             res.type("text/css");

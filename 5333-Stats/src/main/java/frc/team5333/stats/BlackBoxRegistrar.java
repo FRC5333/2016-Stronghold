@@ -18,6 +18,11 @@ public class BlackBoxRegistrar {
         ctx.add("motor_left", IO.motor_left_1::get);
         ctx.add("motor_right", IO.motor_right_1::get);
 
+        ctx.add("motor_left_encoder_velocity", IO.motor_left_1::getEncVelocity);
+        ctx.add("motor_right_encoder_velocity", IO.motor_right_2::getEncVelocity);
+        ctx.add("motor_left_encoder_position", IO.motor_left_1::getEncPosition);
+        ctx.add("motor_right_encoder_position", IO.motor_right_2::getEncPosition);
+
         if (IO.IMU_SUPPORTED()) {
             ctx.add("imu_accel_x", IO.imu_mxp::getAccelX);
             ctx.add("imu_accel_y", IO.imu_mxp::getAccelY);
