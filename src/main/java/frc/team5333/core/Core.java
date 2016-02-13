@@ -2,16 +2,19 @@ package frc.team5333.core;
 
 import frc.team5333.core.commands.CommandClearConfigs;
 import frc.team5333.core.commands.ShooterCommand;
+import frc.team5333.core.control.ControlLoopManager;
 import frc.team5333.core.control.ControlManager;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
-import frc.team5333.core.control.loops.ControlLoopManager;
 import frc.team5333.core.control.strategy.StrategyController;
+import frc.team5333.core.control.strategy.StrategyMotionProfile;
 import frc.team5333.core.control.strategy.StrategyOperator;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.events.StateChangeEvent;
 import frc.team5333.core.hardware.IO;
 import frc.team5333.core.network.NetworkHub;
+import frc.team5333.core.systems.ShooterSystem;
+import frc.team5333.core.systems.SplineSystem;
 import frc.team5333.lib.events.EventBus;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
@@ -19,6 +22,7 @@ import jaci.openrio.toast.core.loader.annotation.Priority;
 import jaci.openrio.toast.lib.log.Logger;
 import jaci.openrio.toast.lib.module.IterativeModule;
 import jaci.openrio.toast.lib.module.ModuleConfig;
+import kotlin.Pair;
 
 /**
  * The Core class of Team 5333's Stronghold code. This class serves to startup other parts of the code, as well
@@ -49,10 +53,10 @@ public class Core extends IterativeModule {
 
         NetworkHub.INSTANCE.start();
 
+        ControlLoopManager.start();
+
         Operator.init();
         IO.init();
-
-        ControlLoopManager.init();
 
         MatchInfo.load();
 
@@ -62,6 +66,16 @@ public class Core extends IterativeModule {
 
         CommandBus.registerCommand(new ShooterCommand());
         CommandBus.registerCommand(new CommandClearConfigs());
+    }
+
+    public void autonomousInit() {
+        Pair<SplineSystem.Trajectory, SplineSystem.Trajectory> pairs =
+                SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
+                        new SplineSystem.Waypoint(0, 0, 0),
+                        new SplineSystem.Waypoint(1, 1, 0),
+                        new SplineSystem.Waypoint(2, 0.5, 0)
+                });
+        StrategyController.INSTANCE.setStrategy(new StrategyMotionProfile(pairs));
     }
 
     @Override

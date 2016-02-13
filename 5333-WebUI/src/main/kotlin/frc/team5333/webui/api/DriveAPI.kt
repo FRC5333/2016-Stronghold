@@ -17,7 +17,7 @@ class DriveAPI : API {
 
     override fun handle(request: Request?, response: Response?): Any? {
         var mode = ControlManager.INSTANCE.driveMode().name
-        var strat = StrategyController.INSTANCE.activeStrategy.javaClass.canonicalName
+        var strat = StrategyController.INSTANCE.getStrategy().javaClass.canonicalName
         var map: HashMap<String, String> = hashMapOf(
                 Pair("drive_mode", mode),
                 Pair("strategy", strat)

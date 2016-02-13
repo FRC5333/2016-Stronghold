@@ -8,45 +8,50 @@ enum class StrategyController {
 
     private var fast = false
 
-    var activeStrategy: Strategy = StrategyOperator()
-        private set(value) {
-            activeStrategy.onDisable()
-            EventBus.INSTANCE.raiseEvent(StrategyEvent.StrategyChangeEvent(value, activeStrategy))
-            fast = value.isFast()
-            value.onEnable()
-        }
+    private var activeStrategy: Strategy = StrategyOperator()
 
     val lock = Object()
 
     /**
      * Tick the active strategy periodically
      */
-    fun tick() {
+    fun tick(fast: Boolean) {
         synchronized(lock) {
             if (activeStrategy.isComplete()) {
                 var next_strat = activeStrategy.nextStrategy()
                 if (next_strat != null) {
-                    activeStrategy = next_strat
+                    setStrategy_Now(next_strat)
                 } else {
-                    activeStrategy = StrategyOperator()
+                    setStrategy_Now(StrategyOperator())
                 }
             }
-            activeStrategy.tick()
+            if (fast)   activeStrategy.tickFast()
+            else        activeStrategy.tick()
         }
     }
 
     fun tickFast() {
-        if (fast) tick()
+        if (fast) tick(true)
     }
 
     fun tickSlow() {
-        if (!fast) tick()
+        tick(false)
     }
 
     fun setStrategy(strat: Strategy) {
         synchronized(lock) {
-            activeStrategy = strat
+            setStrategy_Now(strat)
         }
+    }
+
+    fun getStrategy(): Strategy = activeStrategy
+
+    private fun setStrategy_Now(value: Strategy) {
+        activeStrategy.onDisable()
+        EventBus.INSTANCE.raiseEvent(StrategyEvent.StrategyChangeEvent(value, activeStrategy))
+        fast = value.isFast()
+        activeStrategy = value
+        value.onEnable()
     }
 
 }

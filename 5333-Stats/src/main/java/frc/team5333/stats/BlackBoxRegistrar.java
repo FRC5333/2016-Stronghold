@@ -1,6 +1,5 @@
 package frc.team5333.stats;
 
-import frc.team5333.core.control.ControlManager;
 import frc.team5333.core.hardware.IO;
 import jaci.openrio.module.blackbox.BlackBoxContext;
 import jaci.openrio.toast.core.StateTracker;
@@ -15,13 +14,13 @@ public class BlackBoxRegistrar {
         ctx.add("autonomous", to(() -> { return StateTracker.currentState == RobotState.AUTONOMOUS; }));
         ctx.add("teleoperated", to(() -> { return StateTracker.currentState == RobotState.TELEOP; }));
 
-        ctx.add("motor_left", IO.motor_left_1::get);
-        ctx.add("motor_right", IO.motor_right_1::get);
+        ctx.add("motor_left", IO.motor_master_left::get);
+        ctx.add("motor_right", IO.motor_master_right::get);
 
-        ctx.add("motor_left_encoder_velocity", IO.motor_left_1::getEncVelocity);
-        ctx.add("motor_right_encoder_velocity", IO.motor_right_2::getEncVelocity);
-        ctx.add("motor_left_encoder_position", IO.motor_left_1::getEncPosition);
-        ctx.add("motor_right_encoder_position", IO.motor_right_2::getEncPosition);
+        ctx.add("motor_left_encoder_velocity", IO.motor_master_left::getEncVelocity);
+        ctx.add("motor_right_encoder_velocity", IO.motor_slave_right::getEncVelocity);
+        ctx.add("motor_left_encoder_position", IO.motor_master_left::getEncPosition);
+        ctx.add("motor_right_encoder_position", IO.motor_slave_right::getEncPosition);
 
         if (IO.IMU_SUPPORTED()) {
             ctx.add("imu_accel_x", IO.imu_mxp::getAccelX);

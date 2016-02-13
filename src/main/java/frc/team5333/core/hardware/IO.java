@@ -17,17 +17,23 @@ import jaci.openrio.toast.lib.registry.Registrar;
  */
 public class IO {
 
-    public static CANTalon motor_left_1, motor_left_2, motor_right_1, motor_right_2;
+    public static CANTalon motor_master_left, motor_slave_left, motor_master_right, motor_slave_right;
     public static MotorGroup drive_motors, all_motors;
     public static ADIS16448_IMU imu_mxp;
 
     public static void init() {
-        motor_left_1    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_1",   10));
-        motor_left_2    = Registrar.canTalon(Core.config.getInt("core.io.motor.left_2",   11));
-        motor_right_1   = Registrar.canTalon(Core.config.getInt("core.io.motor.right_1",  12));
-        motor_right_2   = Registrar.canTalon(Core.config.getInt("core.io.motor.right_2",  13));
+        motor_master_left = Registrar.canTalon(Core.config.getInt("core.io.motor.left_master",   10));
+        motor_slave_left = Registrar.canTalon(Core.config.getInt("core.io.motor.left_slave",   11));
+        motor_master_right = Registrar.canTalon(Core.config.getInt("core.io.motor.right_master",  12));
+        motor_slave_right = Registrar.canTalon(Core.config.getInt("core.io.motor.right_slave",  13));
 
-        drive_motors    = new MotorGroup(motor_left_1, motor_left_2, motor_right_1, motor_right_2);
+        motor_slave_left.changeControlMode(CANTalon.TalonControlMode.Follower);
+        motor_slave_left.set(motor_master_left.getDeviceID());
+
+        motor_slave_right.changeControlMode(CANTalon.TalonControlMode.Follower);
+        motor_slave_right.set(motor_master_right.getDeviceID());
+
+        drive_motors    = new MotorGroup(motor_master_left, motor_slave_left, motor_master_right, motor_slave_right);
         all_motors      = new MotorGroup(drive_motors);
 
         if (IMU_SUPPORTED())
@@ -39,13 +45,11 @@ public class IO {
     }
 
     public static void setLeftMotors(double speed) {
-        motor_left_1.set(speed);
-        motor_left_2.set(speed);
+        motor_master_left.set(speed);
     }
 
     public static void setRightMotors(double speed) {
-        motor_right_1.set(speed);
-        motor_right_2.set(speed);
+        motor_master_right.set(speed);
     }
 
 }

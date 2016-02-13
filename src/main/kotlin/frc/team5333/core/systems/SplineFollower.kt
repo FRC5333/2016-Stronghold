@@ -4,6 +4,10 @@ import kotlin.concurrent.currentThread
 
 class SplineFollower {
 
+    var position_offset = 0
+    var encoder_ticks = 0
+    var wheel_circumference = 0.0
+
     var kp = 0.0
     var ki = 0.0
     var kd = 0.0
@@ -20,12 +24,19 @@ class SplineFollower {
         kp = kkp; ki = kki; kd = kkd; kv = kkv; ka = kka
     }
 
+    fun configureEncoder(offset: Int, ticks: Int, diameter: Double) {
+        position_offset = offset
+        encoder_ticks = ticks
+        wheel_circumference = Math.PI * diameter
+    }
+
     fun reset() {
         last_error = 0.0
         segment = 0
     }
 
-    fun calculate(distance: Double): Double {
+    fun calculate(tick: Int): Double {
+        var distance = (tick-position_offset) / encoder_ticks * wheel_circumference
         var traj = trajectory!!
         if (segment < traj.getLength()) {
             var seg = traj.get(segment)

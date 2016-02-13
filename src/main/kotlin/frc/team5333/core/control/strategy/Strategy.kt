@@ -6,15 +6,17 @@ abstract class Strategy {
 
     abstract fun getName(): String
 
-    fun onEnable() { }
+    open fun onEnable() { }
 
-    fun onDisable() { }
+    open fun onDisable() { }
 
     abstract fun tick()
 
+    open fun tickFast() { }
+
     abstract fun isOperatorControl(): Boolean
 
-    fun isComplete(): Boolean = false
+    open fun isComplete(): Boolean = false
 
     fun then(strategy: Strategy): Strategy {
         strat = strategy
@@ -25,6 +27,6 @@ abstract class Strategy {
         return strat
     }
 
-    fun isFast(): Boolean = false
+    open fun isFast(): Boolean = false
 
 }

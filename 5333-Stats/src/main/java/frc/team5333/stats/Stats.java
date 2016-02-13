@@ -3,6 +3,7 @@ package frc.team5333.stats;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.stats.serializers.EventSerializer;
 import frc.team5333.stats.serializers.ShooterSerializer;
+import frc.team5333.stats.serializers.SplineSerializer;
 import jaci.openrio.module.blackbox.BlackBox;
 import jaci.openrio.module.blackbox.BlackBoxContext;
 import jaci.openrio.toast.core.loader.annotation.Priority;
@@ -34,6 +35,7 @@ public class Stats extends IterativeModule {
 
             BlackBoxRegistrar.register(ctx);
             ShooterSerializer.init();
+            SplineSerializer.init();
             EventSerializer.init();
         }
         startedOperation = true;

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define HOST_ADDRESS "localhost"
+#define HOST_ADDRESS "roborio-5333-frc.local"
 #define HOST_PORT 5802
 
 int main() {
@@ -74,6 +74,8 @@ int main() {
                 waypoints[i] = wp;
             }
             
+            printf("Waypoints Received\n");
+            
             TrajectoryCandidate candidate;
             trajectory_prepare_candidate(waypoints, waypoint_num, FIT_HERMITE_CUBIC, SPLINE_SAMPLES_LO, 0.01, max_velocity, max_acceleration, 60.0, &candidate);
                 
@@ -81,6 +83,8 @@ int main() {
 
             Segment seg[length];
             trajectory_generate(&candidate, &seg);
+            
+            printf("Waypoints Generated\n");
             
             intToBytes(0xBA, buf);
             send(host_socket, buf, 4, 0);

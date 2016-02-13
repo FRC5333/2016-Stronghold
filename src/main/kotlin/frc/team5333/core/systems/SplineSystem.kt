@@ -1,11 +1,9 @@
 package frc.team5333.core.systems
 
+import edu.wpi.first.wpilibj.CANTalon
 import frc.team5333.core.Core
 import frc.team5333.core.network.NetworkHub
-import kotlin.collections.forEach
-import kotlin.collections.map
-import kotlin.collections.toHashSet
-import kotlin.collections.toTypedArray
+import kotlin.collections.*
 
 /**
  * Spline and Motion Profiling generation subsystem. All values are in Metric Units unless otherwise stated. Not your
@@ -34,6 +32,22 @@ enum class SplineSystem {
         fun getLength(): Int = segments.size
         fun get(i: Int): Segment = segments.get(i)
         fun set(i: Int, seg: Segment) = segments.set(i, seg)
+    }
+
+    fun trajectoriesToTalon(trajs: Pair<Trajectory, Trajectory>): Pair<List<CANTalon.TrajectoryPoint>, List<CANTalon.TrajectoryPoint>> {
+        return Pair(trajectoryToTalon(trajs.first), trajectoryToTalon(trajs.second))
+    }
+
+    fun trajectoryToTalon(traj: Trajectory): List<CANTalon.TrajectoryPoint> {
+        var list = traj.segments.map {
+            var pt = CANTalon.TrajectoryPoint()
+            pt.position = it.position
+            pt.velocity = it.velocity
+            pt.timeDurMs = (0.01 * 1000).toInt()
+            pt
+        }
+        list.last().isLastPoint = true
+        return list
     }
 
     fun generateTrajectoryPairs(points: Array<out Waypoint>): Pair<Trajectory, Trajectory> {
