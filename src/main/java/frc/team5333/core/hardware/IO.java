@@ -2,6 +2,7 @@ package frc.team5333.core.hardware;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import frc.team5333.core.Core;
+import frc.team5333.core.control.ControlLease;
 import frc.team5333.lib.device.ADIS16448_IMU;
 import jaci.openrio.toast.core.Environment;
 import jaci.openrio.toast.lib.registry.Registrar;
@@ -22,11 +23,14 @@ public class IO {
     public static MotorGroup drive_motors, flywheel_motors, all_motors;
     public static ADIS16448_IMU imu_mxp;
 
+    public static ControlLease<CANTalon>    lease_drive_left, lease_drive_right,
+                                            lease_flywheel_top, lease_flywheel_bottom;
+
     public static void init() {
-        motor_master_left       = Registrar.canTalon(Core.config.getInt("core.io.motor.left_master",        10));
-        motor_slave_left        = Registrar.canTalon(Core.config.getInt("core.io.motor.left_slave",         11));
-        motor_master_right      = Registrar.canTalon(Core.config.getInt("core.io.motor.right_master",       12));
-        motor_slave_right       = Registrar.canTalon(Core.config.getInt("core.io.motor.right_slave",        13));
+        motor_master_left       = Registrar.canTalon(Core.config.getInt("core.io.motor.left_master",        11));
+        motor_slave_left        = Registrar.canTalon(Core.config.getInt("core.io.motor.left_slave",         10));
+        motor_master_right      = Registrar.canTalon(Core.config.getInt("core.io.motor.right_master",       13));
+        motor_slave_right       = Registrar.canTalon(Core.config.getInt("core.io.motor.right_slave",        12));
 
         motor_flywheel_top      = Registrar.canTalon(Core.config.getInt("core.io.motor.flywheel_top",       14));
         motor_flywheel_bottom   = Registrar.canTalon(Core.config.getInt("core.io.motor.flywheel_bottom",    15));
@@ -40,6 +44,12 @@ public class IO {
         drive_motors    = new MotorGroup(motor_master_left, motor_slave_left, motor_master_right, motor_slave_right);
         flywheel_motors = new MotorGroup(motor_flywheel_bottom, motor_flywheel_top);
         all_motors      = new MotorGroup(drive_motors, flywheel_motors);
+
+        lease_drive_left = new ControlLease<>(motor_master_left);
+        lease_drive_right = new ControlLease<>(motor_master_right);
+
+        lease_flywheel_bottom = new ControlLease<>(motor_flywheel_bottom);
+        lease_flywheel_top = new ControlLease<>(motor_flywheel_top);
 
         if (IMU_SUPPORTED())
             imu_mxp = new ADIS16448_IMU();
