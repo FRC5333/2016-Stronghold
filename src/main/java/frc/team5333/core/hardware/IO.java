@@ -18,14 +18,18 @@ import jaci.openrio.toast.lib.registry.Registrar;
 public class IO {
 
     public static CANTalon motor_master_left, motor_slave_left, motor_master_right, motor_slave_right;
-    public static MotorGroup drive_motors, all_motors;
+    public static CANTalon motor_flywheel_top, motor_flywheel_bottom;
+    public static MotorGroup drive_motors, flywheel_motors, all_motors;
     public static ADIS16448_IMU imu_mxp;
 
     public static void init() {
-        motor_master_left = Registrar.canTalon(Core.config.getInt("core.io.motor.left_master",   10));
-        motor_slave_left = Registrar.canTalon(Core.config.getInt("core.io.motor.left_slave",   11));
-        motor_master_right = Registrar.canTalon(Core.config.getInt("core.io.motor.right_master",  12));
-        motor_slave_right = Registrar.canTalon(Core.config.getInt("core.io.motor.right_slave",  13));
+        motor_master_left       = Registrar.canTalon(Core.config.getInt("core.io.motor.left_master",        10));
+        motor_slave_left        = Registrar.canTalon(Core.config.getInt("core.io.motor.left_slave",         11));
+        motor_master_right      = Registrar.canTalon(Core.config.getInt("core.io.motor.right_master",       12));
+        motor_slave_right       = Registrar.canTalon(Core.config.getInt("core.io.motor.right_slave",        13));
+
+        motor_flywheel_top      = Registrar.canTalon(Core.config.getInt("core.io.motor.flywheel_top",       14));
+        motor_flywheel_bottom   = Registrar.canTalon(Core.config.getInt("core.io.motor.flywheel_bottom",    15));
 
         motor_slave_left.changeControlMode(CANTalon.TalonControlMode.Follower);
         motor_slave_left.set(motor_master_left.getDeviceID());
@@ -34,7 +38,8 @@ public class IO {
         motor_slave_right.set(motor_master_right.getDeviceID());
 
         drive_motors    = new MotorGroup(motor_master_left, motor_slave_left, motor_master_right, motor_slave_right);
-        all_motors      = new MotorGroup(drive_motors);
+        flywheel_motors = new MotorGroup(motor_flywheel_bottom, motor_flywheel_top);
+        all_motors      = new MotorGroup(drive_motors, flywheel_motors);
 
         if (IMU_SUPPORTED())
             imu_mxp = new ADIS16448_IMU();

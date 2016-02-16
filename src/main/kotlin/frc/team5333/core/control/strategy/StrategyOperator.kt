@@ -12,5 +12,8 @@ class StrategyOperator : Strategy() {
         ControlManager.INSTANCE.update()
         IO.setLeftMotors(ControlManager.INSTANCE.getLeftDrive())
         IO.setRightMotors(-ControlManager.INSTANCE.getRightDrive())
+
+        IO.motor_flywheel_top.set(ControlManager.INSTANCE.getFlywheelTop())
+        IO.motor_flywheel_bottom.set(ControlManager.INSTANCE.getFlywheelBottom())
     }
 }

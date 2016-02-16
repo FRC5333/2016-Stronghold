@@ -92,6 +92,34 @@ public enum class ControlManager {
         return 0.0
     }
 
+    // TODO: Controller Lock?
+
+    fun getFlywheelTop(): Double {
+        var lJoy = Operator.getLeftJoystick()
+        var rJoy = Operator.getRightJoystick()
+
+        if (driveMode() == DriveMode.LEFT_ONLY) {
+            return calculateRatio(Joy.getX(rJoy), -Joy.getY(rJoy)).first
+        } else if (driveMode() == DriveMode.RIGHT_ONLY) {
+            return calculateRatio(Joy.getX(lJoy), -Joy.getY(lJoy)).first
+        } else {
+            return 0.0
+        }
+    }
+
+    fun getFlywheelBottom(): Double {
+        var lJoy = Operator.getLeftJoystick()
+        var rJoy = Operator.getRightJoystick()
+
+        if (driveMode() == DriveMode.LEFT_ONLY) {
+            return calculateRatio(Joy.getX(rJoy), -Joy.getY(rJoy)).second
+        } else if (driveMode() == DriveMode.RIGHT_ONLY) {
+            return calculateRatio(Joy.getX(lJoy), -Joy.getY(lJoy)).second
+        } else {
+            return 0.0
+        }
+    }
+
     /**
      * Calculate the Left/Right sides of the Drive Train using the Throttle and Rotate values (usually
      * X/Y Axis) of the Joystick. On it's own, the X-axis has a limited maximum rotation. This makes it more accurate
@@ -124,6 +152,29 @@ public enum class ControlManager {
             }
         }
         return Pair(left * throttleScale, right * throttleScale)
+    }
+
+    internal fun calculateRatio(throttle: Double, ratio: Double): Pair<Double, Double> {
+        var top = 0.0
+        var btm = 0.0
+        if (throttle > 0.0) {
+            if (ratio > 0.0) {
+                top = throttle - ratio
+                btm = Math.max(throttle, ratio)
+            } else {
+                top = Math.max(throttle, -ratio)
+                btm = throttle + ratio
+            }
+        } else {
+            if (ratio > 0.0) {
+                top = -Math.max(-throttle, ratio)
+                btm = throttle + ratio
+            } else {
+                top = throttle - ratio
+                btm = -Math.max(-throttle, -ratio)
+            }
+        }
+        return Pair(top, btm)
     }
 
     /**
