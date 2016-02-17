@@ -91,3 +91,8 @@ body {
     margin-left: 5px;
     margin-bottom: 0;
 }
+
+td {
+    font-size: 12px;
+    padding: 2px !important;
+}

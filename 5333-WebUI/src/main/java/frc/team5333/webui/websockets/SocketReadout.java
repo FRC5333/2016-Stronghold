@@ -2,6 +2,8 @@ package frc.team5333.webui.websockets;
 
 import com.grack.nanojson.JsonObject;
 import edu.wpi.first.wpilibj.CANTalon;
+import frc.team5333.core.control.strategy.StrategyController;
+import frc.team5333.core.data.DefenseInfo;
 import frc.team5333.core.hardware.IO;
 import frc.team5333.webui.WebHandler;
 import jaci.openrio.toast.core.shared.GlobalBlackboard;
@@ -36,8 +38,14 @@ public class SocketReadout {
 
     public static void tick(RobotState state) {
         JsonObject obj = new JsonObject();
-        obj.put("shooter_top_throttle", IO.motor_flywheel_top.get() * 100);
-        obj.put("shooter_btm_throttle", IO.motor_flywheel_bottom.get() * 100);
+        obj.put("Left Throttle", IO.motor_master_left.get() * 100 + "%");
+        obj.put("Right Throttle", IO.motor_master_right.get() * 100 + "%");
+
+        obj.put("Flywheel Top", IO.motor_flywheel_top.get() * 100 + "%");
+        obj.put("Flywheel Bottom", IO.motor_flywheel_bottom.get() * 100 + "%");
+
+        obj.put("Strategy", StrategyController.INSTANCE.getStrategy().getName());
+
         sessions.forEach(session -> {
             try {
                 session.getRemote().sendString(WebHandler.jsonToString(obj));

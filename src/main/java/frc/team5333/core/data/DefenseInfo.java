@@ -12,7 +12,7 @@ public class DefenseInfo {
         DRAWBRIDGE("drw", "c", "drawbridge"),   SALLY_PORT("sly", "c", "sally"),
         ROCK_WALL("rck", "d", "rock"),          ROUGH_TERRAIN("rgh", "d", "rough");
 
-        String shortname, group, longname;
+        public String shortname, group, longname;
 
         Defense(String shortname, String group, String longname) {
             this.shortname = shortname; this.group = group; this.longname = longname;
