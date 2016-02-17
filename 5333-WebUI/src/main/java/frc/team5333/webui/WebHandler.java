@@ -6,10 +6,7 @@ import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonWriter;
 import frc.team5333.core.Core;
-import frc.team5333.webui.api.API;
-import frc.team5333.webui.api.DriveAPI;
-import frc.team5333.webui.api.EventBusAPI;
-import frc.team5333.webui.api.MatchAPI;
+import frc.team5333.webui.api.*;
 import frc.team5333.webui.controller.Controller;
 import frc.team5333.webui.controller.IndexController;
 import frc.team5333.webui.websockets.SocketLogger;
@@ -86,6 +83,7 @@ public class WebHandler {
         register(new EventBusAPI());
         register(new DriveAPI());
         register(new MatchAPI());
+        register(new DefenseAPI());
 
         register(new IndexController());
     }
