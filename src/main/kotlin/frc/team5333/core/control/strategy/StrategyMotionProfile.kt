@@ -23,8 +23,8 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
     override fun onEnable() {
         super.onEnable()
-        followerLeft.configurePID_VA(1.0, 0.0, 0.0, 1.0 / 1.5, 0.0)
-        followerRight.configurePID_VA(1.0, 0.0, 0.0, 1.0 / 1.5, 0.0)
+        followerLeft.configurePID_VA(1.5, 0.0, 0.0, 1.0 / 1.5, 0.0)
+        followerRight.configurePID_VA(1.5, 0.0, 0.0, 1.0 / 1.5, 0.0)
 
         followerLeft.configureEncoder(-IO.motor_master_left.encPosition, 1000, 0.08)
         followerRight.configureEncoder(IO.motor_master_right.encPosition, 1000, 0.08)
