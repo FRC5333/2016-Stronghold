@@ -1,7 +1,7 @@
 <script type="text/javascript" src="/scripts/config.js"> </script>
 <div>
     <label> Configuration </label>
-    <textarea id="config_area" style="height: 500px;" onkeyup="if (event.keyCode == 13 && !event.shiftKey) updateConfig();">
+    <textarea id="config_area" style="height: 500px;" onkeyup="if (event.keyCode == 13 && event.ctrlKey) updateConfig();">
     </textarea>
     <a class="button" onclick="updateConfig();" style="width: 100%;"> Save Config </a>
 </div>
