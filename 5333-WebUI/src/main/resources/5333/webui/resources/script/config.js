@@ -16,3 +16,7 @@ function updateConfig() {
     var json = document.getElementById("config_area").value;
     socket.send(json);
 }
+
+window.onload = function() {
+    document.getElementById("config_area").addEventListener('keydown', textAreaKeyDown, false);
+}
