@@ -34,22 +34,6 @@ enum class SplineSystem {
         fun set(i: Int, seg: Segment) = segments.set(i, seg)
     }
 
-    fun trajectoriesToTalon(trajs: Pair<Trajectory, Trajectory>): Pair<List<CANTalon.TrajectoryPoint>, List<CANTalon.TrajectoryPoint>> {
-        return Pair(trajectoryToTalon(trajs.first), trajectoryToTalon(trajs.second))
-    }
-
-    fun trajectoryToTalon(traj: Trajectory): List<CANTalon.TrajectoryPoint> {
-        var list = traj.segments.map {
-            var pt = CANTalon.TrajectoryPoint()
-            pt.position = it.position
-            pt.velocity = it.velocity
-            pt.timeDurMs = (0.01 * 1000).toInt()
-            pt
-        }
-        list.last().isLastPoint = true
-        return list
-    }
-
     fun generateTrajectoryPairs(points: Array<out Waypoint>): Pair<Trajectory, Trajectory> {
         return createTrajectoryPair(generateCentralTrajectory(points), Core.config.getDouble("motion.wheelbase_width", 0.633294))
     }
