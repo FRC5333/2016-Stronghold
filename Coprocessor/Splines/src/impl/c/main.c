@@ -17,25 +17,21 @@ int main() {
     socket_init();
     int return_code = -1;
     
-    printf("Acquiring Host Target at %s:%i", HOST_ADDRESS, HOST_PORT);
+    printf("Acquiring Host Target at %s:%i\n", HOST_ADDRESS, HOST_PORT);
     char HOST_IP[50];
-    while (return_code != 0) {
-        return_code = socket_host(HOST_ADDRESS, HOST_IP);
-        if (return_code != 0) {
-            printf(".");
-            sleep_ms(100);
-        }
+    return_code = socket_host(HOST_ADDRESS, HOST_IP);
+    if (return_code != 0) {
+        printf("Failed\n");
+        return 1;
     }
     return_code = -1;
     
-    printf("\nConnecting to Host Target at %s", HOST_IP);
+    printf("Connecting to Host Target at %s\n", HOST_IP);
     SOCKET host_socket = socket_create();
-    while (return_code < 0) {
-        return_code = socket_connect(host_socket, HOST_IP, HOST_PORT);
-        if (return_code != 0) {
-            printf(".");
-            sleep_ms(100);
-        }
+    return_code = socket_connect(host_socket, HOST_IP, HOST_PORT);
+    if (return_code != 0) {
+        printf("Failed\n");
+        return 1;
     }
     printf("\nHost Connected!\n");
     char *id = "CP_SPL";
@@ -77,7 +73,7 @@ int main() {
             printf("Waypoints Received\n");
             
             TrajectoryCandidate candidate;
-            trajectory_prepare_candidate(waypoints, waypoint_num, FIT_HERMITE_CUBIC, SPLINE_SAMPLES_LO, 0.01, max_velocity, max_acceleration, 60.0, &candidate);
+            trajectory_prepare_candidate(waypoints, waypoint_num, FIT_HERMITE_CUBIC, SPLINE_SAMPLES_LO, 0.05, max_velocity, max_acceleration, 60.0, &candidate);
                 
             int length = candidate.length;
 

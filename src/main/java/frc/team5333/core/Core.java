@@ -69,11 +69,16 @@ public class Core extends IterativeModule {
     }
 
     public void autonomousInit() {
+//        Pair<SplineSystem.Trajectory, SplineSystem.Trajectory> pairs =
+//                SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
+//                        new SplineSystem.Waypoint(0, 0, 0),
+//                        new SplineSystem.Waypoint(1, 1, 0),
+//                        new SplineSystem.Waypoint(2, 0.5, 0)
+//                });
         Pair<SplineSystem.Trajectory, SplineSystem.Trajectory> pairs =
                 SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
                         new SplineSystem.Waypoint(0, 0, 0),
-                        new SplineSystem.Waypoint(1, 1, 0),
-                        new SplineSystem.Waypoint(2, 0.5, 0)
+                        new SplineSystem.Waypoint(1, 0, 0),
                 });
         StrategyController.INSTANCE.setStrategy(new StrategyMotionProfile(pairs));
     }

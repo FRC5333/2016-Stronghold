@@ -1,6 +1,9 @@
 package frc.team5333.core.control.profiling
 
+import frc.team5333.core.Core
 import frc.team5333.core.control.profiling.SplineSystem
+import java.io.File
+import java.io.FileWriter
 import kotlin.concurrent.currentThread
 
 class SplineFollower {
@@ -37,14 +40,14 @@ class SplineFollower {
     }
 
     fun calculate(tick: Int): Double {
-        var distance = (tick-position_offset) / encoder_ticks * wheel_circumference
+        var distance = ((tick-position_offset).toDouble() / encoder_ticks.toDouble()) * wheel_circumference
         var traj = trajectory!!
         if (segment < traj.getLength()) {
             var seg = traj.get(segment)
             var error = seg.position - distance
             var calculated_value =
                     kp * error +
-                    kd * ((error - last_error) / 0.01 - seg.velocity) +
+                    kd * ((error - last_error) / 0.05) +
                     (kv * seg.velocity + ka * seg.acceleration)
             last_error = error
             heading = seg.heading

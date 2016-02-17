@@ -13,6 +13,14 @@ import kotlin.ranges.rangeTo
 class ShooterSystem(var flywheelTop: CANTalon, var flywheelBottom: CANTalon) {
     val LEASE = ControlLease(this)
 
+    // AUTOMATIC CONTROL
+
+//    fun calculateSpeeds(relative_distance: Double): Pair<Double, Double> {
+
+//    }
+
+    // MANUAL CONTROL
+
     fun runFlywheels() {
         var pairs = getFlywheelPairs()
         flywheelTop.set(pairs.first)

@@ -20,7 +20,7 @@ public class ControlLoopManager implements Runnable {
 
     public static void start() {
         notifier = new Notifier(new ControlLoopManager());
-        notifier.startPeriodic(0.01);
+        notifier.startPeriodic(0.05);
     }
 
 }

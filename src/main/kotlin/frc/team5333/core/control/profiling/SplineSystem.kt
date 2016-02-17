@@ -55,8 +55,8 @@ enum class SplineSystem {
     }
 
     fun generateCentralTrajectory(points: Array<out Waypoint>): Trajectory {
-        writeToCoprocessor(Core.config.getFloat("motion.max_velocity", 10.0f),
-                Core.config.getFloat("motion.max_acceleration", 15.0f), points)
+        writeToCoprocessor(Core.config.getFloat("motion.max_velocity", 1.5f),
+                Core.config.getFloat("motion.max_acceleration", 7.0f), points)
         return readFromCoprocessor()
     }
 
@@ -123,9 +123,9 @@ enum class SplineSystem {
                 var last = out.first.get(i - 1)
                 var distance = Math.sqrt((seg1.x - last.x) * (seg1.x - last.x) + (seg1.y - last.y) * (seg1.y - last.y))
                 seg1.position = last.position + distance
-                seg1.velocity = distance / 0.01
-                seg1.acceleration = (seg1.velocity - last.velocity) / 0.01
-                seg1.jerk = (seg1.acceleration - last.acceleration) / 0.01
+                seg1.velocity = distance / 0.05
+                seg1.acceleration = (seg1.velocity - last.velocity) / 0.05
+                seg1.jerk = (seg1.acceleration - last.acceleration) / 0.05
             }
 
             var seg2 = out.second.get(i)
@@ -136,9 +136,9 @@ enum class SplineSystem {
                 var last = out.second.get(i - 1)
                 var distance = Math.sqrt((seg2.x - last.x) * (seg2.x - last.x) + (seg2.y - last.y) * (seg2.y - last.y))
                 seg2.position = last.position + distance
-                seg2.velocity = distance / 0.01
-                seg2.acceleration = (seg2.velocity - last.velocity) / 0.01
-                seg2.jerk = (seg2.acceleration - last.acceleration) / 0.01
+                seg2.velocity = distance / 0.05
+                seg2.acceleration = (seg2.velocity - last.velocity) / 0.05
+                seg2.jerk = (seg2.acceleration - last.acceleration) / 0.05
             }
         }
         return out

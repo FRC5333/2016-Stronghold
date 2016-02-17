@@ -23,11 +23,14 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
     override fun onEnable() {
         super.onEnable()
-        followerLeft.configurePID_VA(0.8, 0.005, 0.01, 0.1, 0.1)
-        followerRight.configurePID_VA(0.8, 0.005, 0.01, 0.1, 0.1)
+        followerLeft.configurePID_VA(1.0, 0.0, 0.0, 1.0 / 1.5, 0.0)
+        followerRight.configurePID_VA(1.0, 0.0, 0.0, 1.0 / 1.5, 0.0)
 
-        followerLeft.configureEncoder(IO.motor_master_left.encPosition, 1024, 0.089)
-        followerRight.configureEncoder(IO.motor_master_right.encPosition, 1024, 0.089)
+        followerLeft.configureEncoder(-IO.motor_master_left.encPosition, 1000, 0.08)
+        followerRight.configureEncoder(IO.motor_master_right.encPosition, 1000, 0.08)
+
+        followerLeft.trajectory = trajectory.first
+        followerRight.trajectory = trajectory.second
 
         lease_drive = Systems.drive.LEASE.acquire(ControlLease.Priority.HIGHER)
     }
@@ -43,7 +46,7 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
     override fun tickFast() {
         lease_drive.use {
-            it.leftMotor.set(followerLeft.calculate(it.leftMotor.encPosition))
+            it.leftMotor.set(-followerLeft.calculate(-it.leftMotor.encPosition))
             it.rightMotor.set(followerRight.calculate(it.rightMotor.encPosition))
         }
     }

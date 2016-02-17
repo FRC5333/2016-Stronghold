@@ -50,6 +50,9 @@ public class SocketReadout {
 
         obj.put("Throttle Scale", p(Systems.drive.getThrottleScale() * 100));
 
+        obj.put("Left Encoder", IO.motor_master_left.getEncPosition());
+        obj.put("Right Encoder", IO.motor_master_right.getEncPosition());
+
         sessions.forEach(session -> {
             try {
                 session.getRemote().sendString(WebHandler.jsonToString(obj));
