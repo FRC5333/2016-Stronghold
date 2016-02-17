@@ -7,8 +7,10 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonWriter;
 import frc.team5333.core.Core;
 import frc.team5333.webui.api.*;
+import frc.team5333.webui.controller.ConfigController;
 import frc.team5333.webui.controller.Controller;
 import frc.team5333.webui.controller.IndexController;
+import frc.team5333.webui.websockets.SocketConfig;
 import frc.team5333.webui.websockets.SocketLogger;
 import frc.team5333.webui.websockets.SocketReadout;
 import jaci.openrio.toast.core.StateTracker;
@@ -55,6 +57,7 @@ public class WebHandler {
 
         webSocket("/socket/logger", SocketLogger.class);
         webSocket("/socket/readout", SocketReadout.class);
+        webSocket("/socket/config", SocketConfig.class);
         Logger.addHandler(new SocketLogger());
         StateTracker.addTicker(SocketReadout::tick);
 
@@ -86,6 +89,7 @@ public class WebHandler {
         register(new DefenseAPI());
 
         register(new IndexController());
+        register(new ConfigController());
     }
 
     public static Handlebars getHandlebars() {
