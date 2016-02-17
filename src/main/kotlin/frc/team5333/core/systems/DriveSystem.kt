@@ -30,7 +30,7 @@ class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
         update()
         var pairs = getDrivePairs()
         leftMotor.set(pairs.first)
-        rightMotor.set(pairs.second)
+        rightMotor.set(-pairs.second)
     }
 
     fun getDrivePairs(): Pair<Double, Double> {
@@ -39,7 +39,7 @@ class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
         var mode = Systems.control.driveMode()
 
         if (mode == ControlSystem.DriveMode.BOTH)
-            return Pair(sq(-Joy.getY(lJoy)), sq(-Joy.getY(rJoy)))
+            return Pair(sq(Joy.getY(rJoy)), sq(Joy.getY(lJoy)))
         else if (mode == ControlSystem.DriveMode.LEFT_ONLY)
             return jaciDrive3(sq(Joy.getY(lJoy)), sq(-Joy.getX(lJoy)), Joy.getTwist(lJoy))
         else if (mode == ControlSystem.DriveMode.RIGHT_ONLY)

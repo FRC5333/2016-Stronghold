@@ -46,7 +46,7 @@ allprojects {
     
     // Toast is kind of important, don't you think?
     dependencies {
-        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.7'
+        compile group: 'jaci.openrio.toast', name: 'Toast', version: '2.4.8'
     }
     
     // The buildLibs configuration makes it easy to include libraries in the final .jar for any project.
