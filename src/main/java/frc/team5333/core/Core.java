@@ -11,8 +11,9 @@ import frc.team5333.core.control.strategy.StrategyOperator;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.events.StateChangeEvent;
 import frc.team5333.core.hardware.IO;
+import frc.team5333.core.systems.Systems;
 import frc.team5333.core.network.NetworkHub;
-import frc.team5333.core.systems.SplineSystem;
+import frc.team5333.core.control.profiling.SplineSystem;
 import frc.team5333.lib.events.EventBus;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
@@ -55,6 +56,7 @@ public class Core extends IterativeModule {
 
         Operator.init();
         IO.init();
+        Systems.init();
 
         MatchInfo.load();
 

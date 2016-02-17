@@ -8,7 +8,7 @@ enum class StrategyController {
 
     private var fast = false
 
-    private var activeStrategy: Strategy = StrategyOperator()
+    private var activeStrategy: Strategy = StrategyBlank()
 
     val lock = Object()
 

@@ -1,5 +1,6 @@
-package frc.team5333.core.systems
+package frc.team5333.core.control.profiling
 
+import frc.team5333.core.control.profiling.SplineSystem
 import kotlin.concurrent.currentThread
 
 class SplineFollower {

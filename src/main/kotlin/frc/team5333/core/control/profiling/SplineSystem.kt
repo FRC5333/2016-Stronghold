@@ -1,4 +1,4 @@
-package frc.team5333.core.systems
+package frc.team5333.core.control.profiling
 
 import edu.wpi.first.wpilibj.CANTalon
 import frc.team5333.core.Core

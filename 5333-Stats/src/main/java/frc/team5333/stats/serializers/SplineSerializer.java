@@ -3,7 +3,7 @@ package frc.team5333.stats.serializers;
 import frc.team5333.core.control.strategy.StrategyMotionProfile;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.events.StrategyEvent;
-import frc.team5333.core.systems.SplineSystem;
+import frc.team5333.core.control.profiling.SplineSystem;
 import frc.team5333.lib.events.EventBus;
 import frc.team5333.lib.events.EventListener;
 import jaci.openrio.toast.core.Toast;

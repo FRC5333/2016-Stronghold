@@ -29,7 +29,7 @@ class ShooterCommand : AbstractCommand(), IHelpable {
 
         angle = MathHelper.d2r(angle)
 
-        var traj = ShooterSystem.ShooterTrajectory(x, y, angle)
+//        var traj = ShooterSystem.ShooterTrajectory(x, y, angle)
 //        traj.shoot()
 
         Core.logger.info("Kaboom!")

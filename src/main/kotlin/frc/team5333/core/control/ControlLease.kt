@@ -22,6 +22,7 @@ class ControlLease<T>(var obj: T) {
     }
 
     private var active_priority = -1
+    private var last_update = 0L
 
     fun acquire(priority: Int): Lease<T> = Lease(priority, this)
 
@@ -30,7 +31,9 @@ class ControlLease<T>(var obj: T) {
     }
 
     fun use(lease: Lease<T>, consumer: (T) -> Unit) {
-        if (lease.priority >= active_priority) {
+        var now = System.currentTimeMillis()
+        if (lease.priority >= active_priority || now - last_update > 100) {
+            last_update = now
             active_priority = lease.priority
             consumer.invoke(obj)
         }
@@ -39,7 +42,9 @@ class ControlLease<T>(var obj: T) {
     fun isActive(lease: Lease<T>): Boolean = lease.priority >= active_priority
 
     fun get(lease: Lease<T>): Optional<T> {
-        if (lease.priority >= active_priority) {
+        var now = System.currentTimeMillis()
+        if (lease.priority >= active_priority || now - last_update > 100) {
+            last_update = now
             active_priority = lease.priority
             return Optional.of(obj)
         }

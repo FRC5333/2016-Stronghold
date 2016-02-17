@@ -23,9 +23,6 @@ public class IO {
     public static MotorGroup drive_motors, flywheel_motors, all_motors;
     public static ADIS16448_IMU imu_mxp;
 
-    public static ControlLease<CANTalon>    lease_drive_left, lease_drive_right,
-                                            lease_flywheel_top, lease_flywheel_bottom;
-
     public static void init() {
         motor_master_left       = Registrar.canTalon(Core.config.getInt("core.io.motor.left_master",        11));
         motor_slave_left        = Registrar.canTalon(Core.config.getInt("core.io.motor.left_slave",         10));
@@ -44,12 +41,6 @@ public class IO {
         drive_motors    = new MotorGroup(motor_master_left, motor_slave_left, motor_master_right, motor_slave_right);
         flywheel_motors = new MotorGroup(motor_flywheel_bottom, motor_flywheel_top);
         all_motors      = new MotorGroup(drive_motors, flywheel_motors);
-
-        lease_drive_left = new ControlLease<>(motor_master_left);
-        lease_drive_right = new ControlLease<>(motor_master_right);
-
-        lease_flywheel_bottom = new ControlLease<>(motor_flywheel_bottom);
-        lease_flywheel_top = new ControlLease<>(motor_flywheel_top);
 
         if (IMU_SUPPORTED())
             imu_mxp = new ADIS16448_IMU();

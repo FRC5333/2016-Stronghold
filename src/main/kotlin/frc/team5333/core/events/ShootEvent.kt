@@ -10,4 +10,4 @@ import frc.team5333.lib.events.EventBase
  *
  * @author Jaci
  */
-class ShootEvent(var trajectory: ShooterSystem.ShooterTrajectory) : EventBase() { }
+class ShootEvent(var system: ShooterSystem) : EventBase() { }

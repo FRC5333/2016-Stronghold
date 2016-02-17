@@ -1,8 +1,8 @@
 package frc.team5333.webui.api
 
 import com.grack.nanojson.JsonObject
-import frc.team5333.core.control.ControlManager
 import frc.team5333.core.control.strategy.StrategyController
+import frc.team5333.core.systems.Systems
 import frc.team5333.webui.WebHandler
 import spark.Request
 import spark.Response
@@ -16,7 +16,7 @@ class DriveAPI : API {
     override fun init() { }
 
     override fun handle(request: Request?, response: Response?): Any? {
-        var mode = ControlManager.INSTANCE.driveMode().name
+        var mode = Systems.control.driveMode().name
         var strat = StrategyController.INSTANCE.getStrategy().javaClass.canonicalName
         var map: HashMap<String, String> = hashMapOf(
                 Pair("drive_mode", mode),
