@@ -32,6 +32,9 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
         followerLeft.configurePID_VA(prop, 0.0, deriv, 1.0 / velocity, accel)
         followerRight.configurePID_VA(prop, 0.0, deriv, 1.0 / velocity, accel)
 
+        IO.motor_master_left.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 20)
+        IO.motor_master_right.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 20)
+
         followerLeft.configureEncoder(-IO.motor_master_left.encPosition, 1000, 0.08)
         followerRight.configureEncoder(IO.motor_master_right.encPosition, 1000, 0.08)
 
@@ -44,6 +47,9 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
     override fun onDisable() {
         super.onDisable()
         lease_drive.release()
+
+        IO.motor_master_left.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 100)
+        IO.motor_master_right.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 100)
     }
 
     override fun tick() {
