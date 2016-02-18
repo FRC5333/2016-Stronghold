@@ -79,6 +79,8 @@ public class Core extends IterativeModule {
                 SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
                         new SplineSystem.Waypoint(0, 0, 0),
                         new SplineSystem.Waypoint(1, 0, 0),
+                        new SplineSystem.Waypoint(3, -1.0, 0),
+                        new SplineSystem.Waypoint(4, -1.0, 0)
                 });
         StrategyController.INSTANCE.setStrategy(new StrategyMotionProfile(pairs));
     }

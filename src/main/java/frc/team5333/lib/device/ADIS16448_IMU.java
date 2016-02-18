@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWindowSendable {
     private static final double kTimeout = 0.1;
-    private static final double kCalibrationSampleTime = 5.0;
+    private static final double kCalibrationSampleTime = 2.0;
     private static final double kDegreePerSecondPerLSB = 1.0/25.0;
     private static final double kGPerLSB = 1.0/1200.0;
     private static final double kMilligaussPerLSB = 1.0/7.0;
@@ -162,7 +162,6 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
 
     /**
      * {@inheritDoc}
-     * TODO: better calibration
      */
     @Override
     public void calibrate() {

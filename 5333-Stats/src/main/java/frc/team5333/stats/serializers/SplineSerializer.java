@@ -23,11 +23,11 @@ public class SplineSerializer {
     public static void stratChanged(StrategyEvent.StrategyChangeEvent event) {
         if (event.getNewStrategy() instanceof StrategyMotionProfile) {
             StrategyMotionProfile s = (StrategyMotionProfile) event.getNewStrategy();
-            serialize(s.getTrajectory().getFirst());
+            serialize(s.getTrajectory().getFirst(), s.getTrajectory().getSecond());
         }
     }
 
-    public static void serialize(SplineSystem.Trajectory trajectory) {
+    public static void serialize(SplineSystem.Trajectory trajectory, SplineSystem.Trajectory trajectory2) {
         double timestamp = Toast.getToast().station().getMatchTime();
         Async.schedule(() -> {
             try {
@@ -36,12 +36,15 @@ public class SplineSerializer {
                 file.getParentFile().mkdirs();
 
                 FileWriter writer = new FileWriter(file);
-                writer.write("x,y,position,velocity,acceleration,jerk,heading\n");
+                writer.write("x1,y1,x2,y2,position1,position2,velocity1,velocity2,acceleration1,acceleration2\n");
 
-                for (SplineSystem.Segment seg : trajectory.getSegments()) {
+                for (int i = 0; i < trajectory.getLength(); i++) {
+                    SplineSystem.Segment seg1 = trajectory.get(i);
+                    SplineSystem.Segment seg2 = trajectory2.get(i);
                     writer.write(
-                        String.format("%f,%f,%f,%f,%f,%f,%f\n", seg.getX(), seg.getY(), seg.getPosition(),
-                                seg.getVelocity(), seg.getAcceleration(), seg.getJerk(), seg.getHeading())
+                            String.format("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n", seg1.getX(), seg1.getY(), seg2.getX(), seg2.getY(),
+                                    seg1.getPosition(), seg2.getPosition(), seg1.getVelocity(), seg2.getVelocity(),
+                                    seg1.getAcceleration(), seg2.getAcceleration())
                     );
                 }
                 writer.close();

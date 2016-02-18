@@ -7,6 +7,9 @@ import frc.team5333.lib.device.ADIS16448_IMU;
 import jaci.openrio.toast.core.Environment;
 import jaci.openrio.toast.lib.registry.Registrar;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
  * The IO Class is used to specify all the Inputs and Outputs of the RoboRIO. Things like Motors, Switches and LEDs go
  * in here.
@@ -44,6 +47,11 @@ public class IO {
 
         if (IMU_SUPPORTED())
             imu_mxp = new ADIS16448_IMU();
+    }
+
+    public static double maybeIMU(Function<ADIS16448_IMU, Double> d) {
+        if (IMU_SUPPORTED()) return d.apply(imu_mxp);
+        return 0.0;
     }
 
     public static boolean IMU_SUPPORTED() {

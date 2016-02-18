@@ -8,7 +8,9 @@ import frc.team5333.core.control.profiling.SplineFollower
 import frc.team5333.core.control.profiling.SplineSystem
 import frc.team5333.core.systems.DriveSystem
 import frc.team5333.core.systems.Systems
+import frc.team5333.lib.util.MathUtil
 import jaci.openrio.toast.core.shared.GlobalBlackboard
+import jaci.openrio.toast.lib.math.MathHelper
 import kotlin.collections.forEach
 
 class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, SplineSystem.Trajectory>) : Strategy() {
@@ -24,8 +26,8 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
     override fun onEnable() {
         super.onEnable()
 
-        var velocity = Core.config.getFloat("motion.max_velocity", 1.5f)
-        var prop = Core.config.getDouble("motion.profile.p", 1.5)
+        var velocity = Core.config.getFloat("motion.max_velocity_scale", 2.5f)
+        var prop = Core.config.getDouble("motion.profile.p", 0.8)
         var deriv = Core.config.getDouble("motion.profile.d", 0.0)
         var accel = Core.config.getDouble("motion.profile.a", 0.0)
 
@@ -58,8 +60,20 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
     override fun tickFast() {
         lease_drive.use {
-            it.leftMotor.set(-followerLeft.calculate(-it.leftMotor.encPosition))
-            it.rightMotor.set(followerRight.calculate(it.rightMotor.encPosition))
+            var l = -followerLeft.calculate(-it.leftMotor.encPosition)
+            var r = followerRight.calculate(it.rightMotor.encPosition)
+
+            var imu_heading = MathUtil.boundHalfDeg(IO.maybeIMU { it.accelY })
+            var desired_heading = MathUtil.boundHalfDeg(MathHelper.r2d(followerLeft.heading))
+
+            var angleDiff = MathUtil.boundHalfDeg(desired_heading - imu_heading)
+
+            Core.logger.info("DELTA: ${angleDiff} IMU: ${imu_heading} DESIRED: ${desired_heading} L: ${l} R:${r}")
+
+            var turn = 0.8 * (-3.0/80.0) * angleDiff
+
+            it.leftMotor.set(l + turn)
+            it.rightMotor.set(r - turn)
         }
     }
 
