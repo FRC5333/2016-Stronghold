@@ -9,20 +9,8 @@ freenect_device *f_dev;
 int bytecount = 3;
 
 void *depth_stored;
-void *video_stored;
-
-pthread_cond_t video_cv;
-pthread_mutex_t video_mtx;
-pthread_cond_t depth_cv;
-pthread_mutex_t depth_mtx;
 
 int init_kinect() {
-    pthread_cond_init(&video_cv, NULL);
-    pthread_mutex_init(&video_mtx, NULL);
-    
-    pthread_cond_init(&depth_cv, NULL);
-    pthread_mutex_init(&depth_mtx, NULL);
-    
     if (freenect_init(&f_ctx, NULL) < 0) {
 		printf("Freenect Framework Initialization Failed!\n");
 		return 1;
@@ -78,43 +66,12 @@ int kinect_video_bytecount() {
     return bytecount;
 }
 
-// INTERFACING //
-
-void *depth_wait() {
-    pthread_cond_wait(&depth_cv, &depth_mtx);
-    return depth_stored;
-}
-
-void *depth_fetch() {
-    return depth_stored;
-}
-
-void *video_wait() {
-    pthread_cond_wait(&video_cv, &video_mtx);
-    return video_stored;
-}
-
-void *video_fetch() {
-    return video_stored;
-}
-
 // CALLBACKS //
 
 void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp) {
-    pthread_mutex_lock(&depth_mtx);
-    
     depth_stored = depth;
-    pthread_cond_broadcast(&depth_cv);
-    
-    pthread_mutex_unlock(&depth_mtx);
 }
 
 void rgb_callback(freenect_device *dev, void *video, uint32_t timestamp) {
-    // render_rgb(rgb, timestamp, bytecount);
-    pthread_mutex_lock(&video_mtx);
-    
-    video_stored = video;
-    pthread_cond_broadcast(&video_cv);
-    
-    pthread_mutex_unlock(&video_mtx);
+    process_kinect(video, depth_stored);
 }

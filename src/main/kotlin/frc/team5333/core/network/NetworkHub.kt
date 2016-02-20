@@ -23,7 +23,7 @@ enum class NetworkHub {
     INSTANCE;
 
     enum class PROCESSORS(var abbrev: String) {
-        DRIVER_STATION("DS_CON"), SPLINES("CP_SPL"), KINECT("CP_SPL");
+        DRIVER_STATION("DS_CON"), SPLINES("CP_SPL"), KINECT("CP_KIN");
         var active: Socket? = null
     }
 

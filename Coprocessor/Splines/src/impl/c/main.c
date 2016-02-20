@@ -8,7 +8,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define HOST_ADDRESS "roborio-5333-frc.local"
+#define HOST_ADDR_1 "roborio-5333-frc.local"
+#define HOST_ADDR_2 "roborio-5333-frc.lan"
 #define HOST_PORT 5802
 
 int main() {
@@ -17,12 +18,17 @@ int main() {
     socket_init();
     int return_code = -1;
     
-    printf("Acquiring Host Target at %s:%i\n", HOST_ADDRESS, HOST_PORT);
     char HOST_IP[50];
-    return_code = socket_host(HOST_ADDRESS, HOST_IP);
+    bzero(HOST_IP, 50);
+    printf("Acquiring Host Target at %s:%i\n", HOST_ADDR_1, HOST_PORT);
+    return_code = hostname_to_ip(HOST_ADDR_1, HOST_IP);
     if (return_code != 0) {
-        printf("Failed\n");
-        return 1;
+        printf("Acquiring Host Target at %s:%i\n", HOST_ADDR_2, HOST_PORT);
+        return_code = hostname_to_ip(HOST_ADDR_2, HOST_IP);
+        if (return_code != 0) {
+            printf("Failed, using Static IP\n");
+            memcpy(HOST_IP, "10.53.33.83", 11);
+        }
     }
     return_code = -1;
     
@@ -40,30 +46,30 @@ int main() {
     
     while (1) {
         char buf[4];
-        read(host_socket, buf, 4);
+        if (read(host_socket, buf, 4) <= 0) return 2;
         
         int buffer_read = bytesToInt(buf);
         if (buffer_read == 0xAB) {	     // Negotiation Byte 
-            read(host_socket, buf, 4);
+            if (read(host_socket, buf, 4) <= 0) return 2;
             double max_velocity = (double) bytesToFloat(buf);
             
-            read(host_socket, buf, 4);
+            if (read(host_socket, buf, 4) <= 0) return 2;
             double max_acceleration = (double) bytesToFloat(buf);
             
-            read(host_socket, buf, 4);
+            if (read(host_socket, buf, 4) <= 0) return 2;
             int waypoint_num = bytesToInt(buf);
             
             Waypoint waypoints[waypoint_num];
             
             int i = 0;
             for (i = 0; i < waypoint_num; i++) {
-                read(host_socket, buf, 4);
+                if (read(host_socket, buf, 4) <= 0) return 2;
                 double x = (double) bytesToFloat(buf);
                 
-                read(host_socket, buf, 4);
+                if (read(host_socket, buf, 4) <= 0) return 2;
                 double y = (double) bytesToFloat(buf);
                 
-                read(host_socket, buf, 4);
+                if (read(host_socket, buf, 4) <= 0) return 2;
                 double angle = (double) bytesToFloat(buf);
                 
                 Waypoint wp = { x, y, angle };

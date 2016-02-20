@@ -1,5 +1,6 @@
 #include "kinect_cv.hpp"
 #include "kinect.h"
+#include "sleep.h"
 
 #include <libfreenect.h>
 
@@ -7,14 +8,10 @@ using namespace cv;
 
 Mat videomat, temp_1c, temp_3c;
 
-void *video_thread(void *args) {
-    while(1) {
-        void *data = video_wait();
-        void *depth = depth_fetch();
-        int count = kinect_video_bytecount();
+void process_kinect(void *video, void *depth) {
+    int count = kinect_video_bytecount();
     
-        prepare_video(data, count, videomat);
-    }
+    prepare_video(video, count, videomat);
 }
 
 void prepare_video(void *video, int bytecount, Mat video_mat) {
@@ -35,11 +32,4 @@ void init_cv() {
     temp_1c = Mat(480, 640, CV_8UC1);
     temp_3c = Mat(480, 640, CV_8UC3);
     videomat = Mat(480, 640, CV_8UC3);
-    
-    // pthread_t listen_thread;
-    
-    // pthread_create(&listen_thread, NULL, video_thread, NULL);
-    Mat mat = imread("out.jpg", CV_LOAD_IMAGE_COLOR);
-    char *destination;
-    size_t comp_size = compressLZ4()
 }
