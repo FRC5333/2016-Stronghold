@@ -36,9 +36,9 @@ class ShooterSystem(var flywheelTop: CANTalon, var flywheelBottom: CANTalon, var
         var mode = Systems.control.driveMode()
 
         if (mode == ControlSystem.DriveMode.LEFT_ONLY) {
-            return calc(lJoy);
-        } else if (mode == ControlSystem.DriveMode.RIGHT_ONLY) {
             return calc(rJoy);
+        } else if (mode == ControlSystem.DriveMode.RIGHT_ONLY) {
+            return calc(lJoy);
         } else {
             return Pair(0.0, 0.0)
         }
