@@ -1,6 +1,7 @@
 package frc.team5333.core.hardware;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Talon;
 import frc.team5333.core.Core;
 import frc.team5333.core.control.ControlLease;
 import frc.team5333.lib.device.ADIS16448_IMU;
@@ -23,6 +24,7 @@ public class IO {
 
     public static CANTalon motor_master_left, motor_slave_left, motor_master_right, motor_slave_right;
     public static CANTalon motor_flywheel_top, motor_flywheel_bottom;
+    public static Talon motor_intake;
     public static MotorGroup drive_motors, flywheel_motors, all_motors;
     public static ADIS16448_IMU imu_mxp;
 
@@ -35,6 +37,8 @@ public class IO {
         motor_flywheel_top      = Registrar.canTalon(Core.config.getInt("core.io.motor.flywheel_top",       14));
         motor_flywheel_bottom   = Registrar.canTalon(Core.config.getInt("core.io.motor.flywheel_bottom",    15));
 
+        motor_intake            = Registrar.talon(Core.config.getInt("core.io.motor.intake",                0));
+
         motor_slave_left.changeControlMode(CANTalon.TalonControlMode.Follower);
         motor_slave_left.set(motor_master_left.getDeviceID());
 
@@ -43,7 +47,7 @@ public class IO {
 
         drive_motors    = new MotorGroup(motor_master_left, motor_slave_left, motor_master_right, motor_slave_right);
         flywheel_motors = new MotorGroup(motor_flywheel_bottom, motor_flywheel_top);
-        all_motors      = new MotorGroup(drive_motors, flywheel_motors);
+        all_motors      = new MotorGroup(drive_motors, flywheel_motors, motor_intake);
 
         if (IMU_SUPPORTED())
             imu_mxp = new ADIS16448_IMU();

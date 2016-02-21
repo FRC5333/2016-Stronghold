@@ -14,7 +14,7 @@ public class Systems {
     public static void init() {
         control = new ControlSystem();
         drive   = new DriveSystem(IO.motor_master_left, IO.motor_master_right);
-        shooter = new ShooterSystem(IO.motor_flywheel_top, IO.motor_flywheel_bottom);
+        shooter = new ShooterSystem(IO.motor_flywheel_top, IO.motor_flywheel_bottom, IO.motor_intake);
     }
 
 }
