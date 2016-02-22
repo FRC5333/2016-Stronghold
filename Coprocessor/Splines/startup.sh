@@ -1,5 +1,5 @@
 while :
 do
-    ./spline_lib
+    /home/pi/FRC2016/Splines/spline_lib
     sleep 2
 done

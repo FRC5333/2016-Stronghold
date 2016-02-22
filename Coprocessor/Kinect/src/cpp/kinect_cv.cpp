@@ -1,17 +1,21 @@
 #include "kinect_cv.hpp"
 #include "kinect.h"
-#include "sleep.h"
+#include "conversions.h"
+#include "main.h"
 
 #include <pthread.h>
 #include <libfreenect.h>
 
+using namespace std;
 using namespace cv;
 
-Mat videomat, temp_1c, temp_3c, temp_contours;
+Mat videomat, temp_1c, temp_3c;
 Scalar hsl_low, hsl_high;
 Size blur_size;
 
-pthread_cont_t video_cv;
+vector<Rect> ir_rects;
+vector<uint16_t> ir_depths;
+pthread_cond_t video_cv;
 pthread_mutex_t video_mtx;
 
 Mat video_wait() { 
@@ -21,15 +25,48 @@ Mat video_wait() {
 
 void process_kinect(void *video, void *depth) {
     int count = kinect_video_bytecount();
+    char buf[4];
     
     prepare_video(video, count, videomat);
-    
+    	
     if (count == 1) {
-        // IR Stream -> Send Contours to RoboRIO
-        process_IR(videomat);
+        // IR Stream -> Send Contour Bounds to RoboRIO
+        videomat = process_IR(videomat, depth);
+        intToBytes(0xBA, buf);
+        send_to_rio(buf, 4);
+        int i;
+        for (i = 0; i < ir_rects.size(); i++) {
+            Rect r = ir_rects[i];
+            int depth_mm = ir_depths[i];
+
+            intToBytes(0xBB, buf);
+            send_to_rio(buf, 4);
+            
+            intToBytes(r.x, buf);
+            send_to_rio(buf, 4);
+            
+            intToBytes(r.y, buf);
+            send_to_rio(buf, 4);
+            
+            intToBytes(r.width, buf);
+            send_to_rio(buf, 4);
+            
+            intToBytes(r.height, buf);
+            send_to_rio(buf, 4);
+            
+            intToBytes(depth_mm, buf);
+            send_to_rio(buf, 4);
+        }
+        
+        intToBytes(0xBC, buf);
+        send_to_rio(buf, 4);
     } else {
         // RGB Stream -> Driver Station Feedback Only
+        intToBytes(0xCA, buf);
+        send_to_rio(buf, 4);
     }
+    
+    printf("KinectFrame\n");
     
     pthread_mutex_lock(&video_mtx);
 
@@ -37,18 +74,55 @@ void process_kinect(void *video, void *depth) {
     pthread_mutex_unlock(&video_mtx);
 }
 
-void process_IR(Mat video) {
-    cvtColor(video, temp_3c, CV_RGB2HLS);
-    inRange(temp_3c, hsl_low, hsl_high, temp_3c);
-    blur(temp_3c, temp_3c, blur_size);
+Mat process_IR(Mat video, void *depth) {
+    ir_rects.clear();
     
-    memcpy(temp_contours.data, temp_3c.data, 640*480*3);
-    vector<vector<Point>> contours;
+    Mat depth_mat = Mat(480, 640, CV_16UC1);
+    memcpy(depth_mat.data, depth, 640*480*2);
+    
+    flip(depth_mat, depth_mat, 0);
+    flip(video, video, 0);
+    
+    Mat original = video.clone();
+    Mat tmp;
+    cvtColor(video, tmp, CV_RGB2HLS);
+    inRange(tmp, hsl_low, hsl_high, tmp);
+    blur(tmp, tmp, blur_size);
+    
+    Mat temp_contours = tmp.clone();
+    
+    vector<vector<Point> > contours;
+    vector<vector<Point> > filteredContours;
     
     findContours(temp_contours, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_KCOS);
-    drawContours(temp_3c, contours, -1, Scalar(230, 0, 230));
+
+    int i;
+    for (i = 0; i < contours.size(); i++) {
+        vector<Point> contour = contours[i];
+        double area = contourArea(contour);
+        vector<Point> hull;
+        convexHull(contour, hull);
+        double solidity = 100 * area / contourArea(hull);
+        
+        if (area > 300.0 && solidity < 75.0) {
+            filteredContours.push_back(contour);
+            Rect r = boundingRect(contour);
+            
+            uint16_t d = depth_mat.at<uint16_t>(r.x-5, r.y-5);
+            ir_depths.push_back(d);
+            ir_rects.push_back(r);
+        }
+    }   
+        
+    // for (i = 0; i < filteredContours.size(); i++) {
+    //     drawContours(video, filteredContours, i, Scalar(255, 0, 255), 2);
+    //     Rect r = ir_rects[i];
+    //     rectangle(video, r.tl(), r.br(), Scalar(0, 0, 255), 1);
+    //     render_text(video, format("[%d,%d]", r.x, r.y), r.x - r.width / 2, r.y - r.height / 2, 0.5, 255, 0, 255);
+    //     render_text(video, format("[<< %d]", ir_depths[i]), r.x - 5, r.y - 5, 0.5, 0, 255, 0);
+    // }
     
-    memcpy(video.data, temp_3c.data);
+    return video.clone();
 }
 
 void prepare_video(void *video, int bytecount, Mat video_mat) {
@@ -61,20 +135,13 @@ void prepare_video(void *video, int bytecount, Mat video_mat) {
     }
 }
 
-void render_text(Mat *mat, std::string str, int x, int y, double scale, int r, int g, int b) {
-    putText(*mat, str, Point(x, y), FONT_HERSHEY_COMPLEX, scale, Scalar(r, g, b));
+void render_text(Mat mat, std::string str, int x, int y, double scale, int r, int g, int b) {
+    putText(mat, str, Point(x, y), FONT_HERSHEY_COMPLEX, scale, Scalar(r, g, b));
 }
 
 void init_cv() {
-    Mat image = imread("out.jpg");
-    
-    process_IR(image);
-    
-    imwrite("out2.jpg", image);
-    
     temp_1c = Mat(480, 640, CV_8UC1);
     temp_3c = Mat(480, 640, CV_8UC3);
-    temp_contours = Mat(480, 640, CV_8UC3);
     videomat = Mat(480, 640, CV_8UC3);
     
     hsl_low = Scalar(0, 16, 0);

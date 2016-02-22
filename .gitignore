@@ -39,3 +39,4 @@ Coprocessor/Kinect/kinect.dSYM
 Coprocessor/Splines/spline_lib.dSYM
 Coprocessor/Kinect/kinect_lib.dSYM
 kinect_lib
+*.jpg

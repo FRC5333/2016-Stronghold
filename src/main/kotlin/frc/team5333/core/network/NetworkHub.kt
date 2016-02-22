@@ -11,6 +11,7 @@ import java.nio.ByteOrder
 import kotlin.collections.filter
 import kotlin.collections.toString
 import kotlin.concurrent.thread
+import kotlin.text.toByteArray
 import kotlin.text.toLowerCase
 
 /**

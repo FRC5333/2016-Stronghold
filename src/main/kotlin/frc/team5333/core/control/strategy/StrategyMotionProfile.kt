@@ -26,13 +26,16 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
     override fun onEnable() {
         super.onEnable()
 
-        var velocity = Core.config.getFloat("motion.max_velocity_scale", 2.5f)
+        var velocity_actual = Core.config.getFloat("motion.max_velocity_actual", 1.7f)
+        var velocity = Core.config.getFloat("motion.max_velocity", 1.2f)
         var prop = Core.config.getDouble("motion.profile.p", 0.8)
         var deriv = Core.config.getDouble("motion.profile.d", 0.0)
         var accel = Core.config.getDouble("motion.profile.a", 0.0)
 
-        followerLeft.configurePID_VA(prop, 0.0, deriv, 1.0 / velocity, accel)
-        followerRight.configurePID_VA(prop, 0.0, deriv, 1.0 / velocity, accel)
+        var adj_scaler = (1.0 * (velocity / velocity_actual)) / velocity
+
+        followerLeft.configurePID_VA(prop, 0.0, deriv, adj_scaler, accel)
+        followerRight.configurePID_VA(prop, 0.0, deriv, adj_scaler, accel)
 
         IO.motor_master_left.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 20)
         IO.motor_master_right.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 20)

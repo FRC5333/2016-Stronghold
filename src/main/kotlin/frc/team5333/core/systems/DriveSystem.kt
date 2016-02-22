@@ -29,8 +29,12 @@ class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
     fun drive() {
         update()
         var pairs = getDrivePairs()
-        leftMotor.set(pairs.first)
-        rightMotor.set(-pairs.second)
+        drive(pairs.first, pairs.second)
+    }
+
+    fun drive(l: Double, r: Double) {
+        leftMotor.set(l)
+        rightMotor.set(-r)
     }
 
     fun getDrivePairs(): Pair<Double, Double> {

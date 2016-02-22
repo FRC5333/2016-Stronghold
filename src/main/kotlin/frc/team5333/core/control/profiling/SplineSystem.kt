@@ -39,7 +39,7 @@ enum class SplineSystem {
     }
 
     fun generateCentralTrajectory(points: Array<out Waypoint>): Trajectory {
-        writeToCoprocessor(Core.config.getFloat("motion.max_velocity", 2.0f),
+        writeToCoprocessor(Core.config.getFloat("motion.max_velocity", 1.2f),
                 Core.config.getFloat("motion.max_acceleration", 2.0f), points)
         return readFromCoprocessor()
     }

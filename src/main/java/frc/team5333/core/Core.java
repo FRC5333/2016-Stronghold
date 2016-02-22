@@ -1,7 +1,7 @@
 package frc.team5333.core;
 
 import frc.team5333.core.commands.CommandClearConfigs;
-import frc.team5333.core.commands.ShooterCommand;
+import frc.team5333.core.commands.CommandSpeedTest;
 import frc.team5333.core.control.ControlLoopManager;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
@@ -14,6 +14,7 @@ import frc.team5333.core.hardware.IO;
 import frc.team5333.core.systems.Systems;
 import frc.team5333.core.network.NetworkHub;
 import frc.team5333.core.control.profiling.SplineSystem;
+import frc.team5333.core.vision.VisionNetwork;
 import frc.team5333.lib.events.EventBus;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
@@ -60,21 +61,17 @@ public class Core extends IterativeModule {
 
         MatchInfo.load();
 
+        VisionNetwork.INSTANCE.init();
+
         TransientControls.init();
         StateTracker.addTicker((s) -> { TransientControls.tick(); });
         StateTracker.addTransition((o,n) -> { EventBus.INSTANCE.raiseEvent(new StateChangeEvent(o,n)); });
 
-        CommandBus.registerCommand(new ShooterCommand());
         CommandBus.registerCommand(new CommandClearConfigs());
+        CommandBus.registerCommand(new CommandSpeedTest());
     }
 
     public void autonomousInit() {
-//        Pair<SplineSystem.Trajectory, SplineSystem.Trajectory> pairs =
-//                SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
-//                        new SplineSystem.Waypoint(0, 0, 0),
-//                        new SplineSystem.Waypoint(1, 1, 0),
-//                        new SplineSystem.Waypoint(2, 0.5, 0)
-//                });
         Pair<SplineSystem.Trajectory, SplineSystem.Trajectory> pairs =
                 SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
                         new SplineSystem.Waypoint(0, 0, 0),
