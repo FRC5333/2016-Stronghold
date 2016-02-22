@@ -71,7 +71,7 @@ public class SocketTraining {
     }
 
     @EventListener
-    public void onEvent(VisionFrameEvent event) {
+    public static void onEvent(VisionFrameEvent event) {
         sessions.forEach(session -> {
             try {
                 if (event.getFrame() == null)
