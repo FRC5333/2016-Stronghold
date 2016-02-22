@@ -1,6 +1,7 @@
 package frc.team5333.core.control;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.team5333.core.control.strategy.StrategyAlign;
 import frc.team5333.core.control.strategy.StrategyBlank;
 import frc.team5333.core.control.strategy.StrategyController;
 import frc.team5333.core.control.strategy.StrategyOperator;
@@ -48,6 +49,10 @@ public class TransientControls {
         // all motors to 0.0. This is kind of like an E-Stop mode.
         triggerOn(onChangeRising(() -> { return Operator.eitherButton(5); }), () -> {
             StrategyController.INSTANCE.setStrategy(new StrategyBlank()); });
+
+        triggerOn(onChangeRising(() -> { return Operator.eitherButton(4); }), () -> {
+            StrategyController.INSTANCE.setStrategy(new StrategyAlign());
+        });
     }
 
     /**

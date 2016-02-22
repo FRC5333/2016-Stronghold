@@ -1,0 +1,59 @@
+package frc.team5333.core.control.strategy
+
+import edu.wpi.first.wpilibj.PIDController
+import frc.team5333.core.Core
+import frc.team5333.core.control.ControlLease
+import frc.team5333.core.systems.DriveSystem
+import frc.team5333.core.systems.Systems
+import frc.team5333.core.vision.VisionNetwork
+
+
+class StrategyAlign : Strategy() {
+
+    override fun getName(): String = "Align"
+
+    lateinit var controller: PIDController
+
+    var kp = 0.0
+    var ki = 0.0
+    var kd = 0.0
+
+    var lastError = 0.0
+    var cumulativeError = 0.0
+    var lastTime = 0L
+
+    lateinit var lease: ControlLease.Lease<DriveSystem>
+
+    override fun onEnable() {
+        super.onEnable()
+        kp = Core.config.getDouble("vision.align.p", 0.8)
+        ki = Core.config.getDouble("vision.align.i", 0.001)
+        kd = Core.config.getDouble("vision.align.d", 0.05)
+        lastTime = System.currentTimeMillis()
+        lease = Systems.drive.LEASE.acquire(ControlLease.Priority.HIGH)
+    }
+
+    override fun tick() {
+        if (VisionNetwork.INSTANCE.active != null) {
+            var now = System.currentTimeMillis()
+            var dt = now - lastTime
+
+            var error = VisionNetwork.INSTANCE.active.offsetCenterX()
+            cumulativeError += (error * dt)
+            var deriv = (error - lastError) / dt.toDouble()
+
+            var turnV = kp * error + ki * cumulativeError + kd * deriv
+
+            lease.use {
+                it.drive(turnV, -turnV)
+            }
+
+            lastError = error
+            lastTime = now
+        } else lastError = 0.0
+    }
+
+    override fun isOperatorControl(): Boolean = false
+
+    override fun isComplete(): Boolean = Math.abs(lastError) <= 0.01
+}
