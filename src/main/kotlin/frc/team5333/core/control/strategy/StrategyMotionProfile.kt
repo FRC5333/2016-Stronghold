@@ -66,12 +66,12 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
             var l = -followerLeft.calculate(-it.leftMotor.encPosition)
             var r = followerRight.calculate(it.rightMotor.encPosition)
 
-            var imu_heading = MathUtil.boundHalfDeg(IO.maybeIMU { it.accelY })
+            var imu_heading = MathUtil.boundHalfDeg(IO.maybeIMU { it.angleY })
             var desired_heading = MathUtil.boundHalfDeg(MathHelper.r2d(followerLeft.heading))
 
             var angleDiff = MathUtil.boundHalfDeg(desired_heading - imu_heading)
 
-            var turn = 0.8 * (-3.0/80.0) * angleDiff
+            var turn = 0.8 * (-1.0/80.0) * angleDiff
 
             it.leftMotor.set(l + turn)
             it.rightMotor.set(r - turn)

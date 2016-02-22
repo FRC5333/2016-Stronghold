@@ -27,10 +27,6 @@ class ShooterSystem(var flywheelTop: CANTalon, var flywheelBottom: CANTalon, var
         LOOKUP.saveToFile()
     }
 
-    fun takeShot() {
-
-    }
-
     // MANUAL CONTROL
 
     fun setTop(v: Double) = flywheelTop.set(v)

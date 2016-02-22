@@ -25,7 +25,7 @@ class StrategyAlign : Strategy() {
 
     override fun onEnable() {
         super.onEnable()
-        kp = Core.config.getDouble("vision.align.p", 0.5)
+        kp = Core.config.getDouble("vision.align.p", 0.7)
         ki = Core.config.getDouble("vision.align.i", 0.001)
         kd = Core.config.getDouble("vision.align.d", 0.05)
         lastTime = System.currentTimeMillis()
@@ -45,7 +45,7 @@ class StrategyAlign : Strategy() {
             var turnV = (kp * error + kd * deriv)
 
             lease.use {
-                it.drive(-turnV, turnV)
+                it.drive(turnV, -turnV)
             }
 
             lastError = error
@@ -58,5 +58,5 @@ class StrategyAlign : Strategy() {
 
     override fun isOperatorControl(): Boolean = false
 
-    override fun isComplete(): Boolean = started && Math.abs(lastError) <= 0.01
+    override fun isComplete(): Boolean = started && Math.abs(lastError) <= 0.05
 }

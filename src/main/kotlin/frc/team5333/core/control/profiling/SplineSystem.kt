@@ -85,6 +85,7 @@ enum class SplineSystem {
                     segments.set(i, Segment(x, y, pos, vel, acc, jerk, head))
                 }
 
+                sock.close()
                 return Trajectory(segments.map { it!! }.toTypedArray())
             }
         }

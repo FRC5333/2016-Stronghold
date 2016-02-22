@@ -1,10 +1,9 @@
 package frc.team5333.core.control;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.team5333.core.control.strategy.StrategyAlign;
-import frc.team5333.core.control.strategy.StrategyBlank;
-import frc.team5333.core.control.strategy.StrategyController;
-import frc.team5333.core.control.strategy.StrategyOperator;
+import frc.team5333.core.control.strategy.*;
+import frc.team5333.core.vision.VisionFrame;
+import frc.team5333.core.vision.VisionNetwork;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -51,7 +50,11 @@ public class TransientControls {
             StrategyController.INSTANCE.setStrategy(new StrategyBlank()); });
 
         triggerOn(onChangeRising(() -> { return Operator.eitherButton(4); }), () -> {
-            StrategyController.INSTANCE.setStrategy(new StrategyAlign());
+            StrategyController.INSTANCE.setStrategy(new StrategyAlign()); });
+
+        triggerOn(onChangeRising(() -> { return Operator.eitherButton(6); }), () -> {
+            VisionFrame frame = VisionNetwork.INSTANCE.getActive();
+            if (frame != null) StrategyController.INSTANCE.setStrategy(new StrategyShoot(frame.getY()));
         });
     }
 

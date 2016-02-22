@@ -6,9 +6,7 @@ import frc.team5333.core.commands.CommandSpeedTest;
 import frc.team5333.core.control.ControlLoopManager;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
-import frc.team5333.core.control.strategy.StrategyController;
-import frc.team5333.core.control.strategy.StrategyMotionProfile;
-import frc.team5333.core.control.strategy.StrategyOperator;
+import frc.team5333.core.control.strategy.*;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.events.StateChangeEvent;
 import frc.team5333.core.hardware.IO;
@@ -79,9 +77,10 @@ public class Core extends IterativeModule {
                         new SplineSystem.Waypoint(0, 0, 0),
                         new SplineSystem.Waypoint(1, 0, 0),
                         new SplineSystem.Waypoint(3, -1.0, 0),
-                        new SplineSystem.Waypoint(4, -1.0, 0)
+                        new SplineSystem.Waypoint(4, -0.5, 0)
                 });
-        StrategyController.INSTANCE.setStrategy(new StrategyMotionProfile(pairs));
+        Strategy stra = new StrategyMotionProfile(pairs);
+        StrategyController.INSTANCE.setStrategy(stra);
     }
 
     @Override
