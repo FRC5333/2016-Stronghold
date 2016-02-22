@@ -39,6 +39,7 @@ public enum VisionNetwork {
                         read(active);
                     } catch (Exception e) {
                         NetworkHub.PROCESSORS.KINECT.setActive(null);
+                        Core.logger.exception(e);
                     }
                 }
             }

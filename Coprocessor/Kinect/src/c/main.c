@@ -16,7 +16,7 @@
 SOCKET host_socket;
 
 void send_to_rio(char *data, int length) {
-    send(host_socket, data, length, 0);
+    if (send(host_socket, data, length, 0) < 0) exit(1);
 }
 
 int main() {

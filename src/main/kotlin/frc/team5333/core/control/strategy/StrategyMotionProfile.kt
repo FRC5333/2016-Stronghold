@@ -71,8 +71,6 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
             var angleDiff = MathUtil.boundHalfDeg(desired_heading - imu_heading)
 
-            Core.logger.info("DELTA: ${angleDiff} IMU: ${imu_heading} DESIRED: ${desired_heading} L: ${l} R:${r}")
-
             var turn = 0.8 * (-3.0/80.0) * angleDiff
 
             it.leftMotor.set(l + turn)
