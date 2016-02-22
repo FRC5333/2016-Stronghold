@@ -77,7 +77,7 @@ public class SocketTraining {
                 if (event.getFrame() == null)
                     session.getRemote().sendString("null");
                 else {
-                    session.getRemote().sendString(String.format("%.2f", event.getFrame().getHeight() * 1000.0));
+                    session.getRemote().sendString(String.format("%.2fpx", event.getFrame().getY()));
                 }
             } catch (IOException e) {}
         });

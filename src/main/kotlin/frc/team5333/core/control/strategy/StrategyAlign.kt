@@ -25,7 +25,7 @@ class StrategyAlign : Strategy() {
 
     override fun onEnable() {
         super.onEnable()
-        kp = Core.config.getDouble("vision.align.p", 0.8)
+        kp = Core.config.getDouble("vision.align.p", 0.5)
         ki = Core.config.getDouble("vision.align.i", 0.001)
         kd = Core.config.getDouble("vision.align.d", 0.05)
         lastTime = System.currentTimeMillis()
@@ -42,8 +42,7 @@ class StrategyAlign : Strategy() {
             cumulativeError += (error * dt)
             var deriv = (error - lastError) / dt.toDouble()
 
-            var turnV = (kp * error + kd * deriv) / 2.0
-            Core.logger.info("ERROR: ${error} TURN: ${turnV}")
+            var turnV = (kp * error + kd * deriv)
 
             lease.use {
                 it.drive(-turnV, turnV)

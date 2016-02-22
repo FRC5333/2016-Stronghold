@@ -1,13 +1,14 @@
 package frc.team5333.core.control.command
 
 import edu.wpi.first.wpilibj.command.Command
+import frc.team5333.core.Core
 import frc.team5333.core.control.ControlLease
 import frc.team5333.core.systems.ShooterSystem
 import frc.team5333.core.systems.Systems
 
 class CCommandShoot(var top: Double, var bottom: Double) : Command() {
 
-    val SPINUP_PERIOD = 1000
+    val SPINUP_PERIOD = 2000
 
     var startTime = 0L
     lateinit var lease: ControlLease.Lease<ShooterSystem>
@@ -20,11 +21,11 @@ class CCommandShoot(var top: Double, var bottom: Double) : Command() {
     override fun execute() {
         var elapsed = System.currentTimeMillis() - startTime
         lease.use {
-            it.setTop(top)
-            it.setBottom(bottom)
+            it.setTop(-top)
+            it.setBottom(-bottom)
 
             if (elapsed < SPINUP_PERIOD) {
-                it.setIntake(-1.0)
+                it.setIntake(-0.5)
             } else {
                 it.setIntake(1.0)
             }

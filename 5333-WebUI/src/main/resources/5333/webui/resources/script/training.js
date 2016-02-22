@@ -5,7 +5,7 @@ new_uri += "/socket/training";
 
 var socket = new WebSocket(new_uri);
 socket.onmessage = function(event) {
-    shooter_distance.value = event.data + "m"
+    shooter_distance.value = event.data
 };
 
 function training_test() {

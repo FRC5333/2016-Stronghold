@@ -5,8 +5,8 @@ import frc.team5333.core.systems.Systems
 
 class StrategyShoot(var top: Double, var btm: Double) : Strategy() {
 
-    constructor(height: Double) : this(0.0, 0.0) {
-        var p = Systems.shooter.LOOKUP.get(height)
+    constructor(y: Double) : this(0.0, 0.0) {
+        var p = Systems.shooter.LOOKUP.get(y)
         this.top = p.first
         this.btm = p.second
     }
