@@ -14,7 +14,8 @@ Scalar hsl_low, hsl_high;
 Size blur_size;
 
 vector<Rect> ir_rects;
-vector<uint16_t> ir_depths;
+vector<double> ir_dists;
+vector<double> ir_angles;
 pthread_cond_t video_cv;
 pthread_mutex_t video_mtx;
 
@@ -37,7 +38,7 @@ void process_kinect(void *video, void *depth) {
         int i;
         for (i = 0; i < ir_rects.size(); i++) {
             Rect r = ir_rects[i];
-            int depth_mm = ir_depths[i];
+            int depth_mm = 0;
 
             intToBytes(0xBB, buf);
             send_to_rio(buf, 4);
@@ -53,13 +54,6 @@ void process_kinect(void *video, void *depth) {
             
             intToBytes(r.height, buf);
             send_to_rio(buf, 4);
-            
-            intToBytes(depth_mm, buf);
-            send_to_rio(buf, 4);
-            
-            int depth_local = (int)(depth_mm * cos(0.523599));
-            intToBytes(depth_local, buf);
-            send_to_rio(buf, 4);
         }
         
         intToBytes(0xBC, buf);
@@ -70,8 +64,6 @@ void process_kinect(void *video, void *depth) {
         send_to_rio(buf, 4);
     }
     
-    printf("KinectFrame\n");
-    
     pthread_mutex_lock(&video_mtx);
 
     pthread_cond_broadcast(&video_cv);      // Broadcast to Threaded Listeners (e.g. Driver Station Sender)
@@ -81,17 +73,12 @@ void process_kinect(void *video, void *depth) {
 Mat process_IR(Mat video, void *depth) {
     ir_rects.clear();
     
-    Mat depth_mat = Mat(480, 640, CV_16UC1);
-    memcpy(depth_mat.data, depth, 640*480*2);
-    
-    flip(depth_mat, depth_mat, 0);
     flip(video, video, 0);
     
     Mat original = video.clone();
     Mat tmp;
     cvtColor(video, tmp, CV_RGB2HLS);
     inRange(tmp, hsl_low, hsl_high, tmp);
-    blur(tmp, tmp, blur_size);
     
     Mat temp_contours = tmp.clone();
     
@@ -103,6 +90,8 @@ Mat process_IR(Mat video, void *depth) {
     int i;
     for (i = 0; i < contours.size(); i++) {
         vector<Point> contour = contours[i];
+        Rect r = boundingRect(contour);
+       
         double area = contourArea(contour);
         vector<Point> hull;
         convexHull(contour, hull);
@@ -110,21 +99,9 @@ Mat process_IR(Mat video, void *depth) {
         
         if (area > 300.0 && solidity < 75.0) {
             filteredContours.push_back(contour);
-            Rect r = boundingRect(contour);
-            
-            uint16_t d = depth_mat.at<uint16_t>(r.x-5, r.y-5);
-            ir_depths.push_back(d);
             ir_rects.push_back(r);
         }
     }   
-        
-    // for (i = 0; i < filteredContours.size(); i++) {
-    //     drawContours(video, filteredContours, i, Scalar(255, 0, 255), 2);
-    //     Rect r = ir_rects[i];
-    //     rectangle(video, r.tl(), r.br(), Scalar(0, 0, 255), 1);
-    //     render_text(video, format("[%d,%d]", r.x, r.y), r.x - r.width / 2, r.y - r.height / 2, 0.5, 255, 0, 255);
-    //     render_text(video, format("[<< %d]", ir_depths[i]), r.x - 5, r.y - 5, 0.5, 0, 255, 0);
-    // }
     
     return video.clone();
 }

@@ -57,7 +57,7 @@ public class SocketTraining {
                 strat.then(StrategyController.INSTANCE.getStrategy());
                 StrategyController.INSTANCE.setStrategy(strat);
             } else if (action.equalsIgnoreCase("register")) {
-                double distance = VisionNetwork.INSTANCE.getActive().getDepth_mm();
+                double distance = VisionNetwork.INSTANCE.getActive().getHeight();
                 double top = obj.getDouble("top");
                 double btm = obj.getDouble("btm");
 
@@ -77,7 +77,7 @@ public class SocketTraining {
                 if (event.getFrame() == null)
                     session.getRemote().sendString("null");
                 else {
-                    session.getRemote().sendString(String.format("%.2f", event.getFrame().getDepth_mm() * 1000.0));
+                    session.getRemote().sendString(String.format("%.2f", event.getFrame().getHeight() * 1000.0));
                 }
             } catch (IOException e) {}
         });

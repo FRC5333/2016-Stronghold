@@ -70,12 +70,6 @@ public enum VisionNetwork {
                     i = NetworkHub.INSTANCE.readInt(in);
                     frame.setHeight(i);
 
-                    i = NetworkHub.INSTANCE.readInt(in);
-                    frame.setDepth_mm(i);
-
-                    i = NetworkHub.INSTANCE.readInt(in);
-                    frame.setDepth_local_mm(i);
-
                     frame.fin();
 
                     if (activeFrame == null || frame.area() > activeFrame.area()) activeFrame = frame;      // Select largest area

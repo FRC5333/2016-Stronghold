@@ -36,7 +36,7 @@ class ShooterLookup {
         file.createNewFile()
 
         var writer = FileWriter(file)
-        writer.write("distance,throttleTop,throttleBottom\n")
+        writer.write("height,throttleTop,throttleBottom\n")
         entries.forEach {
             writer.write("${it.first},${it.second},${it.third}\n")
         }
