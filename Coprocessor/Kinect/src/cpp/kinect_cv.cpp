@@ -56,6 +56,10 @@ void process_kinect(void *video, void *depth) {
             
             intToBytes(depth_mm, buf);
             send_to_rio(buf, 4);
+            
+            int depth_local = (int)(depth_mm * cos(0.523599));
+            intToBytes(depth_local, buf);
+            send_to_rio(buf, 4);
         }
         
         intToBytes(0xBC, buf);

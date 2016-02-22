@@ -109,55 +109,66 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
         }
     }
     private Thread m_task;
+    private boolean found_imu = false;
+    private int find_attempts = 0;
 
     /**
      * Constructor.
      */
     public ADIS16448_IMU() {
-        m_spi = new SPI(SPI.Port.kMXP);
-        m_spi.setClockRate(1000000);
-        m_spi.setMSBFirst();
-        m_spi.setSampleDataOnFalling();
-        m_spi.setClockActiveLow();
-        m_spi.setChipSelectActiveLow();
+        while (!found_imu && find_attempts < 8) {   // Sometimes SPI is hella slow
+            m_spi = new SPI(SPI.Port.kMXP);
+            m_spi.setClockRate(1000000);
+            m_spi.setMSBFirst();
+            m_spi.setSampleDataOnFalling();
+            m_spi.setClockActiveLow();
+            m_spi.setChipSelectActiveLow();
 
-        readRegister(kRegPROD_ID); // dummy read
+            readRegister(kRegPROD_ID); // dummy read
 
-        // Validate the part ID
-        if (readRegister(kRegPROD_ID) != 16448) {
-            m_spi.free();
-            m_spi = null;
-            DriverStation.reportError("could not find ADIS16448", false);
-            return;
+            // Validate the part ID
+            if (readRegister(kRegPROD_ID) != 16448) {
+                m_spi.free();
+                m_spi = null;
+                find_attempts++;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) { }
+                return;
+            } else {
+                found_imu = true;
+            }
+
+            // Set IMU internal decimation to 102.4 SPS
+            writeRegister(kRegSMPL_PRD, 769);
+
+            // Enable Data Ready (LOW = Good Data) on DIO1 (PWM0 on MXP)
+            writeRegister(kRegMSC_CTRL, 4);
+
+            // Configure IMU internal Bartlett filter
+            writeRegister(kRegSENS_AVG, 1030);
+
+            m_cmd = ByteBuffer.allocateDirect(26);
+            m_cmd.put(0, (byte) kGLOB_CMD);
+            m_cmd.put(1, (byte) 0);
+            m_resp = ByteBuffer.allocateDirect(26);
+            m_resp.order(ByteOrder.BIG_ENDIAN);
+
+            // Configure interrupt on MXP DIO0
+            m_interrupt = new InterruptSource(10);  // MXP DIO0
+            m_task = new Thread(new ReadTask(this));
+            m_interrupt.requestInterrupts();
+            m_interrupt.setUpSourceEdge(false, true);
+            m_task.setDaemon(true);
+            m_task.start();
+
+            calibrate();
+
+            //UsageReporting.report(tResourceType.kResourceType_ADIS16448, 0);
+            LiveWindow.addSensor("ADIS16448_IMU", 0, this);
         }
-
-        // Set IMU internal decimation to 102.4 SPS
-        writeRegister(kRegSMPL_PRD, 769);
-
-        // Enable Data Ready (LOW = Good Data) on DIO1 (PWM0 on MXP)
-        writeRegister(kRegMSC_CTRL, 4);
-
-        // Configure IMU internal Bartlett filter
-        writeRegister(kRegSENS_AVG, 1030);
-
-        m_cmd = ByteBuffer.allocateDirect(26);
-        m_cmd.put(0, (byte) kGLOB_CMD);
-        m_cmd.put(1, (byte) 0);
-        m_resp = ByteBuffer.allocateDirect(26);
-        m_resp.order(ByteOrder.BIG_ENDIAN);
-
-        // Configure interrupt on MXP DIO0
-        m_interrupt = new InterruptSource(10);  // MXP DIO0
-        m_task = new Thread(new ReadTask(this));
-        m_interrupt.requestInterrupts();
-        m_interrupt.setUpSourceEdge(false, true);
-        m_task.setDaemon(true);
-        m_task.start();
-
-        calibrate();
-
-        //UsageReporting.report(tResourceType.kResourceType_ADIS16448, 0);
-        LiveWindow.addSensor("ADIS16448_IMU", 0, this);
+        if (!found_imu)
+            DriverStation.reportError("could not find ADIS16448", false);
     }
 
     /**

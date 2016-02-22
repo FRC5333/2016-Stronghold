@@ -10,9 +10,11 @@ import frc.team5333.webui.api.*;
 import frc.team5333.webui.controller.ConfigController;
 import frc.team5333.webui.controller.Controller;
 import frc.team5333.webui.controller.IndexController;
+import frc.team5333.webui.controller.TrainingController;
 import frc.team5333.webui.websockets.SocketConfig;
 import frc.team5333.webui.websockets.SocketLogger;
 import frc.team5333.webui.websockets.SocketReadout;
+import frc.team5333.webui.websockets.SocketTraining;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.lib.log.Logger;
 
@@ -58,8 +60,10 @@ public class WebHandler {
         webSocket("/socket/logger", SocketLogger.class);
         webSocket("/socket/readout", SocketReadout.class);
         webSocket("/socket/config", SocketConfig.class);
+        webSocket("/socket/training", SocketTraining.class);
         Logger.addHandler(new SocketLogger());
         StateTracker.addTicker(SocketReadout::tick);
+        SocketTraining.init();
 
         get("/styles/:file", (req, res) -> {
             res.type("text/css");
@@ -90,6 +94,7 @@ public class WebHandler {
 
         register(new IndexController());
         register(new ConfigController());
+        register(new TrainingController());
     }
 
     public static Handlebars getHandlebars() {

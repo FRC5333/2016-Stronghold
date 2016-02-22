@@ -21,3 +21,7 @@ function textAreaKeyDown(e) {
         e.preventDefault();
     }
 }
+
+function round2(num) {
+    return Math.round(num * 100) / 100;
+}

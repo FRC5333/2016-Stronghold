@@ -1,0 +1,23 @@
+{{#include t="include/base.html" title="Shot Training" }}
+<script type="text/javascript" src="/scripts/training.js"> </script>
+
+<div class="container" style="max-width: 400px; text-align: center">
+
+    <input type="text" name="distance" value="0m" id="shooter_distance" disabled style="font-size: 16px; text-align: center">
+
+    <label> Top Flywheel </label>
+    {{import t="components/shot_btn.html" id="top_spd"}}
+
+    <label> Bottom Flywheel </label>
+    {{import t="components/shot_btn.html" id="btm_spd"}}
+
+    <br>
+    <a class="button fade" style="width: 100%" onclick="training_test(); return false;"> Test </a> <br>
+    <a class="button button-outline fade" style="width: 100%" onclick="training_register(); return false;"> Register </a> <br>
+
+    <br>
+
+    <a class="button button-outline fade" style="width: 100%" onclick="training_clear(); return false;"> Clear Lookup </a>
+
+</div>
+{{/include}}

@@ -10,18 +10,37 @@ import frc.team5333.core.events.ShootEvent
 import frc.team5333.lib.events.EventBus
 import java.util.function.Consumer
 import frc.team5333.lib.util.Range
+import jaci.openrio.toast.core.io.Persistent
 import kotlin.ranges.rangeTo
 
 class ShooterSystem(var flywheelTop: CANTalon, var flywheelBottom: CANTalon, var intake: Talon) {
     val LEASE = ControlLease(this)
+    var LOOKUP = ShooterLookup()
 
     // AUTOMATIC CONTROL
 
-//    fun calculateSpeeds(relative_distance: Double): Pair<Double, Double> {
+    fun init() {
+        LOOKUP.loadFromFile()
+    }
 
-//    }
+    fun sync() {
+        LOOKUP.saveToFile()
+    }
+
+    fun takeShot() {
+
+    }
 
     // MANUAL CONTROL
+
+    fun setTop(v: Double) = flywheelTop.set(v)
+    fun setBottom(v: Double) = flywheelBottom.set(v)
+    fun setIntake(v: Double) = intake.set(v)
+    fun setAll(v: Double) {
+        setTop(v)
+        setBottom(v)
+        setIntake(v)
+    }
 
     fun runFlywheels() {
         var pairs = getFlywheelPairs()

@@ -1,0 +1,27 @@
+<script type="text/javascript">
+    function increase_{{id}}() {
+        var val = Number(Number({{id}}.value) + 0.1);
+        if (val > 1.0) val = 1;
+        {{id}}.value = round2(val);
+        return false;
+    }
+
+    function decrease_{{id}}() {
+        var val = Number(Number({{id}}.value) - 0.1);
+        if (val < -1.0) val = -1;
+        {{id}}.value = round2(val);
+        return false;
+    }
+</script>
+
+<div class="row">
+    <div class="column">
+        <a class="button fade" onclick="return decrease_{{id}}();" style="width: 100%"> - </a>
+    </div>
+    <div class="column">
+        <input type="number" value="0" name="{{id}}" id="{{id}}" max="1" min="-1" step="0.1" style="text-align: center;">
+    </div>
+    <div class="column">
+        <a class="button fade" onclick="return increase_{{id}}();" style="width: 100%"> + </a>
+    </div>
+</div>

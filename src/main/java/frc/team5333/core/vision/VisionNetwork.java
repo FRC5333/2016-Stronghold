@@ -2,19 +2,29 @@ package frc.team5333.core.vision;
 
 import frc.team5333.core.Core;
 import frc.team5333.core.network.NetworkHub;
-import frc.team5333.core.network.NetworkHubEvent;
 import frc.team5333.lib.events.EventBus;
-import frc.team5333.lib.events.EventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum VisionNetwork {
     INSTANCE;
 
     Thread t;
+    VisionFrame activeFrame;
+
+    public void setActive(VisionFrame active) {
+        activeFrame = active;
+        EventBus.INSTANCE.raiseEvent(new VisionFrameEvent(active));
+    }
+
+    public VisionFrame getActive() {
+        return activeFrame;
+    }
 
     public void init() {
         t = new Thread(() -> {
@@ -44,25 +54,35 @@ public enum VisionNetwork {
             int i = NetworkHub.INSTANCE.readInt(in);
             if (i == 0xBA) {
                 i = NetworkHub.INSTANCE.readInt(in);
+                VisionFrame activeFrame = null;
                 while (i == 0xBB) {
-                    VisionRectangle r = new VisionRectangle();
+                    VisionFrame frame = new VisionFrame();
                     i = NetworkHub.INSTANCE.readInt(in);
-                    r.setX(i);
+                    frame.setX(i);
 
                     i = NetworkHub.INSTANCE.readInt(in);
-                    r.setY(i);
+                    frame.setY(i);
 
                     i = NetworkHub.INSTANCE.readInt(in);
-                    r.setWidth(i);
+                    frame.setWidth(i);
 
                     i = NetworkHub.INSTANCE.readInt(in);
-                    r.setHeight(i);
+                    frame.setHeight(i);
 
                     i = NetworkHub.INSTANCE.readInt(in);
-                    r.setDepth_mm(i);
+                    frame.setDepth_mm(i);
+
+                    i = NetworkHub.INSTANCE.readInt(in);
+                    frame.setDepth_local_mm(i);
+
+                    frame.fin();
+
+                    if (activeFrame == null || frame.area() > activeFrame.area()) activeFrame = frame;      // Select largest area
 
                     Core.logger.info("Rectangle Found!");
                 }
+
+                VisionNetwork.INSTANCE.setActive(activeFrame);
             }
         }
     }

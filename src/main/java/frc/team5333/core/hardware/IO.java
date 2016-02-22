@@ -49,8 +49,7 @@ public class IO {
         flywheel_motors = new MotorGroup(motor_flywheel_bottom, motor_flywheel_top);
         all_motors      = new MotorGroup(drive_motors, flywheel_motors, motor_intake);
 
-        if (IMU_SUPPORTED())
-            imu_mxp = new ADIS16448_IMU();
+        if (IMU_SUPPORTED()) imu_mxp = new ADIS16448_IMU();
     }
 
     public static double maybeIMU(Function<ADIS16448_IMU, Double> d) {

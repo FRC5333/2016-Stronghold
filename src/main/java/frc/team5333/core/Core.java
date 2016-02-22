@@ -1,5 +1,6 @@
 package frc.team5333.core;
 
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.team5333.core.commands.CommandClearConfigs;
 import frc.team5333.core.commands.CommandSpeedTest;
 import frc.team5333.core.control.ControlLoopManager;
@@ -65,6 +66,7 @@ public class Core extends IterativeModule {
 
         TransientControls.init();
         StateTracker.addTicker((s) -> { TransientControls.tick(); });
+        StateTracker.addTicker((s) -> { Scheduler.getInstance().run(); });
         StateTracker.addTransition((o,n) -> { EventBus.INSTANCE.raiseEvent(new StateChangeEvent(o,n)); });
 
         CommandBus.registerCommand(new CommandClearConfigs());
