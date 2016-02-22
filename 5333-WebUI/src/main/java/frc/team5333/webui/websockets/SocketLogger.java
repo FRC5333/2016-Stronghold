@@ -1,5 +1,6 @@
 package frc.team5333.webui.websockets;
 
+import frc.team5333.core.Core;
 import jaci.openrio.toast.core.command.CommandBus;
 import jaci.openrio.toast.lib.log.LogHandler;
 import jaci.openrio.toast.lib.log.Logger;
@@ -50,7 +51,7 @@ public class SocketLogger implements LogHandler {
         sessions.forEach(session -> {
             try {
                 session.getRemote().sendString(Pretty.strip(formatted));
-            } catch (IOException e) { }
+            } catch (Exception e) { }
         });
     }
 }

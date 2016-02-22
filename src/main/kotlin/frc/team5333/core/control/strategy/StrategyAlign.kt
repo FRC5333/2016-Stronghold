@@ -12,8 +12,6 @@ class StrategyAlign : Strategy() {
 
     override fun getName(): String = "Align"
 
-    lateinit var controller: PIDController
-
     var kp = 0.0
     var ki = 0.0
     var kd = 0.0
@@ -21,6 +19,7 @@ class StrategyAlign : Strategy() {
     var lastError = 0.0
     var cumulativeError = 0.0
     var lastTime = 0L
+    var started = false
 
     lateinit var lease: ControlLease.Lease<DriveSystem>
 
@@ -34,6 +33,7 @@ class StrategyAlign : Strategy() {
     }
 
     override fun tick() {
+        started = true
         if (VisionNetwork.INSTANCE.active != null) {
             var now = System.currentTimeMillis()
             var dt = now - lastTime
@@ -42,18 +42,22 @@ class StrategyAlign : Strategy() {
             cumulativeError += (error * dt)
             var deriv = (error - lastError) / dt.toDouble()
 
-            var turnV = kp * error + ki * cumulativeError + kd * deriv
+            var turnV = (kp * error + kd * deriv) / 2.0
+            Core.logger.info("ERROR: ${error} TURN: ${turnV}")
 
             lease.use {
-                it.drive(turnV, -turnV)
+                it.drive(-turnV, turnV)
             }
 
             lastError = error
             lastTime = now
-        } else lastError = 0.0
+        } else {
+            lastError = 0.0
+            Core.logger.info("Could not align: No Frame!")
+        }
     }
 
     override fun isOperatorControl(): Boolean = false
 
-    override fun isComplete(): Boolean = Math.abs(lastError) <= 0.01
+    override fun isComplete(): Boolean = started && Math.abs(lastError) <= 0.01
 }

@@ -79,8 +79,6 @@ public enum VisionNetwork {
                     frame.fin();
 
                     if (activeFrame == null || frame.area() > activeFrame.area()) activeFrame = frame;      // Select largest area
-
-                    Core.logger.info("Rectangle Found!");
                 }
 
                 VisionNetwork.INSTANCE.setActive(activeFrame);

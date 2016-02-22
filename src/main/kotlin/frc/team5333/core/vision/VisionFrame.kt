@@ -26,8 +26,8 @@ class VisionFrame {
     fun area(): Double = width * height
 
     fun offsetCenterX(): Double {
-        var centerRectX = x + width / 2
-        var centerFrame = 640.0 / 2
+        var centerRectX = x + (width / 2.0)
+        var centerFrame = 640.0 / 2.0
         return (centerFrame - centerRectX) / centerFrame
     }
 

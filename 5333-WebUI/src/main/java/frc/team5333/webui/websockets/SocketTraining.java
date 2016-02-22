@@ -71,13 +71,13 @@ public class SocketTraining {
     }
 
     @EventListener
-    public void onEvent(VisionFrameEvent event) {
+    public static void onEvent(VisionFrameEvent event) {
         sessions.forEach(session -> {
             try {
                 if (event.getFrame() == null)
                     session.getRemote().sendString("null");
                 else {
-                    session.getRemote().sendString(String.format("%.2f", event.getFrame().getDepth_mm() * 1000.0));
+                    session.getRemote().sendString(String.format("%.2f", event.getFrame().getDepth_mm() / 1000.0));
                 }
             } catch (IOException e) {}
         });
