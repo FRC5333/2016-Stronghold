@@ -74,6 +74,7 @@ dependencies {
     // It's really quite nifty
     runtime  project(path: ':5333-Stats', configuration: 'compile')
     runtime  project(path: ':5333-WebUI', configuration: 'compile')
+    runtime  project(path: ':5333-Autonomous', configuration: 'compile')
     
     // The main and WebUI modules have some sources written in Kotlin. 
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4589'
@@ -105,4 +106,10 @@ project(":5333-WebUI") {
         compile 'com.github.jknack:handlebars:+'
         buildLibs 'com.github.jknack:handlebars:+'
     }
+}
+
+// The Autonomous Module loads Autonomous Configurations from the Main Config file. We keep this in a separate module so 
+// that it can be disabled if need be.
+project(":5333-Autonomous") {
+    archivesBaseName = "5333-Autonomous"
 }

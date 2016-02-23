@@ -16,6 +16,9 @@ public class BlackBoxRegistrar {
 
         ctx.add("motor_left", IO.motor_master_left::get);
         ctx.add("motor_right", IO.motor_master_right::get);
+        ctx.add("motor_flywheel_top", IO.motor_flywheel_top::get);
+        ctx.add("motor_flywheel_bottom", IO.motor_flywheel_bottom::get);
+        ctx.add("motor_intake", IO.motor_intake::get);
 
         ctx.add("motor_left_encoder_velocity", IO.motor_master_left::getEncVelocity);
         ctx.add("motor_right_encoder_velocity", IO.motor_slave_right::getEncVelocity);

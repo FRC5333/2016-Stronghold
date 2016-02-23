@@ -46,6 +46,7 @@ enum class SplineSystem {
 
     fun writeToCoprocessor(max_velocity: Float, max_acceleration: Float, points: Array<out Waypoint>) {
         var hub = NetworkHub.INSTANCE
+        NetworkHub.INSTANCE.waitFor(NetworkHub.PROCESSORS.SPLINES)
         var sock = NetworkHub.PROCESSORS.SPLINES.active!!
         var out = sock.outputStream
 

@@ -8,6 +8,8 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.collections.filter
 import kotlin.collections.toString
 import kotlin.concurrent.thread
@@ -26,6 +28,11 @@ enum class NetworkHub {
     enum class PROCESSORS(var abbrev: String) {
         DRIVER_STATION("DS_CON"), SPLINES("CP_SPL"), KINECT("CP_KIN");
         var active: Socket? = null
+        var lock = CountDownLatch(1)
+
+        fun isConnected(): Boolean {
+            return active != null && !active!!.isClosed && active!!.isConnected
+        }
     }
 
     lateinit var thread: Thread
@@ -76,6 +83,12 @@ enum class NetworkHub {
 
         Thread.currentThread().name = "Network Hub Client ${s}"
         Core.logger.info("Network Client Connected: ${s}")
+        proc.lock.countDown()
         EventBus.INSTANCE.raiseEvent(NetworkHubEvent(proc))
+    }
+
+    fun waitFor(processor: PROCESSORS) {
+        if (processor.isConnected()) return
+        processor.lock.await()
     }
 }
