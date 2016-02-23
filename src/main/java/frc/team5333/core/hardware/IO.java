@@ -3,13 +3,11 @@ package frc.team5333.core.hardware;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Talon;
 import frc.team5333.core.Core;
-import frc.team5333.core.control.ControlLease;
 import frc.team5333.lib.device.ADIS16448_IMU;
 import jaci.openrio.toast.core.Environment;
 import jaci.openrio.toast.lib.registry.Registrar;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * The IO Class is used to specify all the Inputs and Outputs of the RoboRIO. Things like Motors, Switches and LEDs go

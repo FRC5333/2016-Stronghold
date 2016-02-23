@@ -1,11 +1,5 @@
 package frc.team5333.core.control.profiling
 
-import frc.team5333.core.Core
-import frc.team5333.core.control.profiling.SplineSystem
-import java.io.File
-import java.io.FileWriter
-import kotlin.concurrent.currentThread
-
 class SplineFollower {
 
     var position_offset = 0

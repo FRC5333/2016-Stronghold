@@ -1,7 +1,7 @@
 Trajectory Generation and Spline Fitting
 ----
 
-This is the C source for the Trajectory Generation and Spline Fitting library used on our Pine64 Coprocessor for the 2016 FRC Tournament "FIRST Stronghold".
+This is the C source for the Trajectory Generation and Spline Fitting library used on our Coprocessor for the 2016 FRC Tournament "FIRST Stronghold".
 
 ## Rationale
 We wrote this in C as opposed to the Java alternative for multiple reasons:
@@ -62,7 +62,7 @@ TrajectoryCandidate candidate;
 
 // Prepare the Trajectory with a Cubic Hermite Fit, High Spline Samples (100000 iterations), 
 // 0.01 time step, 15 max velocity, 10 max acceleration, 60 max jerk
-trajectory_prepare_candidate(points, POINT_LENGTH, FIT_HERMITE_CUBIC, SPLINE_SAMPLES_HI, 0.01, 15.0, 10.0, 60.0, &cd);
+trajectory_prepare_candidate(points, POINT_LENGTH, FIT_HERMITE_CUBIC, SPLINE_SAMPLES_HI, 0.01, 15.0, 10.0, 60.0, &candidate);
 
 int length = candidate.length;
 
@@ -78,6 +78,7 @@ You can also use `FIT_HERMITE_QUINTIC` for a Quintic Hermite Spline fit.
 ### Using the Segments
 
 ```c
+int i;
 for (i = 0; i < length; i++) {
     Segment s = seg[i];
     printf("Time Step: %f\n", s.dt);
@@ -89,7 +90,3 @@ for (i = 0; i < length; i++) {
     printf("Heading (radians): %f\n", s.heading);
 }
 ```
-
-## Thanks
-Shoutout to the guys over at Pine64, for sending us some early development boards to run as coprocessors before they were officially released.  
-Also, some inspiration was taken from Team 254's 'TrajectoryLib', with some changes to make it more efficient and sane.

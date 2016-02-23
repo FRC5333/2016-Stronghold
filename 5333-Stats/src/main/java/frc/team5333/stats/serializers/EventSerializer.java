@@ -5,11 +5,12 @@ import frc.team5333.lib.events.EventBase;
 import frc.team5333.lib.events.EventBus;
 import frc.team5333.lib.events.EventListener;
 import frc.team5333.lib.events.EventPriority;
-import jaci.openrio.toast.core.Toast;
 import jaci.openrio.toast.core.io.Storage;
 import jaci.openrio.toast.core.thread.Async;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class EventSerializer {
 

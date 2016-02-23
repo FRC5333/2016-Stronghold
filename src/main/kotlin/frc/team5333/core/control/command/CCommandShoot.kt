@@ -1,7 +1,6 @@
 package frc.team5333.core.control.command
 
 import edu.wpi.first.wpilibj.command.Command
-import frc.team5333.core.Core
 import frc.team5333.core.control.ControlLease
 import frc.team5333.core.systems.ShooterSystem
 import frc.team5333.core.systems.Systems

@@ -1,7 +1,6 @@
 package frc.team5333.lib.util
 
 import java.util.function.Consumer
-import kotlin.ranges.rangeTo
 
 /**
  * The Range Class is used to create a Min/Max range, and a Step value to be used for iteration over the range of numbers.

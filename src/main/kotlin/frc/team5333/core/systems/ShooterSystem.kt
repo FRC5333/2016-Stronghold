@@ -6,12 +6,6 @@ import edu.wpi.first.wpilibj.Talon
 import frc.team5333.core.control.ControlLease
 import frc.team5333.core.control.Joy
 import frc.team5333.core.control.Operator
-import frc.team5333.core.events.ShootEvent
-import frc.team5333.lib.events.EventBus
-import java.util.function.Consumer
-import frc.team5333.lib.util.Range
-import jaci.openrio.toast.core.io.Persistent
-import kotlin.ranges.rangeTo
 
 class ShooterSystem(var flywheelTop: CANTalon, var flywheelBottom: CANTalon, var intake: Talon) {
     val LEASE = ControlLease(this)

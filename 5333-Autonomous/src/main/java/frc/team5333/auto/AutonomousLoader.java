@@ -3,13 +3,11 @@ package frc.team5333.auto;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
-import com.grack.nanojson.JsonParserException;
 import frc.team5333.core.Core;
 import frc.team5333.core.control.strategy.Strategy;
 import jaci.openrio.toast.lib.module.ModuleConfig;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 

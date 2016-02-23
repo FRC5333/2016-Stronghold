@@ -1,8 +1,6 @@
 package frc.team5333.core.control.strategy
 
-import edu.wpi.first.wpilibj.CANTalon
 import frc.team5333.core.control.ControlLease
-import frc.team5333.core.hardware.IO
 import frc.team5333.core.systems.DriveSystem
 import frc.team5333.core.systems.ShooterSystem
 import frc.team5333.core.systems.Systems

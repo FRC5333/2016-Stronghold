@@ -3,15 +3,13 @@ package frc.team5333.core.control.strategy
 import edu.wpi.first.wpilibj.CANTalon
 import frc.team5333.core.Core
 import frc.team5333.core.control.ControlLease
-import frc.team5333.core.hardware.IO
 import frc.team5333.core.control.profiling.SplineFollower
 import frc.team5333.core.control.profiling.SplineSystem
+import frc.team5333.core.hardware.IO
 import frc.team5333.core.systems.DriveSystem
 import frc.team5333.core.systems.Systems
 import frc.team5333.lib.util.MathUtil
-import jaci.openrio.toast.core.shared.GlobalBlackboard
 import jaci.openrio.toast.lib.math.MathHelper
-import kotlin.collections.forEach
 
 class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, SplineSystem.Trajectory>) : Strategy() {
 

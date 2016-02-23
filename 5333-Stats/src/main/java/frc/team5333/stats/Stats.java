@@ -2,7 +2,6 @@ package frc.team5333.stats;
 
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.stats.serializers.EventSerializer;
-import frc.team5333.stats.serializers.ShooterSerializer;
 import frc.team5333.stats.serializers.SplineSerializer;
 import jaci.openrio.module.blackbox.BlackBox;
 import jaci.openrio.module.blackbox.BlackBoxContext;
@@ -34,7 +33,6 @@ public class Stats extends IterativeModule {
             ctx = BlackBox.context(MatchInfo.matchType.getShortName() + "_" + MatchInfo.matchNum);
 
             BlackBoxRegistrar.register(ctx);
-            ShooterSerializer.init();
             SplineSerializer.init();
             EventSerializer.init();
         }

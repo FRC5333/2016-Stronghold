@@ -2,7 +2,6 @@ package frc.team5333.webui.api
 
 import com.grack.nanojson.JsonArray
 import com.grack.nanojson.JsonObject
-import com.grack.nanojson.JsonWriter
 import frc.team5333.lib.events.EventBase
 import frc.team5333.lib.events.EventBus
 import frc.team5333.lib.events.EventListener
@@ -10,8 +9,6 @@ import frc.team5333.lib.util.FifoBuffer
 import frc.team5333.webui.WebHandler
 import spark.Request
 import spark.Response
-import java.io.StringWriter
-import kotlin.ranges.downTo
 
 class EventBusAPI : API{
 

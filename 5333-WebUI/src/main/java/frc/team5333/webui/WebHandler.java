@@ -22,9 +22,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static spark.Spark.get;
-import static spark.Spark.port;
-import static spark.Spark.webSocket;
+import static spark.Spark.*;
 
 public class WebHandler {
 

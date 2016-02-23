@@ -1,9 +1,7 @@
 package frc.team5333.core.control.profiling
 
-import edu.wpi.first.wpilibj.CANTalon
 import frc.team5333.core.Core
 import frc.team5333.core.network.NetworkHub
-import kotlin.collections.*
 
 /**
  * Spline and Motion Profiling generation subsystem. All values are in Metric Units unless otherwise stated. Not your

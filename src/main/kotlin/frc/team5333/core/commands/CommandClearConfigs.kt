@@ -4,7 +4,6 @@ import jaci.openrio.toast.core.command.AbstractCommand
 import jaci.openrio.toast.core.command.IHelpable
 import jaci.openrio.toast.lib.module.ModuleConfig
 import java.io.File
-import kotlin.collections.forEach
 
 class CommandClearConfigs : AbstractCommand(), IHelpable {
     override fun getCommandName(): String? = "clear_cfg"

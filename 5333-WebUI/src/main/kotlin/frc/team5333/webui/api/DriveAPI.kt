@@ -7,7 +7,6 @@ import frc.team5333.webui.WebHandler
 import spark.Request
 import spark.Response
 import java.util.*
-import kotlin.collections.hashMapOf
 
 class DriveAPI : API {
 

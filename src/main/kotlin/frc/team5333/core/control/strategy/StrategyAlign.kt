@@ -1,6 +1,5 @@
 package frc.team5333.core.control.strategy
 
-import edu.wpi.first.wpilibj.PIDController
 import frc.team5333.core.Core
 import frc.team5333.core.control.ControlLease
 import frc.team5333.core.systems.DriveSystem

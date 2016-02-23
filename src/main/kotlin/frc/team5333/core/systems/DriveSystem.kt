@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.CANTalon
 import frc.team5333.core.control.ControlLease
 import frc.team5333.core.control.Joy
 import frc.team5333.core.control.Operator
-import frc.team5333.core.systems.Systems
 
 class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
     val LEASE = ControlLease(this)

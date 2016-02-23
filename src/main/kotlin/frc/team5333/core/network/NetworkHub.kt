@@ -10,12 +10,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.collections.filter
-import kotlin.collections.toString
-import kotlin.concurrent.thread
-import kotlin.text.toByteArray
-import kotlin.text.toLowerCase
 
 /**
  * A stripped down version of NetworkDelegate. The reason we're using this instead of delegate is because

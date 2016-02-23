@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * The EventBus provides a listener system for listening to events. Events are raised, and then any available

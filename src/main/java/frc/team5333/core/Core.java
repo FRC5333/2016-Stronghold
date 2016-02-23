@@ -6,23 +6,21 @@ import frc.team5333.core.commands.CommandSpeedTest;
 import frc.team5333.core.control.ControlLoopManager;
 import frc.team5333.core.control.Operator;
 import frc.team5333.core.control.TransientControls;
-import frc.team5333.core.control.strategy.*;
+import frc.team5333.core.control.strategy.StrategyController;
+import frc.team5333.core.control.strategy.StrategyOperator;
 import frc.team5333.core.data.MatchInfo;
 import frc.team5333.core.events.StateChangeEvent;
 import frc.team5333.core.hardware.IO;
-import frc.team5333.core.systems.Systems;
 import frc.team5333.core.network.NetworkHub;
-import frc.team5333.core.control.profiling.SplineSystem;
+import frc.team5333.core.systems.Systems;
 import frc.team5333.core.vision.VisionNetwork;
 import frc.team5333.lib.events.EventBus;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
 import jaci.openrio.toast.core.loader.annotation.Priority;
 import jaci.openrio.toast.lib.log.Logger;
-import jaci.openrio.toast.lib.math.MathHelper;
 import jaci.openrio.toast.lib.module.IterativeModule;
 import jaci.openrio.toast.lib.module.ModuleConfig;
-import kotlin.Pair;
 
 /**
  * The Core class of Team 5333's Stronghold code. This class serves to startup other parts of the code, as well

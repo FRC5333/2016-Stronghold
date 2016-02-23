@@ -7,24 +7,15 @@ package frc.team5333.lib.device;
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-import edu.wpi.first.wpilibj.GyroBase;
-
-
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.DigitalSource;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GyroBase;
-import edu.wpi.first.wpilibj.InterruptableSensorBase;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class is for the ADIS16448 IMU that connects to the RoboRIO MXP port.

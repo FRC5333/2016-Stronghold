@@ -5,9 +5,6 @@ import java.io.BufferedReader
 import java.io.FileReader
 import java.io.FileWriter
 import java.util.*
-import kotlin.collections.*
-import kotlin.text.split
-import kotlin.text.toDouble
 
 class ShooterLookup {
 

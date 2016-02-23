@@ -1,7 +1,6 @@
 package frc.team5333.core.hardware
 
 import edu.wpi.first.wpilibj.SpeedController
-import kotlin.collections.forEach
 
 /**
  * The MotorGroup class is a dummy SpeedController which combines multiple SpeedControllers under one class. This means
