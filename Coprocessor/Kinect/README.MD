@@ -16,8 +16,8 @@ that mimic the high goal retroreflective tape. Once these are found, bounding bo
 ## Why the Kinect?
 We're using the Kinect Camera purely for it's IR Streams. In initial testing, we were looking at depth for resolving the distance we are to the tower, however the Kinect v1 is
 no where near accurate enough to make this worthwhile. So why the IR streams? Well, retroreflective tape doesn't just reflect visible light, but infrared light as well. This means
-that to an IR camera, the high goals stick out like a sore thumb.
-![High goals as viewed by the Kinect](img/highgoalir.jpg)
+that to an IR camera, the high goals stick out like a sore thumb.  
+![High goals as viewed by the Kinect](img/highgoalir.png)
 
 Because the High Goals stick out very well, it means that we don't have to look for a Green Hue as if we had an LED ring around the camera. This means that people in green shirts, 
 or the field floor, is not accidentally tracked. Now I know what you're thinking: 'What about robots that sit in front of you? Won't they be detected?'. Well, the answer is no. Because
