@@ -19,6 +19,7 @@ import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.command.CommandBus;
 import jaci.openrio.toast.core.loader.annotation.Priority;
 import jaci.openrio.toast.lib.log.Logger;
+import jaci.openrio.toast.lib.math.MathHelper;
 import jaci.openrio.toast.lib.module.IterativeModule;
 import jaci.openrio.toast.lib.module.ModuleConfig;
 import kotlin.Pair;
@@ -71,17 +72,7 @@ public class Core extends IterativeModule {
         CommandBus.registerCommand(new CommandSpeedTest());
     }
 
-    public void autonomousInit() {
-        Pair<SplineSystem.Trajectory, SplineSystem.Trajectory> pairs =
-                SplineSystem.INSTANCE.generateTrajectoryPairs(new SplineSystem.Waypoint[] {
-                        new SplineSystem.Waypoint(0, 0, 0),
-                        new SplineSystem.Waypoint(1, 0, 0),
-                        new SplineSystem.Waypoint(3, -1.0, 0),
-                        new SplineSystem.Waypoint(4, -0.5, 0)
-                });
-        Strategy stra = new StrategyMotionProfile(pairs);
-        StrategyController.INSTANCE.setStrategy(stra);
-    }
+    public void autonomousInit() { }
 
     @Override
     public void autonomousPeriodic() {

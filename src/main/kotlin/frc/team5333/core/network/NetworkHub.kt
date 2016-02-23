@@ -9,6 +9,7 @@ import java.net.Socket
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.collections.filter
 import kotlin.collections.toString
@@ -89,6 +90,7 @@ enum class NetworkHub {
 
     fun waitFor(processor: PROCESSORS) {
         if (processor.isConnected()) return
-        processor.lock.await()
+        processor.lock.await(10000L, TimeUnit.MILLISECONDS)
+        if (!processor.isConnected()) Core.logger.error("Coprocessor Not Connected within 10 Seconds!")
     }
 }

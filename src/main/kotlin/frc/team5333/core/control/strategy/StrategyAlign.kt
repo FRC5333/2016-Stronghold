@@ -58,5 +58,5 @@ class StrategyAlign : Strategy() {
 
     override fun isOperatorControl(): Boolean = false
 
-    override fun isComplete(): Boolean = started && Math.abs(lastError) <= 0.05
+    override fun isComplete(): Boolean = started && (Math.abs(lastError) <= 0.05 || System.currentTimeMillis() - lastTime > 2000)   // 2 sec align time
 }
