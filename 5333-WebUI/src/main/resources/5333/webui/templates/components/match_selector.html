@@ -15,8 +15,17 @@
         <div class="column">
             <label for="matchNumberField">Match Number</label>
             <input type="number" name="matchNumber" placeholder="0" value="{{match_number}}" id="qualsField">
-            
+
             <input class="button-primary fade" type="submit" value="Update Match" style="width: 100%">
         </div>
     </div>
 </form>
+<div class="row">
+    <div class="column">
+    </div>
+    <div class="column">
+        <label>Robot Placement</label>
+        <input type="number" min="1" max="6" value="1" name="placement" id="placement">
+        <input class="button-primary fade" type="submit" value="Update Placement" style="width: 100%" onclick="return submit_placement()">
+    </div>
+</div>

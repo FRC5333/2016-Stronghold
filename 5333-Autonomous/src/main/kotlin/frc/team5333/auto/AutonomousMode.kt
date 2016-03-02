@@ -6,13 +6,20 @@ import frc.team5333.core.control.strategy.Strategy
 import frc.team5333.core.control.strategy.StrategyController
 import java.util.*
 
-class AutonomousMode(var name: String, var portions: ArrayList<Strategy>) {
+interface AutonomousBase {
+    fun name(): String
+    fun run();      // Fun Run :D
+}
+
+class AutonomousMode(var name: String, var portions: ArrayList<Strategy>) : AutonomousBase {
+
+    override fun name(): String = name
 
     interface Portion {
         fun configure(obj: JsonObject): Strategy
     }
 
-    fun run() {
+    override fun run() {
         portions.forEachIndexed { i, portion ->
             if (i != 0) {
                 var last = portions.get(i - 1)

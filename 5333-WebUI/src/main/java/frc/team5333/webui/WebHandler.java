@@ -89,6 +89,7 @@ public class WebHandler {
         register(new DriveAPI());
         register(new MatchAPI());
         register(new DefenseAPI());
+        register(new PlacementAPI());
 
         register(new IndexController());
         register(new ConfigController());

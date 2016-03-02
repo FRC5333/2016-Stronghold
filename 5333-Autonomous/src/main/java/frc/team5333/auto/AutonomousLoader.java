@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class AutonomousLoader {
 
-    public static ArrayList<AutonomousMode> modes;
+    public static ArrayList<AutonomousBase> modes;
     public static HashMap<String, AutonomousMode.Portion> portions = new HashMap<>();
 
     public static void load() {
@@ -59,10 +59,10 @@ public class AutonomousLoader {
         portions.put(name, portion);
     }
 
-    public static AutonomousMode getActive() {
+    public static AutonomousBase getActive() {
         String name = Core.config.getString("autonomous.active", "{none}");
         if (name.equalsIgnoreCase("{none}")) return null;
-        return modes.stream().filter(m -> { return m.getName().equalsIgnoreCase(name); }).findFirst().get();
+        return modes.stream().filter(m -> { return m.name().equalsIgnoreCase(name); }).findFirst().get();
     }
 
 }

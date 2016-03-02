@@ -10,6 +10,10 @@ import frc.team5333.core.network.NetworkHub
  * Motion Profiling is a way for the Robot to accurately move from point a to point b in a smooth, nice motion using
  * spline fitting. This means our robot cha chas real smooth
  *
+ * Something to note: Motion Profiles are created such that the 'y' position is the center of the Drive Base in terms
+ * of distance between Track Axis (i.e. half way between left and right tracks on the base). The 'x' position is determined
+ * as the rearmost axle of the drive base
+ *
  * @author Jaci
  */
 enum class SplineSystem {

@@ -26,7 +26,7 @@ public class AutonomousModule extends IterativeModule {
 
     @Override
     public void autonomousInit() {
-        AutonomousMode active = AutonomousLoader.getActive();
+        AutonomousBase active = AutonomousLoader.getActive();
         if (active == null) {
             Core.logger.error("No Active Autonomous Program!");
         } else {

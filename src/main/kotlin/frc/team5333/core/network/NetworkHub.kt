@@ -84,7 +84,7 @@ enum class NetworkHub {
 
     fun waitFor(processor: PROCESSORS) {
         if (processor.isConnected()) return
-        processor.lock.await(10000L, TimeUnit.MILLISECONDS)
-        if (!processor.isConnected()) Core.logger.error("Coprocessor Not Connected within 10 Seconds!")
+        processor.lock.await(60000L, TimeUnit.MILLISECONDS)
+        if (!processor.isConnected()) Core.logger.error("Coprocessor Not Connected within 60 Seconds!")
     }
 }
