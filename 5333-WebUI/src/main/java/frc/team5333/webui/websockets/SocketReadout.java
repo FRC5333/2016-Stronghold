@@ -35,7 +35,7 @@ public class SocketReadout {
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException { }
 
-    public static void tick(RobotState state) {
+    public static void tick() {
         JsonObject obj = new JsonObject();
         obj.put("Left Throttle", p(IO.motor_master_left.get() * 100));
         obj.put("Right Throttle", p(IO.motor_master_right.get() * 100));

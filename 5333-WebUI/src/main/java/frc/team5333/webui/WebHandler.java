@@ -16,6 +16,7 @@ import frc.team5333.webui.websockets.SocketLogger;
 import frc.team5333.webui.websockets.SocketReadout;
 import frc.team5333.webui.websockets.SocketTraining;
 import jaci.openrio.toast.core.StateTracker;
+import jaci.openrio.toast.core.thread.Heartbeat;
 import jaci.openrio.toast.lib.log.Logger;
 
 import java.io.*;
@@ -60,7 +61,8 @@ public class WebHandler {
         webSocket("/socket/config", SocketConfig.class);
         webSocket("/socket/training", SocketTraining.class);
         Logger.addHandler(new SocketLogger());
-        StateTracker.addTicker(SocketReadout::tick);
+//        StateTracker.addTicker(SocketReadout::tick);
+        Heartbeat.add(missed -> { SocketReadout.tick(); });
         SocketTraining.init();
 
         get("/styles/:file", (req, res) -> {
