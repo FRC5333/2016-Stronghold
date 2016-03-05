@@ -26,7 +26,9 @@ public class DefenseInfo {
         }
     }
 
-    public static Defense[] defense_configuration = new Defense[4];
+    public static Defense[] defense_configuration = new Defense[] {
+        Defense.PORTCULUS, Defense.RAMPARTS, Defense.DRAWBRIDGE, Defense.ROCK_WALL      // Just makes sure we don't get any nulls on first access
+    };
     public static boolean configured = false;
 
     public static void configure(String... longnames) {

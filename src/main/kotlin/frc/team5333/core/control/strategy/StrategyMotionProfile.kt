@@ -10,8 +10,11 @@ import frc.team5333.core.systems.DriveSystem
 import frc.team5333.core.systems.Systems
 import frc.team5333.lib.util.MathUtil
 import jaci.openrio.toast.lib.math.MathHelper
+import java.util.function.Consumer
 
 class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, SplineSystem.Trajectory>) : Strategy() {
+
+    class EventContainer(var happened: (StrategyMotionProfile) -> Boolean, var trigger: Consumer<StrategyMotionProfile>)
 
     lateinit var lease_drive: ControlLease.Lease<DriveSystem>
 
@@ -20,6 +23,7 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
     var complete = false
     var followerLeft: SplineFollower = SplineFollower()
     var followerRight: SplineFollower = SplineFollower()
+    var conditions = arrayListOf<EventContainer>()
 
     override fun onEnable() {
         super.onEnable()
@@ -73,6 +77,8 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
             it.leftMotor.set(l + turn)
             it.rightMotor.set(r - turn)
+
+            conditions.forEach { if (it.happened.invoke(this)) it.trigger.accept(this) }
         }
     }
 
@@ -81,4 +87,8 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
     override fun isFast(): Boolean = true
 
     override fun isComplete(): Boolean = followerLeft.finished() && followerRight.finished()
+
+    fun on(happened: (StrategyMotionProfile) -> Boolean, trigger: Consumer<StrategyMotionProfile>) {
+        conditions.add(EventContainer(happened, trigger))
+    }
 }
