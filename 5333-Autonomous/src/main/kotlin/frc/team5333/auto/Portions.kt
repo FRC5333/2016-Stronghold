@@ -9,6 +9,7 @@ import jaci.openrio.toast.lib.math.MathHelper
 object Portions {
     fun init() {
         AutonomousLoader.register("align", AlignPortion())
+        AutonomousLoader.register("heading", HeadingPortion())
         AutonomousLoader.register("shoot", ShootPortion())
         AutonomousLoader.register("profile", ProfilePortion())
         AutonomousLoader.register("blank", BlankPortion())
@@ -18,6 +19,13 @@ object Portions {
 class AlignPortion : AutonomousMode.Portion {
     override fun configure(obj: JsonObject): Strategy = StrategyAlign()
 }
+
+class HeadingPortion : AutonomousMode.Portion {
+    override fun configure(obj: JsonObject): Strategy {
+        return StrategyHeading(obj.getDouble("angle"))
+    }
+}
+
 
 class ShootPortion: AutonomousMode.Portion {
     override fun configure(obj: JsonObject): Strategy {
