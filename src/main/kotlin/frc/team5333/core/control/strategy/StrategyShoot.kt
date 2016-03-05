@@ -1,10 +1,10 @@
 package frc.team5333.core.control.strategy
 
-import frc.team5333.core.control.command.CCommandShoot
+import frc.team5333.core.control.command.CCommandShootSpinup
 import frc.team5333.core.systems.Systems
 import frc.team5333.core.vision.VisionNetwork
 
-class StrategyShoot(var top: Double, var btm: Double) : Strategy() {
+class StrategyShoot(var top: Double, var btm: Double, var spun: Boolean = false) : Strategy() {
 
     constructor(y: Double) : this(0.0, 0.0) {
         var p = Systems.shooter.LOOKUP.get(y)
@@ -18,7 +18,7 @@ class StrategyShoot(var top: Double, var btm: Double) : Strategy() {
         genOnEnable = true
     }
 
-    lateinit var command: CCommandShoot
+    lateinit var command: CCommandShootSpinup
 
     override fun getName(): String = "Shoot"
 
@@ -34,7 +34,10 @@ class StrategyShoot(var top: Double, var btm: Double) : Strategy() {
                 this.btm = 0.8
             }
         }
-        command = CCommandShoot(top, btm)
+        if (spun)
+            command = CCommandShootSpinup(top, btm)
+        else
+            command = CCommandShootSpinup(top, btm, 2000.0)
         command.start()
     }
 

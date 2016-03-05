@@ -3,8 +3,10 @@ package frc.team5333.auto;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
+import frc.team5333.auto.mode.AutoCrossShootPark;
 import frc.team5333.core.Core;
 import frc.team5333.core.control.strategy.Strategy;
+import frc.team5333.core.data.DefenseInfo;
 import jaci.openrio.toast.lib.module.ModuleConfig;
 
 import java.io.FileInputStream;
@@ -19,6 +21,8 @@ public class AutonomousLoader {
     public static void load() {
         try {
             modes = new ArrayList<>();
+            initModes();
+
             Portions.INSTANCE.init();
             ModuleConfig config = Core.config;
             config.getString("autonomous.active", "{none}");
@@ -53,6 +57,11 @@ public class AutonomousLoader {
             Core.logger.error("Could not load Autonomous Configuration....");
             Core.logger.exception(e);
         }
+    }
+
+    public static void initModes() {
+        modes.add(new AutoCrossShootPark(DefenseInfo.Category.B));
+        modes.add(new AutoCrossShootPark(DefenseInfo.Category.D));
     }
 
     public static void register(String name, AutonomousMode.Portion portion) {

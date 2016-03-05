@@ -5,9 +5,7 @@ import frc.team5333.core.control.ControlLease
 import frc.team5333.core.systems.ShooterSystem
 import frc.team5333.core.systems.Systems
 
-class CCommandShoot(var top: Double, var bottom: Double) : Command() {
-
-    val SPINUP_PERIOD = 2000
+class CCommandShootSpinup(var top: Double, var bottom: Double, var spinup_period: Double = 2000.0) : Command() {
 
     var startTime = 0L
     lateinit var lease: ControlLease.Lease<ShooterSystem>
@@ -23,7 +21,7 @@ class CCommandShoot(var top: Double, var bottom: Double) : Command() {
             it.setTop(-top)
             it.setBottom(-bottom)
 
-            if (elapsed < SPINUP_PERIOD) {
+            if (elapsed < spinup_period) {
                 it.setIntake(-0.5)
             } else {
                 it.setIntake(1.0)
@@ -43,6 +41,6 @@ class CCommandShoot(var top: Double, var bottom: Double) : Command() {
 
     override fun isFinished(): Boolean {
         var elapsed = System.currentTimeMillis() - startTime
-        return elapsed > SPINUP_PERIOD + 1000
+        return elapsed > spinup_period + (spinup_period / 2)
     }
 }

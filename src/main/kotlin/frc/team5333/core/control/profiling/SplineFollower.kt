@@ -51,6 +51,11 @@ class SplineFollower {
         return 0.0
     }
 
+    fun getSegment(): SplineSystem.Segment {
+        var traj = trajectory!!
+        return traj.get(segment)
+    }
+
     fun finished():Boolean = segment >= trajectory!!.getLength()
 
 }
