@@ -24,7 +24,7 @@ Mat video_wait() {
     return videomat;
 }
 
-void process_kinect(void *video, void *depth) {
+void process_kinect(void *video) {
     int count = kinect_video_bytecount();
     char buf[4];
     
@@ -32,13 +32,12 @@ void process_kinect(void *video, void *depth) {
     	
     if (count == 1) {
         // IR Stream -> Send Contour Bounds to RoboRIO
-        videomat = process_IR(videomat, depth);
+        videomat = process_IR(videomat);
         intToBytes(0xBA, buf);
         send_to_rio(buf, 4);
         int i;
         for (i = 0; i < ir_rects.size(); i++) {
             Rect r = ir_rects[i];
-            int depth_mm = 0;
 
             intToBytes(0xBB, buf);
             send_to_rio(buf, 4);
@@ -70,7 +69,7 @@ void process_kinect(void *video, void *depth) {
     pthread_mutex_unlock(&video_mtx);
 }
 
-Mat process_IR(Mat video, void *depth) {
+Mat process_IR(Mat video) {
     ir_rects.clear();
     
     flip(video, video, 0);

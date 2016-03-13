@@ -15,6 +15,8 @@
 int main() {
     setbuf(stdout, NULL);
     
+    pthread_setschedprio(pthread_self(), 9);
+    
     socket_init();
     int return_code = -1;
     

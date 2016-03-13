@@ -32,3 +32,4 @@ with to get a launch velocity. Many teams think that they need to calculate dist
 The RoboRIO also has an Alignment Strategy, where it will try to center the high goals in the center of the frame, in preparation for taking a shot. This is a pretty simple feedback loop, but may
 take some time as the processing power of the Pi is not powerful enough for a 30fps stream from the Kinect. In our testing (on a single core), we've peaked at about 5fps, which is enough in most cases,
 as all shots are taken from a stationary position. Theoretically this could be increased by multithreading, but our Coprocessor is also handling motion profile generation, so we don't want to hog CPU time.
+That being said, this current branch is being used to test whether multithreading is actually worth it. Head to the 'master' branch for a more stable version.
