@@ -13,6 +13,8 @@
 #define HOST_ADDR_2 "roborio-5333-frc.lan"
 #define HOST_PORT 5802
 
+#define THREAD_COUNT 3
+
 SOCKET host_socket;
 
 void send_to_rio(char *data, int length) {
@@ -55,7 +57,6 @@ int main() {
     init_kinect();
     kinect_video_ir();
     printf("Kinect Ready\n");
-    init_ds();
     start_kinect();
     
     socket_quit();

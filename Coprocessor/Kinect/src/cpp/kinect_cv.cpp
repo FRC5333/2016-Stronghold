@@ -9,30 +9,29 @@
 using namespace std;
 using namespace cv;
 
-Mat videomat, temp_1c, temp_3c;
+Mat videomat[THREAD_COUNT], temp_1c[THREAD_COUNT];
 Scalar hsl_low, hsl_high;
 Size blur_size;
 
-vector<Rect> ir_rects;
-vector<double> ir_dists;
-vector<double> ir_angles;
 pthread_cond_t video_cv;
 pthread_mutex_t video_mtx;
 
-Mat video_wait() { 
-    pthread_cond_wait(&video_cv, &video_mtx);
-    return videomat;
+void *kinect_thread_func(pthread_cond_t *cv_v, pthread_mutex_t *mtx_v, void *video, int tid) {
+    pthread_mutex_lock(mtx_v);
+    pthread_cond_wait(cv_v, mtx_v);
+    prepare_video(video, kinect_video_bytecount(), tid);
+    pthread_mutex_unlock(mtx_v);
+    
+    process_kinect(tid);
 }
 
-void process_kinect(void *video) {
+void process_kinect(int tid) {
     int count = kinect_video_bytecount();
     char buf[4];
-    
-    prepare_video(video, count, videomat);
     	
     if (count == 1) {
         // IR Stream -> Send Contour Bounds to RoboRIO
-        videomat = process_IR(videomat);
+        vector<Rect> ir_rects = process_IR(tid);
         intToBytes(0xBA, buf);
         send_to_rio(buf, 4);
         int i;
@@ -62,15 +61,12 @@ void process_kinect(void *video) {
         intToBytes(0xCA, buf);
         send_to_rio(buf, 4);
     }
-    
-    pthread_mutex_lock(&video_mtx);
-
-    pthread_cond_broadcast(&video_cv);      // Broadcast to Threaded Listeners (e.g. Driver Station Sender)
-    pthread_mutex_unlock(&video_mtx);
 }
 
-Mat process_IR(Mat video) {
-    ir_rects.clear();
+vector<Rect> process_IR(int tid) {
+    vector<Rect> ir_rects;
+    
+    Mat video = videomat[tid];
     
     flip(video, video, 0);
     
@@ -102,16 +98,16 @@ Mat process_IR(Mat video) {
         }
     }   
     
-    return video.clone();
+    return ir_rects;
 }
 
-void prepare_video(void *video, int bytecount, Mat video_mat) {
+void prepare_video(void *video, int bytecount, int tid) {
     if (bytecount == 1) {
-        memcpy(temp_1c.data, video, 640*480*bytecount);
-        cvtColor(temp_1c, video_mat, CV_GRAY2RGB);
+        memcpy(temp_1c[tid].data, video, 640*480*bytecount);
+        cvtColor(temp_1c[tid], videomat[tid], CV_GRAY2RGB);
     } else {
-        memcpy(video_mat.data, video, 640*480*bytecount);
-        cvtColor(video_mat, video_mat, CV_BGR2RGB);
+        memcpy(videomat[tid].data, video, 640*480*bytecount);
+        cvtColor(videomat[tid], videomat[tid], CV_BGR2RGB);
     }
 }
 
@@ -120,15 +116,14 @@ void render_text(Mat mat, std::string str, int x, int y, double scale, int r, in
 }
 
 void init_cv() {
-    temp_1c = Mat(480, 640, CV_8UC1);
-    temp_3c = Mat(480, 640, CV_8UC3);
-    videomat = Mat(480, 640, CV_8UC3);
+    int i;
+    for (i = 0; i < THREAD_COUNT; i++) {
+        videomat[i] = Mat(480, 640, CV_8UC3);
+        temp_1c[i] = Mat(480, 640, CV_8UC1);
+    }
     
     hsl_low = Scalar(0, 16, 0);
     hsl_high = Scalar(255, 255, 255);
     
     blur_size = Size(1, 1);
-    
-    pthread_cond_init(&video_cv, NULL);
-    pthread_mutex_init(&video_mtx, NULL);
 }

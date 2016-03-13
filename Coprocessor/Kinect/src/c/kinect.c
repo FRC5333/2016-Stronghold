@@ -5,8 +5,6 @@
 #include "kinect.h"
 #include "kinect_cv.hpp"
 
-#define THREAD_COUNT 3
-
 freenect_context *f_ctx;
 freenect_device *f_dev;
 int bytecount = 1;
@@ -19,15 +17,16 @@ pthread_mutex_t video_mtx;
 
 pthread_t tids[THREAD_COUNT];
 
+struct thread_args {
+    int tid;
+}
+
 void *thread_func(void *args) {
     printf("Thread Launched!");
-    void *video = malloc(640*480);
+    struct thread_args *arg = args;
+    int tid = args->tid;
     while (1) {
-        pthread_mutex_lock(&video_mtx);
-        pthread_cond_wait(&video_cv, &video_mtx);
-        memcpy(video, video_buf, 640*480);
-        pthread_mutex_unlock(&video_mtx);
-        process_kinect(video);
+        kinect_thread_func(&video_cv, &video_mtx, video, tid);
     }
 }
 
@@ -57,7 +56,10 @@ int init_kinect() {
     
     int i;
     for (i = 0; i < THREAD_COUNT; i++) {
-        pthread_create(&tid[i], NULL, thread_func, NULL);
+        struct thread_args args;
+        args.tid = i;
+        
+        pthread_create(&tid[i], NULL, thread_func, (void *)&args);
         pthread_setschedprio(tid[i], 8);
     }
     
