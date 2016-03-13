@@ -21,14 +21,13 @@ pthread_t tids[THREAD_COUNT];
 
 void *thread_func(void *args) {
     printf("Thread Launched!");
+    void *video = malloc(640*480);
     while (1) {
         pthread_mutex_lock(&video_mtx);
         pthread_cond_wait(&video_cv, &video_mtx);
-        void *video = malloc(640*480);
-        memcpy(video.data, video_buf, 640*480);
+        memcpy(video, video_buf, 640*480);
         pthread_mutex_unlock(&video_mtx);
         process_kinect(video);
-        free(video);
     }
 }
 
