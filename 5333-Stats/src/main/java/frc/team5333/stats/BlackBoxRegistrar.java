@@ -1,6 +1,7 @@
 package frc.team5333.stats;
 
 import frc.team5333.core.hardware.IO;
+import frc.team5333.core.systems.Systems;
 import jaci.openrio.module.blackbox.BlackBoxContext;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.lib.state.RobotState;
@@ -24,6 +25,8 @@ public class BlackBoxRegistrar {
         ctx.add("motor_right_encoder_velocity", IO.motor_slave_right::getEncVelocity);
         ctx.add("motor_left_encoder_position", IO.motor_master_left::getEncPosition);
         ctx.add("motor_right_encoder_position", IO.motor_slave_right::getEncPosition);
+
+        ctx.add("shooter_passive_spinup", to(Systems.shooter::getPassiveSpinup));
 
         if (IO.IMU_SUPPORTED()) {
             ctx.add("imu_accel_x", IO.imu_mxp::getAccelX);

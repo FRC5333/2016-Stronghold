@@ -25,6 +25,8 @@ class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
             throttleScale = 0.25
     }
 
+    fun tick() {  }
+
     fun drive() {
         update()
         var pairs = getDrivePairs()

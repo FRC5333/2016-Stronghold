@@ -7,6 +7,7 @@ import frc.team5333.core.systems.Systems
 
 class CCommandShootSpinup(var top: Double, var bottom: Double, var spinup_period: Double = 2000.0) : Command() {
 
+    var instant = false
     var startTime = 0L
     lateinit var lease: ControlLease.Lease<ShooterSystem>
 
@@ -21,7 +22,9 @@ class CCommandShootSpinup(var top: Double, var bottom: Double, var spinup_period
             it.setTop(-top)
             it.setBottom(-bottom)
 
-            if (elapsed < spinup_period) {
+            if (instant)
+                it.setIntake(1.0)
+            else if (elapsed < spinup_period) {
                 it.setIntake(-0.5)
             } else {
                 it.setIntake(1.0)
@@ -41,6 +44,7 @@ class CCommandShootSpinup(var top: Double, var bottom: Double, var spinup_period
 
     override fun isFinished(): Boolean {
         var elapsed = System.currentTimeMillis() - startTime
+        if (instant && elapsed >= 1000) return true         // Give it time to exit the intake
         return elapsed > spinup_period + (spinup_period / 2)
     }
 }

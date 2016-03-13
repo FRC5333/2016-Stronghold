@@ -75,6 +75,7 @@ public class Core extends IterativeModule {
     @Override
     public void autonomousPeriodic() {
         StrategyController.INSTANCE.tickSlow();
+        Systems.tick();
     }
 
     @Override
@@ -85,6 +86,7 @@ public class Core extends IterativeModule {
     @Override
     public void teleopPeriodic() {
         StrategyController.INSTANCE.tickSlow();
+        Systems.tick();
     }
 
 }

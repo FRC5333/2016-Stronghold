@@ -15,4 +15,13 @@ public class Systems {
         shooter.init();
     }
 
+    /**
+     * Tick all Systems. This will only go through during Autonomous / Teleoperated periods.
+     */
+    public static void tick() {
+        control.tick();
+        drive.tick();
+        shooter.tick();
+    }
+
 }

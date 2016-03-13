@@ -1,5 +1,6 @@
 package frc.team5333.core.control.strategy
 
+import frc.team5333.core.Core
 import frc.team5333.core.control.command.CCommandShootSpinup
 import frc.team5333.core.systems.Systems
 import frc.team5333.core.vision.VisionNetwork
@@ -13,6 +14,7 @@ class StrategyShoot(var top: Double, var btm: Double, var spun: Boolean = false)
     }
 
     var genOnEnable = false
+    var instant = false
 
     constructor() : this(0.0, 0.0) {
         genOnEnable = true
@@ -32,9 +34,14 @@ class StrategyShoot(var top: Double, var btm: Double, var spun: Boolean = false)
             } else {
                 this.top = 0.8      // Take a shot of faith
                 this.btm = 0.8
+                Core.logger.warn("Couldn't acquire vision target for shooting: Taking a shot of faith!")
             }
         }
-        if (spun)
+
+        if (instant) {
+            command = CCommandShootSpinup(top, btm)
+            command.instant = true
+        } else if (spun)
             command = CCommandShootSpinup(top, btm)
         else
             command = CCommandShootSpinup(top, btm, 2000.0)

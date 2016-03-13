@@ -49,7 +49,7 @@ public class SocketTraining {
                 double btm = obj.getDouble("btm");
 
                 // Test Strategy
-                StrategyShoot strat = new StrategyShoot(top, btm);
+                StrategyShoot strat = new StrategyShoot(top, btm, false);
                 strat.then(StrategyController.INSTANCE.getStrategy());
                 StrategyController.INSTANCE.setStrategy(strat);
             } else if (action.equalsIgnoreCase("register")) {

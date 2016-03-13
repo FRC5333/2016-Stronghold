@@ -2,6 +2,7 @@ package frc.team5333.core.control;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team5333.core.control.strategy.*;
+import frc.team5333.core.systems.Systems;
 import frc.team5333.core.vision.VisionFrame;
 import frc.team5333.core.vision.VisionNetwork;
 
@@ -39,22 +40,29 @@ public class TransientControls {
         triggerOn(onChangeRising(() -> { return Operator.joy_1.getRawButton(12); }), () -> { Operator.right_is_1 = true; });
         triggerOn(onChangeRising(() -> { return Operator.joy_2.getRawButton(12); }), () -> { Operator.right_is_1 = false; });
 
-        // Hitting the #3 Button on either Joystick will force control to be regained by the driver, in the case
+        // Hitting the #2 Button on either Joystick will force control to be regained by the driver, in the case
         // an autonomous action is not working properly
-        triggerOn(onChangeRising(() -> { return Operator.eitherButton(3); }), () -> {
+        triggerOn(onChangeRising(() -> { return Operator.eitherButton(2); }), () -> {
             StrategyController.INSTANCE.setStrategy(new StrategyOperator()); });
 
-        // Hitting the #5 Button on either Joystick will force the Teleop program to be disabled and repeatedly set
-        // all motors to 0.0. This is kind of like an E-Stop mode.
-        triggerOn(onChangeRising(() -> { return Operator.eitherButton(5); }), () -> {
-            StrategyController.INSTANCE.setStrategy(new StrategyBlank()); });
-
-        triggerOn(onChangeRising(() -> { return Operator.eitherButton(4); }), () -> {
+        // Hitting the #4 Button on the Drive Joystick will cause the Robot to auto-align against the Vision Tracking
+        // target.
+        triggerOn(onChangeRising(() -> { return Systems.control.driveButton(4); }), () -> {
             StrategyController.INSTANCE.setStrategy(new StrategyAlign()); });
 
-        triggerOn(onChangeRising(() -> { return Operator.eitherButton(6); }), () -> {
-            VisionFrame frame = VisionNetwork.INSTANCE.getActive();
-            if (frame != null) StrategyController.INSTANCE.setStrategy(new StrategyShoot(frame.getY()));
+        // Hitting the #6 Button on the Shooter Joystick will cause the Robot to shoot a boulder based on the targeting
+        // info given by the Vision Tracking System.
+        triggerOn(onChangeRising(() -> { return Systems.control.shootButton(6); }), () -> {
+            StrategyShoot strat = new StrategyShoot();
+            strat.setGenOnEnable(true);
+            strat.setInstant(true);
+            StrategyController.INSTANCE.setStrategy(strat);
+        });
+
+        // Hitting the #3 Button on the Shooter Joystick will toggle the Passive Spinup, something that runs in the background
+        // to keep the Flywheels spinning to avoid waiting for a spinup when shooting a boulder.
+        triggerOn(onChangeRising(() -> { return Systems.control.shootButton(3); }), () -> {
+            Systems.shooter.setPassiveSpinup(!Systems.shooter.getPassiveSpinup());
         });
     }
 

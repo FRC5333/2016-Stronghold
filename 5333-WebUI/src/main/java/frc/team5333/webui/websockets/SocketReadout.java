@@ -6,7 +6,6 @@ import frc.team5333.core.hardware.IO;
 import frc.team5333.core.systems.Systems;
 import frc.team5333.core.vision.VisionNetwork;
 import frc.team5333.webui.WebHandler;
-import jaci.openrio.toast.lib.state.RobotState;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -51,6 +50,7 @@ public class SocketReadout {
         obj.put("Right Encoder", IO.motor_master_right.getEncPosition());
 
         obj.put("Vision Frame", VisionNetwork.INSTANCE.getActive() != null);
+        obj.put("Passive Spinup?", Systems.shooter.getPassiveSpinup());
 
         sessions.forEach(session -> {
             try {
