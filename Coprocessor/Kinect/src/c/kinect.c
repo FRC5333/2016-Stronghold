@@ -19,14 +19,14 @@ pthread_t tids[THREAD_COUNT];
 
 struct thread_args {
     int tid;
-}
+};
 
 void *thread_func(void *args) {
     printf("Thread Launched!");
-    struct thread_args *arg = args;
-    int tid = args->tid;
+    struct thread_args *arg = (struct thread_args *)args;
+    int tid = arg->tid;
     while (1) {
-        kinect_thread_func(&video_cv, &video_mtx, video, tid);
+        kinect_thread_func(&video_cv, &video_mtx, video_buf, tid);
     }
 }
 
@@ -59,8 +59,8 @@ int init_kinect() {
         struct thread_args args;
         args.tid = i;
         
-        pthread_create(&tid[i], NULL, thread_func, (void *)&args);
-        pthread_setschedprio(tid[i], 8);
+        pthread_create(&tids[i], NULL, thread_func, (void *)&args);
+        pthread_setschedprio(&tids[i], 8);
     }
     
     pthread_setschedprio(pthread_self(), 7);

@@ -5,13 +5,12 @@
 #ifndef KINECT_CV_HPP
 #define KINECT_CV_HPP
 
-cv::Mat video_wait();
+void *kinect_thread_func(pthread_cond_t *cv_v, pthread_mutex_t *mtx_v, void *video, int tid);
 
-void process_kinect(void *video, void *depth);
-cv::Mat process_IR(cv::Mat video, void *depth);
+void process_kinect(int tid);
+std::vector<cv::Rect> process_IR(int tid);
 
-void prepare_video(void *video, int bytecount, cv::Mat video_mat);
-void render_text(cv::Mat mat, std::string str, int x, int y, double scale, int r, int g, int b);
+void prepare_video(void *video, int bytecount, int tid);
 
 void init_cv();
 

@@ -3,6 +3,8 @@
 #ifndef KINECT_H_DEF
 #define KINECT_H_DEF
 
+#define THREAD_COUNT 3
+
 int init_kinect();
 void start_kinect();
 

@@ -3,7 +3,6 @@
 #include "sleep.h"
 #include "kinect_cv.hpp"
 #include "conversions.h"
-#include "driver_station.hpp"
 #include "main.h"
 
 #include <pthread.h>
@@ -12,8 +11,6 @@
 #define HOST_ADDR_1 "roborio-5333-frc.local"
 #define HOST_ADDR_2 "roborio-5333-frc.lan"
 #define HOST_PORT 5802
-
-#define THREAD_COUNT 3
 
 SOCKET host_socket;
 

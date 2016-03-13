@@ -13,9 +13,6 @@ Mat videomat[THREAD_COUNT], temp_1c[THREAD_COUNT];
 Scalar hsl_low, hsl_high;
 Size blur_size;
 
-pthread_cond_t video_cv;
-pthread_mutex_t video_mtx;
-
 void *kinect_thread_func(pthread_cond_t *cv_v, pthread_mutex_t *mtx_v, void *video, int tid) {
     pthread_mutex_lock(mtx_v);
     pthread_cond_wait(cv_v, mtx_v);
@@ -23,6 +20,7 @@ void *kinect_thread_func(pthread_cond_t *cv_v, pthread_mutex_t *mtx_v, void *vid
     pthread_mutex_unlock(mtx_v);
     
     process_kinect(tid);
+    return NULL;
 }
 
 void process_kinect(int tid) {
@@ -109,10 +107,6 @@ void prepare_video(void *video, int bytecount, int tid) {
         memcpy(videomat[tid].data, video, 640*480*bytecount);
         cvtColor(videomat[tid], videomat[tid], CV_BGR2RGB);
     }
-}
-
-void render_text(Mat mat, std::string str, int x, int y, double scale, int r, int g, int b) {
-    putText(mat, str, Point(x, y), FONT_HERSHEY_COMPLEX, scale, Scalar(r, g, b));
 }
 
 void init_cv() {
