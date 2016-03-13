@@ -68,17 +68,13 @@ vector<Rect> process_IR(int tid) {
     
     flip(video, video, 0);
     
-    Mat original = video.clone();
     Mat tmp;
     cvtColor(video, tmp, CV_RGB2HLS);
     inRange(tmp, hsl_low, hsl_high, tmp);
     
-    Mat temp_contours = tmp.clone();
-    
     vector<vector<Point> > contours;
-    vector<vector<Point> > filteredContours;
     
-    findContours(temp_contours, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_KCOS);
+    findContours(tmp, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_KCOS);
 
     int i;
     for (i = 0; i < contours.size(); i++) {
@@ -91,7 +87,6 @@ vector<Rect> process_IR(int tid) {
         double solidity = 100 * area / contourArea(hull);
         
         if (area > 300.0 && solidity < 75.0) {
-            filteredContours.push_back(contour);
             ir_rects.push_back(r);
         }
     }   
