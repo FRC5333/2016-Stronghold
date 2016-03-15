@@ -1,6 +1,7 @@
 package frc.team5333.core.control;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.team5333.core.control.command.CCommandUpperTransfer;
 import frc.team5333.core.control.strategy.*;
 import frc.team5333.core.systems.Systems;
 import frc.team5333.core.vision.VisionFrame;
@@ -63,6 +64,12 @@ public class TransientControls {
         // to keep the Flywheels spinning to avoid waiting for a spinup when shooting a boulder.
         triggerOn(onChangeRising(() -> { return Systems.control.shootButton(3); }), () -> {
             Systems.shooter.setPassiveSpinup(!Systems.shooter.getPassiveSpinup());
+        });
+
+        // Hitting the #5 Button on the Shooter Joystick will cause a Boulder in the Lower Chamber to be transferred to
+        // the Upper Chamber to be held. This is done in preparation for the shooting of a Low Goal.
+        triggerOn(onChangeRising(() -> { return Systems.control.shootButton(5); }), () -> {
+            new CCommandUpperTransfer().start();
         });
     }
 
