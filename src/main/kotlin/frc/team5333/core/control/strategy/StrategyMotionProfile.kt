@@ -11,6 +11,7 @@ import frc.team5333.core.systems.Systems
 import frc.team5333.lib.util.MathUtil
 import jaci.openrio.toast.lib.math.MathHelper
 import java.util.function.Consumer
+import kotlin.collections.arrayListOf
 
 class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, SplineSystem.Trajectory>) : Strategy() {
 
@@ -75,8 +76,8 @@ class StrategyMotionProfile(var trajectory: Pair<SplineSystem.Trajectory, Spline
 
             var turn = 0.8 * (-1.0/80.0) * angleDiff
 
-            it.leftMotor.set(l + turn)
-            it.rightMotor.set(r - turn)
+            it.setLeft(l + turn)
+            it.setRight(r - turn)
 
             conditions.forEach { if (it.happened.invoke(this)) it.trigger.accept(this) }
         }

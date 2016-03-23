@@ -37,12 +37,6 @@ public class IO {
 
         motor_intake            = Registrar.talon(Core.config.getInt("core.io.motor.intake",                0));
 
-        motor_slave_left.changeControlMode(CANTalon.TalonControlMode.Follower);
-        motor_slave_left.set(motor_master_left.getDeviceID());
-
-        motor_slave_right.changeControlMode(CANTalon.TalonControlMode.Follower);
-        motor_slave_right.set(motor_master_right.getDeviceID());
-
         drive_motors    = new MotorGroup(motor_master_left, motor_slave_left, motor_master_right, motor_slave_right);
         flywheel_motors = new MotorGroup(motor_flywheel_bottom, motor_flywheel_top);
         all_motors      = new MotorGroup(drive_motors, flywheel_motors, motor_intake);
@@ -61,10 +55,12 @@ public class IO {
 
     public static void setLeftMotors(double speed) {
         motor_master_left.set(speed);
+        motor_slave_left.set(speed);
     }
 
     public static void setRightMotors(double speed) {
         motor_master_right.set(speed);
+        motor_slave_right.set(speed);
     }
 
 }

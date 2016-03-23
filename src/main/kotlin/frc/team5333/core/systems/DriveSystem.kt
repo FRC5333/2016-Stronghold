@@ -5,7 +5,7 @@ import frc.team5333.core.control.ControlLease
 import frc.team5333.core.control.Joy
 import frc.team5333.core.control.Operator
 
-class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
+class DriveSystem(var leftMotor: CANTalon, var leftSlaveMotor: CANTalon, var rightMotor: CANTalon, var rightSlaveMotor: CANTalon) {
     val LEASE = ControlLease(this)
 
     var throttleCoefficient = 0.5
@@ -34,8 +34,18 @@ class DriveSystem(var leftMotor: CANTalon, var rightMotor: CANTalon) {
     }
 
     fun drive(l: Double, r: Double) {
-        leftMotor.set(l)
-        rightMotor.set(-r)
+        setLeft(l)
+        setRight(-r)
+    }
+
+    fun setLeft(t: Double) {
+        leftMotor.set(t)
+        leftSlaveMotor.set(t)
+    }
+
+    fun setRight(t: Double) {
+        rightMotor.set(t)
+        rightSlaveMotor.set(t)
     }
 
     fun getDrivePairs(): Pair<Double, Double> {
